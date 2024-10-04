@@ -1,10 +1,16 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { DashboardComponent } from './dashboard.component';
-import { LayoutComponent } from './components/templates/layout/layout.component';
+import { CategoriesComponent } from './components/pages/categories/categories.component';
+import { DashboardTemplateComponent } from './components/templates/dashboard-template/dashboard-template.component';
 
 const routes: Routes = [
-  {path:'', component: LayoutComponent, children:[]}
+  {
+    path: '',
+    component: DashboardTemplateComponent,
+    children: [
+      { path: 'categories', component: CategoriesComponent },
+    ]
+  }
 ];
 
 @NgModule({

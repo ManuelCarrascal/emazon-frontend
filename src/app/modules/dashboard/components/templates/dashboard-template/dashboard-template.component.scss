@@ -1,0 +1,23 @@
+.layout-wrapper{
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
+    grid-template-rows: auto 1fr auto;
+    grid-template-areas: 
+    "header header header"
+    "content content content"
+    "footer footer footer"
+    ;
+
+    &__header{
+        grid-area: header;
+    }
+
+    &__content{
+        grid-area: content;
+    }
+
+    &__footer{
+        grid-area: footer;
+    }
+    
+}

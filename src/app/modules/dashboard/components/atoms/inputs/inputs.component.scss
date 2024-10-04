@@ -1,0 +1,21 @@
+@import 'styles';
+.input{
+    padding: 0.8rem 1.2rem;
+    border-radius: 0.2rem;
+    border: .1rem solid $spacer-light;
+    color:$border;
+
+    &:focus{
+        outline:none;
+        color: $black;
+        border: .1rem solid $purple;
+
+        &::placeholder{
+            color: $black;
+        }
+    }
+
+    &--normal{
+        padding: 1.2rem;
+    }
+}

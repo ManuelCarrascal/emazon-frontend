@@ -1,0 +1,10 @@
+@import "styles";
+
+.navigation {
+  &__link {
+    color: $white;
+    text-decoration: none;
+    gap: 6rem;
+    font-size: 1.8rem;
+  }
+}
