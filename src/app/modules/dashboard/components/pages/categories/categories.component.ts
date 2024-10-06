@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Category } from '../../../interfaces/category.interface';
 import { CategoryService } from '../../../services/category.service';
+import { ToastService } from 'src/app/core/services/toast.service';
 
 @Component({
   selector: 'app-categories',
@@ -14,7 +15,10 @@ export class CategoriesComponent implements OnInit {
     categoryDescription: '',
   }
 
-  constructor(private categoryService: CategoryService) { }
+  constructor(
+    private categoryService: CategoryService,
+    private toastService: ToastService
+  ) { }
 
   ngOnInit(): void {
   }
@@ -23,6 +27,7 @@ export class CategoriesComponent implements OnInit {
     this.categoryService.createCategory(this.category).subscribe(
       response => {
         console.log('Category created successfully', response);
+        this.toastService.showToast('Category created successfully');
         this.category = {
           categoryName: '',
           categoryDescription: '',

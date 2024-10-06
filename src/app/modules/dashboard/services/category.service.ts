@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
 export class CategoryService {
     private apiUrl = 'http://localhost:9091/categories';
   private token =
-    'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImFkbWluQGFkbWluLmNvbSIsImF1dGhvcml0aWVzIjoiUk9MRV9BRE1JTiIsInN1YiI6IjMiLCJpYXQiOjE3MjgxNzQ0NzgsImV4cCI6MTcyODIxMDQ3OH0.LGOsqR6zSA7aqoi-9Bb1MwrbuZ8MZGB2pNGftpBkn7g';
+    'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImFkbWluQGFkbWluLmNvbSIsImF1dGhvcml0aWVzIjoiUk9MRV9BRE1JTiIsInN1YiI6IjMiLCJpYXQiOjE3MjgyMjMzMTYsImV4cCI6MTcyODI1OTMxNn0.0H1tNIdm52hnvrfXyzLFe0AiJsPc6aJHuB9Hyl21b9c';
 
   constructor(private http: HttpClient) {}
 

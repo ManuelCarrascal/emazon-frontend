@@ -1,1 +1,11 @@
-<div class="toast" id="toast"></div>
+<div *ngIf="isVisible" class="toast poppins-regular">
+    <div class="toast__icon">
+        <i class="fa-solid fa-circle-check"></i>
+    </div>
+    {{message}}
+    <div class="toast__close">
+        <button (click)="isVisible = false" class="toast__close-button">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+    </div>
+  </div>
