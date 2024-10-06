@@ -1,9 +1,14 @@
-@import 'styles';
+@use 'styles' as *;
 
 .divider{
     width: 93%;
-    height: 0.2rem;
+    height: 0.05rem;
     margin: 0 auto;
     border: none;
     background-color: rgba($white, 0.2);
+    margin-bottom: 1rem;
+
+    @include desktop{
+        width: 100%;
+    }
 }

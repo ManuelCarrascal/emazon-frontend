@@ -1,8 +1,15 @@
-@import 'styles';
+@use 'styles' as *;
 
 .container{
-    padding: 0rem 1.5rem;
+    padding: 0 1.5rem;
     margin: 1.6rem 0;
+
+}
+
+.form{
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
 }
 
 .principal-title{
@@ -14,5 +21,11 @@
     &__highlight {
         color: $purple; 
         font-weight: bold; 
+    }
+
+    @include desktop{
+        font-size: 4.4rem;
+        font-weight: 500;
+        line-height: 1;
     }
 }

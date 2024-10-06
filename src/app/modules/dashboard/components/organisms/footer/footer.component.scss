@@ -1,12 +1,19 @@
-@import 'styles';
+@use "styles" as *;
 
-.footer{
-    background-color:$black;
-    display: grid;
-    grid-template-rows: repeat(3,1fr);
-    grid-template-areas: 
-    "nav"
-    "divider"
-    "bottom"
-    ;
+.footer {
+  background-color: $black;
+  display: grid;
+    
+  grid-template-columns: 1fr;
+  padding: 1rem 0;
+  height: 100%;
+  &__bottom {
+    padding: 0.5rem 2rem ;
+    color: $white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+ 
+  }
+
 }

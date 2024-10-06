@@ -1,0 +1,13 @@
+@use 'styles' as *;
+.input{
+    @include input-base-styles;
+    &--normal{
+        padding: 1.2rem;
+    }
+
+    @include desktop{
+        font-size: 1.8rem;
+        line-height: 144%;
+        font-weight: 400;
+    }
+}

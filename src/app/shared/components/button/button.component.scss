@@ -1,0 +1,21 @@
+@use 'styles' as *;
+
+.button{
+    padding: 0.6rem 4rem;
+    background-color: $purple;
+    color: $white;
+    border-radius: 0.4rem;
+    outline: none;
+    border: none;
+    cursor: pointer;
+
+    @include desktop{
+        padding: 1rem 4rem;
+        font-size: 2rem;
+    }
+
+    &:hover{
+        background-color: darken($color: $purple, $amount: 5);
+    }
+
+}

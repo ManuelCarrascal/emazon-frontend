@@ -2,5 +2,9 @@
     <h1 class="principal-title poppins-regular">
         Crea una nueva <span class="principal-title__highlight">Categoría!</span>
       </h1>
-      <app-inputs></app-inputs>
+      <form (ngSubmit)="createCategory()" class="form">
+        <app-inputs [value]="category.categoryName" (valueChange)="updateCategoryName($event)"></app-inputs>
+        <app-text-area [value]="category.categoryDescription" (valueChange)="updateCategoryDescription($event)"></app-text-area>
+        <app-button>Create Category</app-button>
+      </form>
 </div>

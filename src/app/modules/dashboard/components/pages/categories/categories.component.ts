@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { Category } from '../../../interfaces/category.interface';
+import { CategoryService } from '../../../services/category.service';
 
 @Component({
   selector: 'app-categories',
@@ -7,9 +9,38 @@ import { Component, OnInit } from '@angular/core';
 })
 export class CategoriesComponent implements OnInit {
 
-  constructor() { }
+  category: Category = {
+    categoryName: '',
+    categoryDescription: '',
+  }
+
+  constructor(private categoryService: CategoryService) { }
 
   ngOnInit(): void {
+  }
+
+  createCategory() {
+    this.categoryService.createCategory(this.category).subscribe(
+      response => {
+        console.log('Category created successfully', response);
+        this.category = {
+          categoryName: '',
+          categoryDescription: '',
+        };
+        
+      },
+      error => {
+        console.error('Error creating category', error);
+      }
+    );
+  }
+
+  updateCategoryName(newName: string) {
+    this.category.categoryName = newName;
+  }
+
+  updateCategoryDescription(newDescription: string) {
+    this.category.categoryDescription = newDescription;
   }
 
 }

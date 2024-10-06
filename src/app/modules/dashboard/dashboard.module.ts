@@ -10,8 +10,12 @@ import { FooterComponent } from './components/organisms/footer/footer.component'
 import { NavComponent } from './components/organisms/nav/nav.component';
 import { NavLinkComponent } from './components/atoms/nav-link/nav-link.component';
 import { DividerComponent } from './components/atoms/divider/divider.component';
-import { InputsComponent } from './components/atoms/inputs/inputs.component';
+import { InputComponent } from './components/atoms/input/input.component';
 import { CategoriesComponent } from './components/pages/categories/categories.component';
+import { TextAreaComponent } from './components/atoms/text-area/text-area.component';
+import { ButtonComponent } from 'src/app/shared/components/button/button.component';
+import { FormsModule } from '@angular/forms';
+import { SharedModule } from 'src/app/shared/shared.module';
 
 @NgModule({
   declarations: [
@@ -23,10 +27,10 @@ import { CategoriesComponent } from './components/pages/categories/categories.co
     NavComponent,
     NavLinkComponent,
     DividerComponent,
-    InputsComponent,
-    CategoriesComponent
-   
+    InputComponent,
+    CategoriesComponent,
+    TextAreaComponent,
   ],
-  imports: [CommonModule, DashboardRoutingModule],
+  imports: [CommonModule, DashboardRoutingModule, FormsModule,SharedModule],
 })
 export class DashboardModule {}

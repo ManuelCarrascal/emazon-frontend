@@ -1,0 +1,12 @@
+@use 'styles' as *;
+
+.text-area{
+   @include input-base-styles;
+    resize: none;
+
+    @include desktop{
+        font-size: 1.8rem;
+        line-height: 144%;
+        font-weight: 400;
+    }
+}
