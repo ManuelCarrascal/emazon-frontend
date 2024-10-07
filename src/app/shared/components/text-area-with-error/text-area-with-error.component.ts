@@ -1,26 +1,19 @@
-import {
-  Component,
-  EventEmitter,
-  forwardRef,
-  Input,
-  OnInit,
-  Output,
-} from '@angular/core';
+import { Component, forwardRef, Input, OnInit } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 @Component({
-  selector: 'app-input-with-error',
-  templateUrl: './input-with-error.component.html',
-  styleUrls: ['./input-with-error.component.scss'],
+  selector: 'app-text-area-with-error',
+  templateUrl: './text-area-with-error.component.html',
+  styleUrls: ['./text-area-with-error.component.scss'],
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => InputWithErrorComponent),
+      useExisting: forwardRef(() => TextAreaWithErrorComponent),
       multi: true,
     },
   ],
 })
-export class InputWithErrorComponent implements ControlValueAccessor {
+export class TextAreaWithErrorComponent implements ControlValueAccessor {
   @Input() value: string = '';
   @Input() disabled: boolean = false;
   @Input() errorMessage: string = '';
@@ -45,7 +38,7 @@ export class InputWithErrorComponent implements ControlValueAccessor {
   }
 
   onInput(event: Event): void {
-    const inputElement = event.target as HTMLInputElement;
+    const inputElement = event.target as HTMLTextAreaElement;
     this.value = inputElement.value;
     this.onChange(this.value);
     this.onTouched();

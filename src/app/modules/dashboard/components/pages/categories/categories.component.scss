@@ -6,10 +6,16 @@
 
 }
 
+.container-inputs{
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+}
+
 .form{
     display: flex;
     flex-direction: column;
-    gap: 2rem;
+    gap: 6rem;
 }
 
 .principal-title{

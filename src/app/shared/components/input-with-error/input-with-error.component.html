@@ -1,1 +1,13 @@
-<p>input-with-error works!</p>
+<div class="input-container">
+  <input
+    [value]="value"
+    (input)="onInput($event)"
+    [disabled]="disabled"
+    class="input poppins-regular"
+    type="text"
+    placeholder="Category Name"
+  />
+  <div class="error-message poppins-regular" *ngIf="errorMessage">
+    {{ errorMessage }}
+  </div>
+</div>

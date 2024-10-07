@@ -2,12 +2,12 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Category } from '../interfaces/category.interface';
 import { Observable } from 'rxjs';
+import { environment } from 'src/environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class CategoryService {
-    private apiUrl = 'http://localhost:9091/categories';
-  private token =
-    'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImFkbWluQGFkbWluLmNvbSIsImF1dGhvcml0aWVzIjoiUk9MRV9BRE1JTiIsInN1YiI6IjMiLCJpYXQiOjE3MjgyMjMzMTYsImV4cCI6MTcyODI1OTMxNn0.0H1tNIdm52hnvrfXyzLFe0AiJsPc6aJHuB9Hyl21b9c';
+    private apiUrl = environment.stock_service_url;
+  private token =environment.auth_token;
 
   constructor(private http: HttpClient) {}
 

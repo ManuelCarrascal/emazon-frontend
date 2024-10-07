@@ -12,9 +12,7 @@ import { NavLinkComponent } from './components/atoms/nav-link/nav-link.component
 import { DividerComponent } from './components/atoms/divider/divider.component';
 import { InputComponent } from './components/atoms/input/input.component';
 import { CategoriesComponent } from './components/pages/categories/categories.component';
-import { TextAreaComponent } from './components/atoms/text-area/text-area.component';
-import { ButtonComponent } from 'src/app/shared/components/button/button.component';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SharedModule } from 'src/app/shared/shared.module';
 
 @NgModule({
@@ -29,8 +27,7 @@ import { SharedModule } from 'src/app/shared/shared.module';
     DividerComponent,
     InputComponent,
     CategoriesComponent,
-    TextAreaComponent,
   ],
-  imports: [CommonModule, DashboardRoutingModule, FormsModule,SharedModule],
+  imports: [CommonModule, DashboardRoutingModule, FormsModule,SharedModule,ReactiveFormsModule],
 })
 export class DashboardModule {}

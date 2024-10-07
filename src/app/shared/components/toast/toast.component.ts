@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ToastService } from 'src/app/core/services/toast.service';
+import { Toast, ToastService } from 'src/app/core/services/toast.service';
 
 @Component({
   selector: 'app-toast',
@@ -7,20 +7,21 @@ import { ToastService } from 'src/app/core/services/toast.service';
   styleUrls: ['./toast.component.scss']
 })
 export class ToastComponent implements OnInit {
-
   message: string = '';
   isVisible: boolean = false;
+  type: 'success' | 'error' | 'warning' = 'success'; 
 
   constructor(private toastService: ToastService) { }
 
   ngOnInit(): void {
-    this.toastService.toastState.subscribe((message: string) => {
-      this.message = message;
+    this.toastService.toastState.subscribe((toast: Toast) => {
+      this.message = toast.message;
+      this.type = toast.type;
       this.isVisible = true;
 
-       setTimeout(() => {
-         this.isVisible = false;
-       }, 4000);
+      setTimeout(() => {
+        this.isVisible = false;
+      }, 4000);
     });
   }
 }

@@ -1,11 +1,19 @@
-<div *ngIf="isVisible" class="toast poppins-regular">
-    <div class="toast__icon">
-        <i class="fa-solid fa-circle-check"></i>
-    </div>
-    {{message}}
-    <div class="toast__close">
-        <button (click)="isVisible = false" class="toast__close-button">
-            <i class="fa-solid fa-xmark"></i>
-        </button>
-    </div>
+<div *ngIf="isVisible" class="toast poppins-regular" [ngClass]="type">
+  <div class="toast__icon">
+    <i
+      [ngClass]="
+        type === 'success'
+          ? 'fa-solid fa-circle-check'
+          : type === 'error'
+          ? 'fa-solid fa-circle-xmark'
+          : 'fa-solid fa-exclamation-circle'
+      "
+    ></i>
   </div>
+  {{ message }}
+  <div class="toast__close">
+    <button (click)="isVisible = false" class="toast__close-button">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+  </div>
+</div>

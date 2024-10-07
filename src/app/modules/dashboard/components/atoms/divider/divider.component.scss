@@ -1,14 +1,14 @@
-@use 'styles' as *;
+@use "styles" as *;
 
-.divider{
-    width: 93%;
-    height: 0.05rem;
-    margin: 0 auto;
-    border: none;
-    background-color: rgba($white, 0.2);
-    margin-bottom: 1rem;
+.divider {
+  width: 93%;
+  height: 0.05rem;
+  margin: 0 auto;
+  border: none;
+  background-color: rgba($white, 0.2);
+  margin-bottom: 1rem;
 
-    @include desktop{
-        width: 100%;
-    }
+  @include desktop {
+    width: 100%;
+  }
 }

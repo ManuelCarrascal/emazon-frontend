@@ -1,14 +1,13 @@
-.logo{
+.logo {
+  &--small {
+    font-size: 2.4rem;
+  }
 
-    &--small{
-        font-size: 2.4rem;
-    }
+  &--medium {
+    font-size: 6.4rem;
+  }
 
-    &--medium{
-        font-size: 6.4rem;
-    }
-
-    &--large{
-        font-size: 8.0rem;
-    }
+  &--large {
+    font-size: 8rem;
+  }
 }
