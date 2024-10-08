@@ -2,14 +2,11 @@
 
 @mixin input-base-styles{
     padding: 0.8rem 1.2rem;
-    width: 19.151rem;
+    width: 100%;
     border: .1rem solid $spacer-light;
     border-radius: 0.2rem;
     color: $black;
 
-    @include desktop{
-        width: 25rem;
-    }
 
     &:focus {
         outline: none;

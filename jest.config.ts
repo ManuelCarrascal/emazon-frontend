@@ -1,21 +1,21 @@
-module.exports = {
-    preset: 'jest-preset-angular',
-    setupFilesAfterEnv: ['<rootDir>/setup-jest.ts'],
-    testPathIgnorePatterns: ['/node_modules/', '/dist/', '/src/test.ts'],
-    globals: {
-      'ts-jest': {
-        tsconfig: '<rootDir>/tsconfig.spec.json',
-        stringifyContentPathRegex: '\\.html$',
-      },
+import type { Config } from '@jest/types';
+
+const config: Config.InitialOptions = {
+  preset: 'jest-preset-angular',
+  setupFilesAfterEnv: ['<rootDir>/setup-jest.ts'],
+  transform: {
+    '^.+\\.(ts|js|html)$': 'ts-jest',
+  },
+  moduleNameMapper: {
+    '^src/(.*)$': '<rootDir>/src/$1',
+  },
+  globals: {
+    'ts-jest': {
+      tsconfig: 'tsconfig.spec.json',
+      stringifyContentPathRegex: '\\.html$',
     },
-    transform: {
-      '^.+\\.(ts|js|html)$': 'ts-jest',
-    },
-    moduleNameMapper: {
-      '^@app/(.*)$': '<rootDir>/src/app/$1',
-      '^@environments/(.*)$': '<rootDir>/src/environments/$1',
-    },
-    transformIgnorePatterns: ['node_modules/(?!.*\\.mjs$)'],
-    moduleFileExtensions: ['ts', 'html', 'js', 'json', 'mjs'],
-    testEnvironment: 'jsdom',
-  };
+  },
+  moduleFileExtensions: ['ts', 'html', 'js', 'json'],
+};
+
+export default config;

@@ -1,24 +1,36 @@
 <div class="container">
   <h1 class="principal-title poppins-regular">
-    Crea una nueva <span class="principal-title__highlight">Categoría!</span>
+    Create a new <span class="principal-title__highlight">Category!</span>
   </h1>
-  <form
-    [formGroup]="createCategoryForm"
-    (ngSubmit)="createCategory()"
-    class="form"
-  >
-    <div class="container-inputs">
-      <app-input-with-error
-        formControlName="categoryName"
-        [errorMessage]="categoryNameError"
-      ></app-input-with-error>
+  <app-button (click)="openModal()">Add Category</app-button>
 
-      <app-text-area-with-error
-        formControlName="categoryDescription"
-        [errorMessage]="categoryDescriptionError"
-      ></app-text-area-with-error>
-    </div>
+    <app-modal [isVisible]="isModalVisible" (close)="closeModal()">
+      <h2 class="poppins-regular modal-title">Create Category</h2>
+      <form
+        [formGroup]="createCategoryForm"
+        (ngSubmit)="createCategory()"
+        class="form"
+      >
+        <div class="container-inputs">
+          <app-input-with-error
+            formControlName="categoryName"
+            [errorMessage]="categoryNameError"
+          ></app-input-with-error>
 
-    <app-button>Create Category</app-button>
-  </form>
+          <app-text-area-with-error
+            formControlName="categoryDescription"
+            [errorMessage]="categoryDescriptionError"
+          ></app-text-area-with-error>
+        </div>
+
+        <div class="center">
+          <app-button>Create Category</app-button>
+        </div>
+      </form>
+    </app-modal>
+  
+
+  <div>
+
+  </div>
 </div>

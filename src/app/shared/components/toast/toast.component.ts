@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { Toast, ToastService } from 'src/app/core/services/toast.service';
+import { Toast, ToastService, ToastType } from 'src/app/core/services/toast.service';
 
+
+const TOAST_VISIBILITY_DURATION = 4000;
 @Component({
   selector: 'app-toast',
   templateUrl: './toast.component.html',
@@ -9,9 +11,9 @@ import { Toast, ToastService } from 'src/app/core/services/toast.service';
 export class ToastComponent implements OnInit {
   message: string = '';
   isVisible: boolean = false;
-  type: 'success' | 'error' | 'warning' = 'success'; 
+  type: ToastType = ToastType.Success; 
 
-  constructor(private toastService: ToastService) { }
+  constructor(private readonly toastService: ToastService) { }
 
   ngOnInit(): void {
     this.toastService.toastState.subscribe((toast: Toast) => {
@@ -21,7 +23,9 @@ export class ToastComponent implements OnInit {
 
       setTimeout(() => {
         this.isVisible = false;
-      }, 4000);
+      }, TOAST_VISIBILITY_DURATION);
     });
   }
+
+  
 }
