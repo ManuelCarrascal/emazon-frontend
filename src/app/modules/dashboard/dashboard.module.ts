@@ -10,7 +10,6 @@ import { FooterComponent } from './components/organisms/footer/footer.component'
 import { NavComponent } from './components/organisms/nav/nav.component';
 import { NavLinkComponent } from './components/atoms/nav-link/nav-link.component';
 import { DividerComponent } from './components/atoms/divider/divider.component';
-import { InputComponent } from './components/atoms/input/input.component';
 import { CategoriesComponent } from './components/pages/categories/categories.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SharedModule } from 'src/app/shared/shared.module';
@@ -25,7 +24,6 @@ import { SharedModule } from 'src/app/shared/shared.module';
     NavComponent,
     NavLinkComponent,
     DividerComponent,
-    InputComponent,
     CategoriesComponent,
   ],
   imports: [CommonModule, DashboardRoutingModule, FormsModule,SharedModule,ReactiveFormsModule],

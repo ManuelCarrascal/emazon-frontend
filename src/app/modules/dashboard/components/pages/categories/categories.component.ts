@@ -7,7 +7,7 @@ import {
 } from '@angular/forms';
 import { CategoryService } from '../../../services/category.service';
 import { ToastService, ToastType } from 'src/app/core/services/toast.service';
-import { HttpResponse } from '@angular/common/http';
+import { HttpResponse, HttpStatusCode } from '@angular/common/http';
 import { Category } from '../../../interfaces/category.interface';
 import {
   ERROR_MESSAGES,
@@ -17,6 +17,9 @@ import {
   FIELD_NAMES,
   GENERIC_ERROR_MESSAGE,
 } from 'src/app/shared/constants/categoriesComponent';
+
+const MIN_LENGTH = 3;
+
 
 @Component({
   selector: 'app-categories',
@@ -36,7 +39,7 @@ export class CategoriesComponent implements OnInit {
         '',
         [
           Validators.required,
-          Validators.minLength(3),
+          Validators.minLength(MIN_LENGTH),
           Validators.pattern(REGEX_PATTERNS.FORBIDDEN_CHARACTERS),
         ],
       ],
@@ -44,7 +47,7 @@ export class CategoriesComponent implements OnInit {
         '',
         [
           Validators.required,
-          Validators.minLength(3),
+          Validators.minLength(MIN_LENGTH),
           Validators.pattern(REGEX_PATTERNS.FORBIDDEN_CHARACTERS),
         ],
       ],
@@ -85,11 +88,11 @@ export class CategoriesComponent implements OnInit {
       .subscribe({
         next: (response: HttpResponse<Category>) => {
           const message =
-            response.status === 201
+            response.status === HttpStatusCode.Created
               ? SUCCESS_MESSAGES.CATEGORY_CREATED
               : SUCCESS_MESSAGES.UNEXPECTED_RESPONSE;
           this.toastService.showToast(message, ToastType.Success);
-          if (response.status === 201) {
+          if (response.status === HttpStatusCode.Created) {
             this.createCategoryForm.reset({
               categoryName: '',
               categoryDescription: '',
