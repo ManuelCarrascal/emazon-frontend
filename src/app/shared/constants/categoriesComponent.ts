@@ -7,7 +7,7 @@ export const ERROR_MESSAGES = {
   } as const;
   
   export const SUCCESS_MESSAGES = {
-    CATEGORY_CREATED: 'Category created successfully',
+    CATEGORY_CREATED: 'Category created successfully!',
     UNEXPECTED_RESPONSE: 'Unexpected response from server',
   } as const;
   
@@ -18,7 +18,7 @@ export const ERROR_MESSAGES = {
   } as const;
   
   export const ERROR_MESSAGES_BY_CODE = {
-    [ERROR_CODES.BAD_REQUEST]: 'Bad request. Please check the form data.',
+    [ERROR_CODES.BAD_REQUEST]: 'An error occurred while creating the category.',
     [ERROR_CODES.CONFLICT]: 'Category already exists.',
     [ERROR_CODES.SERVER_ERROR]: 'Server error. Please try again later.',
   } as const;

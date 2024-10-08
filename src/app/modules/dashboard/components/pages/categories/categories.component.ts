@@ -1,10 +1,22 @@
 import { Component, OnInit } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {
+  AbstractControl,
+  FormBuilder,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
 import { CategoryService } from '../../../services/category.service';
 import { ToastService, ToastType } from 'src/app/core/services/toast.service';
 import { HttpResponse } from '@angular/common/http';
 import { Category } from '../../../interfaces/category.interface';
-import { ERROR_MESSAGES, ERROR_MESSAGES_BY_CODE, SUCCESS_MESSAGES, REGEX_PATTERNS, FIELD_NAMES, GENERIC_ERROR_MESSAGE } from 'src/app/shared/constants/categoriesComponent';
+import {
+  ERROR_MESSAGES,
+  ERROR_MESSAGES_BY_CODE,
+  SUCCESS_MESSAGES,
+  REGEX_PATTERNS,
+  FIELD_NAMES,
+  GENERIC_ERROR_MESSAGE,
+} from 'src/app/shared/constants/categoriesComponent';
 
 @Component({
   selector: 'app-categories',
@@ -53,7 +65,9 @@ export class CategoriesComponent implements OnInit {
 
   getErrorMessage(control: AbstractControl | null, fieldName: string): string {
     if (control?.touched && control?.errors) {
-      const firstKey = Object.keys(control.errors)[0] as keyof typeof ERROR_MESSAGES;
+      const firstKey = Object.keys(
+        control.errors
+      )[0] as keyof typeof ERROR_MESSAGES;
       const error = control.errors[firstKey];
       return ERROR_MESSAGES[firstKey](fieldName, error);
     }
@@ -66,19 +80,30 @@ export class CategoriesComponent implements OnInit {
       return;
     }
 
-    this.categoryService.createCategory(this.createCategoryForm.value).subscribe({
-      next: (response: HttpResponse<Category>) => {
-        const message = response.status === 201 ? SUCCESS_MESSAGES.CATEGORY_CREATED : SUCCESS_MESSAGES.UNEXPECTED_RESPONSE;
-        this.toastService.showToast(message, ToastType.Success);
-        if (response.status === 201) {
-          this.createCategoryForm.reset();
-        }
-      },
-      error: (error) => {
-        const message = ERROR_MESSAGES_BY_CODE[error.status as keyof typeof ERROR_MESSAGES_BY_CODE] || GENERIC_ERROR_MESSAGE;
-        this.toastService.showToast(message, ToastType.Error);
-      }
-    });
+    this.categoryService
+      .createCategory(this.createCategoryForm.value)
+      .subscribe({
+        next: (response: HttpResponse<Category>) => {
+          const message =
+            response.status === 201
+              ? SUCCESS_MESSAGES.CATEGORY_CREATED
+              : SUCCESS_MESSAGES.UNEXPECTED_RESPONSE;
+          this.toastService.showToast(message, ToastType.Success);
+          if (response.status === 201) {
+            this.createCategoryForm.reset({
+              categoryName: '',
+              categoryDescription: '',
+            });
+          }
+        },
+        error: (error) => {
+          const message =
+            ERROR_MESSAGES_BY_CODE[
+              error.status as keyof typeof ERROR_MESSAGES_BY_CODE
+            ] || GENERIC_ERROR_MESSAGE;
+          this.toastService.showToast(message, ToastType.Error);
+        },
+      });
   }
 
   get categoryNameError(): string {
@@ -86,7 +111,10 @@ export class CategoriesComponent implements OnInit {
   }
 
   get categoryDescriptionError(): string {
-    return this.getErrorMessage(this.categoryDescription, FIELD_NAMES.CATEGORY_DESCRIPTION);
+    return this.getErrorMessage(
+      this.categoryDescription,
+      FIELD_NAMES.CATEGORY_DESCRIPTION
+    );
   }
 
   isModalVisible: boolean = false;

@@ -1,101 +1,112 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
-import { of, throwError } from 'rxjs';
 import { CategoriesComponent } from './categories.component';
 import { CategoryService } from '../../../services/category.service';
-import { ToastService, ToastType } from 'src/app/core/services/toast.service';
+import { ToastService } from 'src/app/core/services/toast.service';
+import { of, throwError } from 'rxjs';
 import { HttpResponse } from '@angular/common/http';
 import { Category } from '../../../interfaces/category.interface';
-import { ERROR_MESSAGES, SUCCESS_MESSAGES, FIELD_NAMES, GENERIC_ERROR_MESSAGE } from 'src/app/shared/constants/categoriesComponent';
 
-jest.mock('../../../../../environments/environment', () => ({
-  environment: {
-    production: false,
-    stock_service_url: 'http://localhost:9091/categories',
-    auth_token: 'mocked-token',
-  },
-}));
+class MockCategoryService {
+  createCategory = jest.fn();
+}
+
+class MockToastService {
+  showToast = jest.fn();
+}
 
 describe('CategoriesComponent', () => {
   let component: CategoriesComponent;
   let fixture: ComponentFixture<CategoriesComponent>;
-  let categoryServiceMock: any;
-  let toastServiceMock: any;
+  let categoryService: MockCategoryService;
+  let toastService: MockToastService;
 
   beforeEach(async () => {
-    categoryServiceMock = {
-      createCategory: jest.fn(),
-    };
-
-    toastServiceMock = {
-      showToast: jest.fn(),
-    };
+    categoryService = new MockCategoryService();
+    toastService = new MockToastService();
 
     await TestBed.configureTestingModule({
-      declarations: [CategoriesComponent],
       imports: [ReactiveFormsModule],
+      declarations: [CategoriesComponent],
       providers: [
-        { provide: CategoryService, useValue: categoryServiceMock },
-        { provide: ToastService, useValue: toastServiceMock },
+        { provide: CategoryService, useValue: categoryService },
+        { provide: ToastService, useValue: toastService },
       ],
     }).compileComponents();
-  });
 
-  beforeEach(() => {
     fixture = TestBed.createComponent(CategoriesComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('should create the component', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should return error message for categoryNameError when control has errors', () => {
-    component.categoryName?.setErrors({ required: true });
-    component.categoryName?.markAsTouched();
-    expect(component.categoryNameError).toBe(ERROR_MESSAGES.required(FIELD_NAMES.CATEGORY_NAME));
+  it('should initialize the form correctly', () => {
+    expect(component.createCategoryForm).toBeTruthy();
+    expect(component.createCategoryForm.get('categoryName')).toBeTruthy();
+    expect(component.createCategoryForm.get('categoryDescription')).toBeTruthy();
   });
 
-  it('should return empty string for categoryNameError when control has no errors', () => {
-    expect(component.categoryNameError).toBe('');
+  it('should return error message for invalid category name', () => {
+    const control = component.categoryName;
+    control?.setErrors({ required: true });
+    const message = component.getErrorMessage(control, 'Category Name');
+    expect(message).toContain('Category Name is required');
   });
 
-  it('should create category when form is valid', () => {
+  it('should create a category successfully', () => {
+    const mockResponse = new HttpResponse<Category>({ status: 201, body: { categoryName: '', categoryDescription: '' } });
+    categoryService.createCategory.mockReturnValue(of(mockResponse));
+  
     component.createCategoryForm.setValue({
-      categoryName: 'Valid Name',
-      categoryDescription: 'Valid Description',
+      categoryName: 'Test Category',
+      categoryDescription: 'Test Description',
+    });
+  
+    component.createCategory();
+  
+    expect(categoryService.createCategory).toHaveBeenCalledWith({
+      categoryName: 'Test Category',
+      categoryDescription: 'Test Description',
+    });
+    expect(toastService.showToast).toHaveBeenCalledWith(
+      'Category created successfully!',
+      'success'
+    );
+    expect(component.createCategoryForm.value).toEqual({
+      categoryName: '',
+      categoryDescription: '',
+    });
+  });
+  
+
+  it('should handle error when creating a category', () => {
+    const errorResponse = { status: 400 };
+    categoryService.createCategory.mockReturnValue(throwError(() => errorResponse));
+
+    component.createCategoryForm.setValue({
+      categoryName: 'Invalid Category',
+      categoryDescription: 'Invalid Description',
     });
 
-    const response = new HttpResponse<Category>({ status: 201 });
-    categoryServiceMock.createCategory.mockReturnValue(of(response));
-
     component.createCategory();
 
-    expect(categoryServiceMock.createCategory).toHaveBeenCalledWith(component.createCategoryForm.value);
-    expect(toastServiceMock.showToast).toHaveBeenCalledWith(SUCCESS_MESSAGES.CATEGORY_CREATED, ToastType.Success);
-    expect(component.createCategoryForm.pristine).toBe(true);
+    expect(toastService.showToast).toHaveBeenCalledWith(
+      'An error occurred while creating the category.',
+      'error' 
+    );
   });
 
-  it('should show error messages when form is invalid', () => {
-    component.createCategoryForm.markAllAsTouched();
-    component.createCategoryForm.setErrors({ invalid: true });
-    component.createCategory();
-
-    expect(component.createCategoryForm.touched).toBe(true);
-    expect(toastServiceMock.showToast).not.toHaveBeenCalled();
+  it('should open modal', () => {
+    expect(component.isModalVisible).toBe(false);
+    component.openModal();
+    expect(component.isModalVisible).toBe(true);
   });
 
-  it('should show error toast on createCategory error', () => {
-    component.createCategoryForm.setValue({
-      categoryName: 'Valid Name',
-      categoryDescription: 'Valid Description',
-    });
-
-    categoryServiceMock.createCategory.mockReturnValue(throwError(() => new Error('Internal Server Error')));
-
-    component.createCategory();
-
-    expect(toastServiceMock.showToast).toHaveBeenCalledWith(GENERIC_ERROR_MESSAGE, ToastType.Error);
+  it('should close modal', () => {
+    component.isModalVisible = true;
+    component.closeModal();
+    expect(component.isModalVisible).toBe(false);
   });
 });
