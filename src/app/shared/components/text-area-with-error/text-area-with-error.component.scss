@@ -1,0 +1,25 @@
+@use 'styles' as *;
+
+.text-area-container {
+  height: 4rem;
+}
+
+.text-area{
+   @include input-base-styles;
+    resize: none;
+
+    &--error {
+      border-color: red;
+    }
+
+    @include desktop{
+        font-size: 1.8rem;
+        line-height: 144%;
+        font-weight: 400;
+    }
+}
+
+.error-message {
+    color: red;
+    font-size: 1.3rem;
+  }

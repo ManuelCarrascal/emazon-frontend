@@ -1,0 +1,77 @@
+@use "styles" as *;
+
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.toast {
+  position: fixed;
+  top: 7rem;
+  right: 2rem;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 0 1rem rgba(0, 0, 0, 0.1);
+  max-width: 36rem;
+  width: 36rem;
+  max-height: 10rem;
+  height: 5.2rem;
+  display: flex;
+  align-items: center;
+  font-size: 1.6rem;
+  gap: 1rem;
+  animation: slideIn 0.5s ease-out;
+  background-color: $white;
+  z-index: 99999;
+
+  &__icon {
+    font-size: 2.5rem;
+  }
+
+  &__close {
+    margin-left: auto;
+  }
+
+  &__close-button {
+    outline: none;
+    border: none;
+    background-color: transparent;
+    font-size: 2.5rem;
+    cursor: pointer;
+    color: $border;
+  }
+
+  &.success {
+    color: $approval;
+    border-left: 0.6rem solid rgba($approval, 20);
+
+    &__icon {
+      color: $white;
+    }
+  }
+
+  &.error {
+    color: $error;
+    border-left: 0.6rem solid rgba($error, $alpha: 20);
+
+    &__icon {
+      color: $white;
+    }
+  }
+
+  &.warning {
+    background-color: $attention;
+    color: $white;
+    border-left: 0.6rem solid rgba($attention, $alpha: 20);
+
+    &__icon {
+      color: $white;
+    }
+  }
+}
