@@ -6,7 +6,7 @@ import {
   OnInit,
   Output,
 } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { AbstractControl, ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 @Component({
   selector: 'app-input-with-error',
@@ -24,9 +24,15 @@ export class InputWithErrorComponent implements ControlValueAccessor {
   @Input() value: string = '';
   @Input() disabled: boolean = false;
   @Input() errorMessage: string = '';
+  @Input() control: AbstractControl | null = null;
 
   onChange: any = () => {};
   onTouched: any = () => {};
+
+  get hasError(): boolean {
+    return this.control?.touched && this.control?.invalid || false;
+  }
+
 
   writeValue(value: string): void {
     this.value = value;

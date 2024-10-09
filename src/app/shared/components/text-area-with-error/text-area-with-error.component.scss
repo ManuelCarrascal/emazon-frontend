@@ -8,6 +8,10 @@
    @include input-base-styles;
     resize: none;
 
+    &--error {
+      border-color: red;
+    }
+
     @include desktop{
         font-size: 1.8rem;
         line-height: 144%;

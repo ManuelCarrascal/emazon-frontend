@@ -3,6 +3,7 @@
       [value]="value"
       (input)="onInput($event)"
       [disabled]="disabled"
+      [ngClass]="{'text-area--error': hasError}"
       class="poppins-regular text-area"
       maxlength="90"
       placeholder="Category Description"

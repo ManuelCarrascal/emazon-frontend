@@ -1,5 +1,5 @@
 import { Component, forwardRef, Input, OnInit } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { AbstractControl, ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 @Component({
   selector: 'app-text-area-with-error',
@@ -17,6 +17,7 @@ export class TextAreaWithErrorComponent implements ControlValueAccessor {
   @Input() value: string = '';
   @Input() disabled: boolean = false;
   @Input() errorMessage: string = '';
+  @Input() control: AbstractControl | null = null;
 
   onChange: any = () => {};
   onTouched: any = () => {};
@@ -42,5 +43,9 @@ export class TextAreaWithErrorComponent implements ControlValueAccessor {
     this.value = inputElement.value;
     this.onChange(this.value);
     this.onTouched();
+  }
+
+  get hasError(): boolean {
+    return this.control?.touched && this.control?.invalid || false;
   }
 }

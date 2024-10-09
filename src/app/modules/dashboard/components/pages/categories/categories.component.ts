@@ -128,6 +128,12 @@ export class CategoriesComponent implements OnInit {
 
   closeModal() {
     this.isModalVisible = false;
+    this.createCategoryForm.reset({
+      categoryName: '',
+      categoryDescription: '',
+    });
+    this.createCategoryForm.markAsPristine();
+    this.createCategoryForm.markAsUntouched();
   }
 
   confirmDelete() {

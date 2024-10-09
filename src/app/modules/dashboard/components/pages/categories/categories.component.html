@@ -15,11 +15,14 @@
           <app-input-with-error
             formControlName="categoryName"
             [errorMessage]="categoryNameError"
+            [control]="categoryName"
+
           ></app-input-with-error>
 
           <app-text-area-with-error
             formControlName="categoryDescription"
             [errorMessage]="categoryDescriptionError"
+            [control]="categoryDescription"
           ></app-text-area-with-error>
         </div>
 

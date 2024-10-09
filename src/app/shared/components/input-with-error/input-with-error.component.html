@@ -6,6 +6,7 @@
     class="input poppins-regular"
     type="text"
     placeholder="Category Name"
+    [ngClass]="{'input--error': hasError}"
   />
   <div class="error-message poppins-regular" *ngIf="errorMessage">
     {{ errorMessage }}
