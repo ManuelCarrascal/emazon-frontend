@@ -15,11 +15,9 @@ import {
   SUCCESS_MESSAGES,
   REGEX_PATTERNS,
   FIELD_NAMES,
-  GENERIC_ERROR_MESSAGE,
 } from 'src/app/shared/constants/categoriesComponent';
 
 const MIN_LENGTH = 3;
-
 
 @Component({
   selector: 'app-categories',
@@ -28,6 +26,13 @@ const MIN_LENGTH = 3;
 })
 export class CategoriesComponent implements OnInit {
   public createCategoryForm: FormGroup;
+  public categories: Category[] = [];
+  public totalElements: number = 0;
+  public totalPages: number = 0;
+  public currentPage: number = 0;
+  public isAscending: boolean = true;
+  public sortBy: string = 'categoryName';
+  public pageSize: number = 5;
 
   constructor(
     private readonly formBuilder: FormBuilder,
@@ -55,7 +60,22 @@ export class CategoriesComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // Initialize form
+    this.loadCategories();
+  }
+
+  loadCategories(page: number = 0, size: number = 5, sortBy: string = 'categoryName', isAscending: boolean = true): void {
+    this.categoryService.getCategories(page, size, sortBy, isAscending).subscribe({
+      next: (data) => {
+        this.categories = data.content;
+        this.totalElements = data.totalElements;
+        this.totalPages = data.totalPages;
+        this.currentPage = data.currentPage;
+      },
+      error: (error) => {
+        const message = ERROR_MESSAGES_BY_CODE[error.status as keyof typeof ERROR_MESSAGES_BY_CODE];
+        this.toastService.showToast(message, ToastType.Error);
+      },
+    });
   }
 
   get categoryName() {
@@ -97,13 +117,14 @@ export class CategoriesComponent implements OnInit {
               categoryName: '',
               categoryDescription: '',
             });
+            this.loadCategories(); 
           }
         },
         error: (error) => {
           const message =
             ERROR_MESSAGES_BY_CODE[
               error.status as keyof typeof ERROR_MESSAGES_BY_CODE
-            ] || GENERIC_ERROR_MESSAGE;
+            ] ;
           this.toastService.showToast(message, ToastType.Error);
         },
       });
@@ -138,5 +159,18 @@ export class CategoriesComponent implements OnInit {
 
   confirmDelete() {
     this.closeModal();
+  }
+
+  changePage(page: number): void {
+    if (page >= 0 && page < this.totalPages) {
+      this.currentPage = page;
+      this.loadCategories(this.currentPage, this.pageSize, this.sortBy, this.isAscending);
+    }
+  }
+
+  changeSortOrder(sortBy: string): void {
+    this.sortBy = sortBy;
+    this.isAscending = !this.isAscending;
+    this.loadCategories(this.currentPage, this.pageSize, this.sortBy, this.isAscending);
   }
 }

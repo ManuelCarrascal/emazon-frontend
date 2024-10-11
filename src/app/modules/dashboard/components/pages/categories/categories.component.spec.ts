@@ -1,18 +1,32 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
+import { of, throwError } from 'rxjs';
 import { CategoriesComponent } from './categories.component';
 import { CategoryService } from '../../../services/category.service';
-import { ToastService } from 'src/app/core/services/toast.service';
-import { of, throwError } from 'rxjs';
-import { HttpResponse } from '@angular/common/http';
+import { ToastService, ToastType } from 'src/app/core/services/toast.service';
+import { HttpResponse, HttpStatusCode } from '@angular/common/http';
 import { Category } from '../../../interfaces/category.interface';
+import {
+  ERROR_MESSAGES,
+  ERROR_MESSAGES_BY_CODE,
+  SUCCESS_MESSAGES,
+  REGEX_PATTERNS,
+  FIELD_NAMES,
+} from 'src/app/shared/constants/categoriesComponent';
 
 class MockCategoryService {
-  createCategory = jest.fn();
+  getCategories() {
+    return of([]);
+  }
+  createCategory(category: Category) {
+    return of(new HttpResponse({ status: HttpStatusCode.Created, body: category }));
+  }
 }
 
 class MockToastService {
-  showToast = jest.fn();
+  showToast(message: string, type: ToastType) {
+    console.log(`Toast message: ${message}, Type: ${type}`);
+  }
 }
 
 describe('CategoriesComponent', () => {
@@ -42,71 +56,104 @@ describe('CategoriesComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize the form correctly', () => {
-    expect(component.createCategoryForm).toBeTruthy();
-    expect(component.createCategoryForm.get('categoryName')).toBeTruthy();
-    expect(component.createCategoryForm.get('categoryDescription')).toBeTruthy();
+  it('should load categories on init', () => {
+    const spy = spyOn(categoryService, 'getCategories').and.returnValue(of([{ id: 1, name: 'Test Category' }]));
+    component.ngOnInit();
+    expect(spy).toHaveBeenCalled();
+    expect(component.categories.length).toBe(1);
   });
 
-  it('should return error message for invalid category name', () => {
-    const control = component.categoryName;
-    control?.setErrors({ required: true });
-    const message = component.getErrorMessage(control, 'Category Name');
-    expect(message).toContain('Category Name is required');
+  it('should show error message when loading categories fails', () => {
+    const spy = spyOn(categoryService, 'getCategories').and.returnValue(throwError(() => ({ status: 500 })));
+    const toastSpy = spyOn(toastService, 'showToast');
+    component.ngOnInit();
+    expect(spy).toHaveBeenCalled();
+    expect(toastSpy).toHaveBeenCalledWith(ERROR_MESSAGES_BY_CODE[500], ToastType.Error);
   });
 
-  it('should create a category successfully', () => {
-    const mockResponse = new HttpResponse<Category>({ status: 201, body: { categoryName: '', categoryDescription: '' } });
-    categoryService.createCategory.mockReturnValue(of(mockResponse));
-  
-    component.createCategoryForm.setValue({
-      categoryName: 'Test Category',
-      categoryDescription: 'Test Description',
-    });
-  
+  it('should mark form as touched if invalid on createCategory', () => {
+    component.createCategoryForm.controls['categoryName'].setValue('');
     component.createCategory();
-  
-    expect(categoryService.createCategory).toHaveBeenCalledWith({
-      categoryName: 'Test Category',
-      categoryDescription: 'Test Description',
-    });
-    expect(toastService.showToast).toHaveBeenCalledWith(
-      'Category created successfully!',
-      'success'
-    );
-    expect(component.createCategoryForm.value).toEqual({
-      categoryName: '',
-      categoryDescription: '',
-    });
+    expect(component.createCategoryForm.touched).toBeTruthy();
   });
-  
 
-  it('should handle error when creating a category', () => {
-    const errorResponse = { status: 400 };
-    categoryService.createCategory.mockReturnValue(throwError(() => errorResponse));
-
-    component.createCategoryForm.setValue({
-      categoryName: 'Invalid Category',
-      categoryDescription: 'Invalid Description',
-    });
-
+  it('should create category successfully', () => {
+    const spy = spyOn(categoryService, 'createCategory').and.returnValue(of(new HttpResponse({ status: HttpStatusCode.Created })));
+    const toastSpy = spyOn(toastService, 'showToast');
+    component.createCategoryForm.controls['categoryName'].setValue('Valid Name');
+    component.createCategoryForm.controls['categoryDescription'].setValue('Valid Description');
     component.createCategory();
+    expect(spy).toHaveBeenCalled();
+    expect(toastSpy).toHaveBeenCalledWith(SUCCESS_MESSAGES.CATEGORY_CREATED, ToastType.Success);
+    expect(component.createCategoryForm.pristine).toBeTruthy();
+    expect(component.createCategoryForm.untouched).toBeTruthy();
+  });
 
-    expect(toastService.showToast).toHaveBeenCalledWith(
-      'An error occurred while creating the category.',
-      'error' 
-    );
+  it('should show error message when creating category fails', () => {
+    const spy = spyOn(categoryService, 'createCategory').and.returnValue(throwError(() => ({ status: 500 })));
+    const toastSpy = spyOn(toastService, 'showToast');
+    component.createCategoryForm.controls['categoryName'].setValue('Valid Name');
+    component.createCategoryForm.controls['categoryDescription'].setValue('Valid Description');
+    component.createCategory();
+    expect(spy).toHaveBeenCalled();
+    expect(toastSpy).toHaveBeenCalledWith(ERROR_MESSAGES_BY_CODE[500], ToastType.Error);
+  });
+
+  it('should reset form and reload categories after creating category', () => {
+    const spy = spyOn(categoryService, 'createCategory').and.returnValue(of(new HttpResponse({ status: HttpStatusCode.Created })));
+    const loadCategoriesSpy = spyOn(component, 'loadCategories');
+    component.createCategoryForm.controls['categoryName'].setValue('Valid Name');
+    component.createCategoryForm.controls['categoryDescription'].setValue('Valid Description');
+    component.createCategory();
+    expect(spy).toHaveBeenCalled();
+    expect(loadCategoriesSpy).toHaveBeenCalled();
+    expect(component.createCategoryForm.pristine).toBeTruthy();
+    expect(component.createCategoryForm.untouched).toBeTruthy();
+  });
+
+  it('should return correct error message for required field', () => {
+    const control = component.createCategoryForm.controls['categoryName'];
+    control.setErrors({ required: true });
+    const errorMessage = component.getErrorMessage(control, FIELD_NAMES.CATEGORY_NAME);
+    expect(errorMessage).toBe(ERROR_MESSAGES.required(FIELD_NAMES.CATEGORY_NAME));
+  });
+
+  it('should return correct error message for pattern mismatch', () => {
+    const control = component.createCategoryForm.controls['categoryName'];
+    control.setErrors({ pattern: { requiredPattern: REGEX_PATTERNS.FORBIDDEN_CHARACTERS } });
+    const errorMessage = component.getErrorMessage(control, FIELD_NAMES.CATEGORY_NAME);
+    expect(errorMessage).toBe(ERROR_MESSAGES.pattern());
+  });
+
+  it('should return correct categoryNameError', () => {
+    const control = component.createCategoryForm.controls['categoryName'];
+    control.setErrors({ required: true });
+    const errorMessage = component.categoryNameError;
+    expect(errorMessage).toBe(ERROR_MESSAGES.required(FIELD_NAMES.CATEGORY_NAME));
+  });
+
+  it('should return correct categoryDescriptionError', () => {
+    const control = component.createCategoryForm.controls['categoryDescription'];
+    control.setErrors({ required: true });
+    const errorMessage = component.categoryDescriptionError;
+    expect(errorMessage).toBe(ERROR_MESSAGES.required(FIELD_NAMES.CATEGORY_DESCRIPTION));
   });
 
   it('should open modal', () => {
-    expect(component.isModalVisible).toBe(false);
     component.openModal();
-    expect(component.isModalVisible).toBe(true);
+    expect(component.isModalVisible).toBeTruthy();
   });
 
-  it('should close modal', () => {
-    component.isModalVisible = true;
+  it('should close modal and reset form', () => {
     component.closeModal();
-    expect(component.isModalVisible).toBe(false);
+    expect(component.isModalVisible).toBeFalsy();
+    expect(component.createCategoryForm.pristine).toBeTruthy();
+    expect(component.createCategoryForm.untouched).toBeTruthy();
+  });
+
+  it('should close modal on confirmDelete', () => {
+    component.isModalVisible = true;
+    component.confirmDelete();
+    expect(component.isModalVisible).toBeFalsy();
   });
 });

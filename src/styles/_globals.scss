@@ -14,6 +14,12 @@ body{
   height: 100%;
 }
 
+.center-y{
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
 .poppins-thin {
   font-family: "Poppins", sans-serif;
   font-weight: 100;

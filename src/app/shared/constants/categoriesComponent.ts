@@ -32,7 +32,6 @@ export const ERROR_MESSAGES = {
     CATEGORY_DESCRIPTION: 'CategoryDescription',
   } as const;
   
-  export const GENERIC_ERROR_MESSAGE = 'Error creating category';
   
   type ErrorMessageKeys = keyof typeof ERROR_MESSAGES;
   type SuccessMessageKeys = keyof typeof SUCCESS_MESSAGES;

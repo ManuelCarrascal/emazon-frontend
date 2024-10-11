@@ -1,39 +1,72 @@
 <div class="container">
-  <h1 class="principal-title poppins-regular">
-    Create a new <span class="principal-title__highlight">Category!</span>
-  </h1>
-  <app-button (click)="openModal()">Add Category</app-button>
+  <div class="container-header-button">
+    <app-button (click)="openModal()">Add Category</app-button>
+  </div>
+  <app-modal [isVisible]="isModalVisible" (close)="closeModal()">
+    <h2 class="poppins-regular modal-title">Create Category</h2>
+    <form
+      [formGroup]="createCategoryForm"
+      (ngSubmit)="createCategory()"
+      class="form"
+    >
+      <div class="container-inputs">
+        <app-input-with-error
+          formControlName="categoryName"
+          [errorMessage]="categoryNameError"
+          [control]="categoryName"
+        ></app-input-with-error>
 
-    <app-modal [isVisible]="isModalVisible" (close)="closeModal()">
-      <h2 class="poppins-regular modal-title">Create Category</h2>
-      <form
-        [formGroup]="createCategoryForm"
-        (ngSubmit)="createCategory()"
-        class="form"
-      >
-        <div class="container-inputs">
-          <app-input-with-error
-            formControlName="categoryName"
-            [errorMessage]="categoryNameError"
-            [control]="categoryName"
+        <app-text-area-with-error
+          formControlName="categoryDescription"
+          [errorMessage]="categoryDescriptionError"
+          [control]="categoryDescription"
+        ></app-text-area-with-error>
+      </div>
 
-          ></app-input-with-error>
+      <div class="center">
+        <app-button>Create Category</app-button>
+      </div>
+    </form>
+  </app-modal>
 
-          <app-text-area-with-error
-            formControlName="categoryDescription"
-            [errorMessage]="categoryDescriptionError"
-            [control]="categoryDescription"
-          ></app-text-area-with-error>
-        </div>
+  <table class="table">
+    <thead>
+      <tr class="table__header">
+        <th class="table__cell center-y" (click)="changeSortOrder('categoryName')">
+          Category Name
+          <lucide-icon
+          [name]="isAscending ? 'arrow-down-a-z' : 'arrow-up-a-z'"
+          size="16"
+        ></lucide-icon>
+        </th>
+        <th class="table__cell">Category Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="table__row" *ngFor="let category of categories">
+        <td class="table__cell">{{ category.categoryName }}</td>
+        <td class="table__cell">{{ category.categoryDescription }}</td>
+      </tr>
+    </tbody>
+  </table>
 
-        <div class="center">
-          <app-button>Create Category</app-button>
-        </div>
-      </form>
-    </app-modal>
-  
-
-  <div>
-
+  <div class="pagination">
+    <button
+      class="pagination__button"
+      (click)="changePage(currentPage - 1)"
+      [disabled]="currentPage === 0"
+    >
+      Previous
+    </button>
+    <span class="pagination__info"
+      >Page {{ currentPage + 1 }} of {{ totalPages }}</span
+    >
+    <button
+      class="pagination__button"
+      (click)="changePage(currentPage + 1)"
+      [disabled]="currentPage + 1 === totalPages"
+    >
+      Next
+    </button>
   </div>
 </div>
