@@ -15,6 +15,7 @@ export interface Toast {
 @Injectable({
   providedIn: 'root',
 })
+
 export class ToastService {
   private readonly toastSubject = new Subject<Toast>();
   toastState = this.toastSubject.asObservable();

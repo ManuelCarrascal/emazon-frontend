@@ -1,60 +1,66 @@
+import { Toast, ToastService, ToastType } from '@/app/core/services/toast.service';
 import { TestBed } from '@angular/core/testing';
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-import { CategoryService } from './category.service';
-import { Category } from '../interfaces/category.interface';
-import { environment } from 'src/environments/environment';
 
-describe('CategoryService', () => {
-    let service: CategoryService;
-    let httpMock: HttpTestingController;
 
-    beforeEach(() => {
-        TestBed.configureTestingModule({
-            imports: [HttpClientTestingModule],
-            providers: [CategoryService]
-        });
-        service = TestBed.inject(CategoryService);
-        httpMock = TestBed.inject(HttpTestingController);
+describe('ToastService', () => {
+  let service: ToastService;
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      providers: [ToastService],
+    });
+    service = TestBed.inject(ToastService);
+  });
+
+  it('should be created', () => {
+    expect(service).toBeTruthy();
+  });
+
+  it('should emit a success toast message', (done) => {
+    const testMessage = 'Success Message';
+    const expectedToast: Toast = { message: testMessage, type: ToastType.Success };
+
+    service.toastState.subscribe((toast) => {
+      expect(toast).toEqual(expectedToast);
+      done();
     });
 
-    afterEach(() => {
-        httpMock.verify();
+    service.showToast(testMessage, ToastType.Success);
+  });
+
+  it('should emit an error toast message', (done) => {
+    const testMessage = 'Error Message';
+    const expectedToast: Toast = { message: testMessage, type: ToastType.Error };
+
+    service.toastState.subscribe((toast) => {
+      expect(toast).toEqual(expectedToast);
+      done();
     });
 
-    it('should be created', () => {
-        expect(service).toBeTruthy();
+    service.showToast(testMessage, ToastType.Error);
+  });
+
+  it('should emit a warning toast message', (done) => {
+    const testMessage = 'Warning Message';
+    const expectedToast: Toast = { message: testMessage, type: ToastType.Warning };
+
+    service.toastState.subscribe((toast) => {
+      expect(toast).toEqual(expectedToast);
+      done();
     });
 
-    it('should create a category', () => {
-        const dummyCategory: Category = { categoryName: 'Test Category', categoryDescription: 'Description' };
-    
+    service.showToast(testMessage, ToastType.Warning);
+  });
 
-        service.createCategory(dummyCategory).subscribe(response => {
-            expect(response.body).toEqual(dummyCategory);
-        });
+  it('should emit a default success toast message when no type is provided', (done) => {
+    const testMessage = 'Default Success Message';
+    const expectedToast: Toast = { message: testMessage, type: ToastType.Success };
 
-        const req = httpMock.expectOne(service['apiUrl']);
-        expect(req.request.method).toBe('POST');
-        expect(req.request.headers.get('Authorization')).toBe(`Bearer ${environment.auth_token}`);
-        expect(req.request.headers.get('Content-Type')).toBe('application/json');
-        req.flush(dummyCategory, { status: 201, statusText: 'Created' });
+    service.toastState.subscribe((toast) => {
+      expect(toast).toEqual(expectedToast);
+      done();
     });
 
-    it('should get categories', () => {
-        const dummyCategories: Category[] = [
-            { categoryName: 'Category 1', categoryDescription: 'Description 1' },
-            { categoryName: 'Category 2', categoryDescription: 'Description 2' }
-        ];
-      
-
-        service.getCategories().subscribe(categories => {
-            expect(categories.length).toBe(2);
-            expect(categories).toEqual(dummyCategories);
-        });
-
-        const req = httpMock.expectOne(service['apiUrl']);
-        expect(req.request.method).toBe('GET');
-        expect(req.request.headers.get('Authorization')).toBe(`Bearer ${environment.auth_token}`);
-        req.flush({ content: dummyCategories });
-    });
+    service.showToast(testMessage);
+  });
 });

@@ -1,132 +1,158 @@
-@use 'styles' as *;
+@use "styles" as *;
 
-.container{
-    padding: 0 1.5rem;
-    margin: 1.6rem 0;
+.container {
+  padding: 0 1.5rem;
+  margin: 1.6rem 0;
 }
 
-.container-inputs{
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
+.container-inputs {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 
-    @include desktop{
-        gap: 3rem;
-    }
+  @include desktop {
+    gap: 3rem;
+  }
 }
 
-.form{
-    display: flex;
-    flex-direction: column;
-    gap: 3.5rem;
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 3.5rem;
 
-    @include desktop{
-        gap: 6.5rem;
-    }
+  @include desktop {
+    gap: 6.5rem;
+  }
 }
 
-.principal-title{
-    font-size: 2.9rem;
-    font-weight: 600;
-    line-height: 1.24;
-    margin-bottom: 2rem;
+.principal-title {
+  font-size: 2.9rem;
+  font-weight: 600;
+  line-height: 1.24;
+  margin-bottom: 2rem;
 
-    &__highlight {
-        color: $purple; 
-        font-weight: bold; 
-    }
+  &__highlight {
+    color: $purple;
+    font-weight: bold;
+  }
 
-    @include desktop{
-        font-size: 4.4rem;
-        font-weight: 500;
-        line-height: 1;
-    }
+  @include desktop {
+    font-size: 4.4rem;
+    font-weight: 500;
+    line-height: 1;
+  }
 }
 
-.modal-title{
-    margin-bottom: 2rem;
+.modal-title {
+  margin-bottom: 2rem;
 }
 
-.center{
-    display: flex;
-    justify-content: center;
+.center {
+  display: flex;
+  justify-content: center;
 }
 
-.container-header-button{
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    margin-right: 1rem;
-    @include desktop{
-        margin-right: 3.9rem;
-    }
+.container-header-button {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin-right: 1rem;
+  @include desktop {
+    margin-right: 3.9rem;
+  }
 }
 
 //Table styles
 .table {
-    width: 95%;
-    border-collapse: collapse;
-    margin: 0 auto;
-    margin-top: 20px;
+  width: 95%;
+  border-collapse: collapse;
+  margin: 0 auto;
+  margin-top: 20px;
 
-    &__header {
-      background-color: $white;
-      color: $black;
-      text-align: left;
-      font-weight: bold;
-      border-top: 0.2rem solid $spacer_light;
-      border-bottom: 0.2rem solid $spacer_light;
-      cursor: pointer;
-      font-size: 1.4rem;
+  &__header {
+    background-color: $white;
+    color: $black;
+    text-align: left;
+    font-weight: bold;
+    border-top: 0.2rem solid $spacer_light;
+    border-bottom: 0.2rem solid $spacer_light;
+    cursor: pointer;
+    font-size: 1.4rem;
+  }
 
+  &__cell {
+    padding: 12px 15px;
+    width: auto;
+    min-width: 30rem;
+  }
+
+  &__row {
+    border-bottom: 1px solid #dddddd;
+    font-size: 1.4rem;
+
+    &:nth-of-type(even) {
+      background-color: #f3f3f3;
     }
-  
-    &__cell {
-      padding: 12px 15px;
+
+    &:last-of-type {
+      border-bottom: 2px solid $purple;
     }
-  
-    &__row {
-      border-bottom: 1px solid #dddddd;
-      font-size: 1.4rem;
-  
-      &:nth-of-type(even) {
-        background-color: #f3f3f3;
-      }
-  
-      &:last-of-type {
-        border-bottom: 2px solid $purple;
-      }
-  
-      &:hover {
-        background-color: #f1f1f1;
-      }
+
+    &:hover {
+      background-color: #f1f1f1;
     }
   }
-  
-  .pagination {
+}
+
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin: 20px 0;
+
+  &__page {
+    background: none;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+  }
+
+  &__button {
+    color: $purple;
     display: flex;
-    justify-content: center;
     align-items: center;
-    margin: 20px 0;
-  
-    &__button {
-      background-color: $purple;
-      color: white;
-      border: none;
-      padding: 10px 20px;
-      margin: 0 5px;
-      cursor: pointer;
-      border-radius: 5px;
-      font-size: 16px;
-  
-      &:disabled {
-        background-color: #cccccc;
-        cursor: not-allowed;
-      }
-    }
-  
-    &__info {
-      font-size: 18px;
-      margin: 0 10px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    
+    &:disabled {
+      display: none;
+      cursor: not-allowed;
     }
   }
+
+  &__info {
+    font-size: 18px;
+    margin: 0 10px;
+  }
+}
+
+.pagination__page {
+  padding: 5px 10px;
+  color: black;
+}
+
+.pagination__page.active {
+  font-weight: bold;
+  color: $purple;
+}
+
+.pagination__page:hover {
+  text-decoration: underline;
+}
+
+span {
+  font-size: 16px;
+  color: $black;
+}

@@ -1,21 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ToastComponent } from './toast.component';
-import { ToastService, ToastType } from 'src/app/core/services/toast.service';
+import { ToastService, Toast, ToastType } from 'src/app/core/services/toast.service';
 import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
 import { of } from 'rxjs';
-
-jest.mock('../../../core/services/toast.service', () => ({
-  ToastService: jest.fn().mockImplementation(() => ({
-    showToast: jest.fn(),
-    toastState: of({ message: 'Test Message', type: ToastType.Success }),
-  })),
-  ToastType: {
-    Success: 'success',
-    Error: 'error',
-    Warning: 'warning',
-  },
-}));
 
 describe('ToastComponent', () => {
   let component: ToastComponent;
@@ -24,7 +12,9 @@ describe('ToastComponent', () => {
   let debugElement: DebugElement;
 
   beforeEach(async () => {
-    toastServiceMock = new ToastService();
+    toastServiceMock = {
+      toastState: of({ message: 'Test Message', type: ToastType.Success }),
+    };
 
     await TestBed.configureTestingModule({
       declarations: [ToastComponent],
@@ -46,5 +36,44 @@ describe('ToastComponent', () => {
   it('should display a toast message when state changes', () => {
     const toastElement = debugElement.query(By.css('.toast-message'));
     expect(toastElement.nativeElement.textContent).toContain('Test Message');
+  });
+
+  it('should hide toast message after duration', () => {
+    jest.useFakeTimers();
+    component.ngOnInit();
+    expect(component.isVisible).toBe(true);
+
+    jest.advanceTimersByTime(4000);
+    fixture.detectChanges(); 
+    expect(component.isVisible).toBe(false);
+  });
+
+  it('should display different types of toast messages', () => {
+    const successToast: Toast = { message: 'Success Message', type: ToastType.Success };
+    const errorToast: Toast = { message: 'Error Message', type: ToastType.Error };
+
+    toastServiceMock.toastState = of(successToast);
+    component.ngOnInit();
+    fixture.detectChanges();
+    expect(component.message).toBe('Success Message');
+    expect(component.type).toBe(ToastType.Success);
+
+    toastServiceMock.toastState = of(errorToast);
+    component.ngOnInit();
+    fixture.detectChanges();
+    expect(component.message).toBe('Error Message');
+    expect(component.type).toBe(ToastType.Error);
+  });
+
+  it('should handle subscription to toast state', () => {
+    const toast: Toast = { message: 'Subscription Test', type: ToastType.Success };
+    toastServiceMock.toastState = of(toast);
+
+    component.ngOnInit();
+    fixture.detectChanges();
+
+    expect(component.message).toBe('Subscription Test');
+    expect(component.type).toBe(ToastType.Success);
+    expect(component.isVisible).toBe(true);
   });
 });

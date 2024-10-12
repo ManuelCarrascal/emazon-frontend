@@ -1,7 +1,10 @@
 <div class="container">
   <div class="container-header-button">
-    <app-button (click)="openModal()">Add Category</app-button>
+    <app-button (click)="openModal()" (keydown)="onKeyDownButton($event)"
+      >Add Category</app-button
+    >
   </div>
+
   <app-modal [isVisible]="isModalVisible" (close)="closeModal()">
     <h2 class="poppins-regular modal-title">Create Category</h2>
     <form
@@ -32,12 +35,18 @@
   <table class="table">
     <thead>
       <tr class="table__header">
-        <th class="table__cell center-y" (click)="changeSortOrder('categoryName')">
+        <th
+          class="table__cell center-y"
+          (click)="changeSortOrder('categoryName')"
+          (keydown)="onKeyDown($event, 'categoryName')"
+          tabindex="0"
+          aria-label="Sort by Category Name"
+        >
           Category Name
           <lucide-icon
-          [name]="isAscending ? 'arrow-down-a-z' : 'arrow-up-a-z'"
-          size="16"
-        ></lucide-icon>
+            [name]="isAscending ? 'arrow-down-a-z' : 'arrow-up-a-z'"
+            size="16"
+          ></lucide-icon>
         </th>
         <th class="table__cell">Category Description</th>
       </tr>
@@ -56,17 +65,35 @@
       (click)="changePage(currentPage - 1)"
       [disabled]="currentPage === 0"
     >
-      Previous
+      <lucide-icon name="MoveLeft" size="14"></lucide-icon>
     </button>
-    <span class="pagination__info"
-      >Page {{ currentPage + 1 }} of {{ totalPages }}</span
+
+    <ng-container *ngFor="let page of getPagesToShow(); let i = index">
+      <button
+        class="pagination__page"
+        [class.active]="currentPage === page"
+        (click)="changePage(page)"
+      >
+        {{ page + 1 }}
+      </button>
+    </ng-container>
+
+    <span *ngIf="shouldShowEllipsis()">...</span>
+
+    <button
+      *ngIf="shouldShowLastPage()"
+      class="pagination__page"
+      (click)="changePage(totalPages - 1)"
     >
+      {{ totalPages }}
+    </button>
+
     <button
       class="pagination__button"
       (click)="changePage(currentPage + 1)"
       [disabled]="currentPage + 1 === totalPages"
     >
-      Next
+      <lucide-icon name="MoveRight" size="14"></lucide-icon>
     </button>
   </div>
 </div>

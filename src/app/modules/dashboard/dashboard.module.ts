@@ -13,7 +13,13 @@ import { DividerComponent } from './components/atoms/divider/divider.component';
 import { CategoriesComponent } from './components/pages/categories/categories.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SharedModule } from 'src/app/shared/shared.module';
-import { LucideAngularModule, ArrowDownAZ, ArrowUpAZ} from 'lucide-angular';
+import {
+  LucideAngularModule,
+  ArrowDownAZ,
+  ArrowUpAZ,
+  MoveRight,
+  MoveLeft,
+} from 'lucide-angular';
 
 @NgModule({
   declarations: [
@@ -33,7 +39,7 @@ import { LucideAngularModule, ArrowDownAZ, ArrowUpAZ} from 'lucide-angular';
     FormsModule,
     SharedModule,
     ReactiveFormsModule,
-    LucideAngularModule.pick({ ArrowDownAZ,ArrowUpAZ})
+    LucideAngularModule.pick({ ArrowDownAZ, ArrowUpAZ, MoveRight, MoveLeft }),
   ],
 })
 export class DashboardModule {}

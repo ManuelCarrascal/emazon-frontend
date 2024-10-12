@@ -18,6 +18,13 @@ import {
 } from 'src/app/shared/constants/categoriesComponent';
 
 const MIN_LENGTH = 3;
+const DEFAULT_PAGE = 0;
+const DEFAULT_PAGE_SIZE = 2;
+const DEFAULT_SORT_BY = 'categoryName';
+const VISIBLE_PAGES = 5;
+const HALF_VISIBLE_PAGES = Math.floor(VISIBLE_PAGES / 2);
+const ELLIPSIS_THRESHOLD = 2;
+const LAST_PAGE_THRESHOLD = 3;
 
 @Component({
   selector: 'app-categories',
@@ -29,10 +36,10 @@ export class CategoriesComponent implements OnInit {
   public categories: Category[] = [];
   public totalElements: number = 0;
   public totalPages: number = 0;
-  public currentPage: number = 0;
+  public currentPage: number = DEFAULT_PAGE;
   public isAscending: boolean = true;
-  public sortBy: string = 'categoryName';
-  public pageSize: number = 5;
+  public sortBy: string = DEFAULT_SORT_BY;
+  public pageSize: number = DEFAULT_PAGE_SIZE;
 
   constructor(
     private readonly formBuilder: FormBuilder,
@@ -63,19 +70,29 @@ export class CategoriesComponent implements OnInit {
     this.loadCategories();
   }
 
-  loadCategories(page: number = 0, size: number = 5, sortBy: string = 'categoryName', isAscending: boolean = true): void {
-    this.categoryService.getCategories(page, size, sortBy, isAscending).subscribe({
-      next: (data) => {
-        this.categories = data.content;
-        this.totalElements = data.totalElements;
-        this.totalPages = data.totalPages;
-        this.currentPage = data.currentPage;
-      },
-      error: (error) => {
-        const message = ERROR_MESSAGES_BY_CODE[error.status as keyof typeof ERROR_MESSAGES_BY_CODE];
-        this.toastService.showToast(message, ToastType.Error);
-      },
-    });
+  loadCategories(
+    page: number = DEFAULT_PAGE,
+    size: number = DEFAULT_PAGE_SIZE,
+    sortBy: string = DEFAULT_SORT_BY,
+    isAscending: boolean = true
+  ): void {
+    this.categoryService
+      .getCategories(page, size, sortBy, isAscending)
+      .subscribe({
+        next: (data) => {
+          this.categories = data.content;
+          this.totalElements = data.totalElements;
+          this.totalPages = data.totalPages;
+          this.currentPage = data.currentPage;
+        },
+        error: (error) => {
+          const message =
+            ERROR_MESSAGES_BY_CODE[
+              error.status as keyof typeof ERROR_MESSAGES_BY_CODE
+            ];
+          this.toastService.showToast(message, ToastType.Error);
+        },
+      });
   }
 
   get categoryName() {
@@ -117,14 +134,14 @@ export class CategoriesComponent implements OnInit {
               categoryName: '',
               categoryDescription: '',
             });
-            this.loadCategories(); 
+            this.loadCategories();
           }
         },
         error: (error) => {
           const message =
             ERROR_MESSAGES_BY_CODE[
               error.status as keyof typeof ERROR_MESSAGES_BY_CODE
-            ] ;
+            ];
           this.toastService.showToast(message, ToastType.Error);
         },
       });
@@ -162,15 +179,67 @@ export class CategoriesComponent implements OnInit {
   }
 
   changePage(page: number): void {
-    if (page >= 0 && page < this.totalPages) {
+    if (page >= DEFAULT_PAGE && page < this.totalPages) {
       this.currentPage = page;
-      this.loadCategories(this.currentPage, this.pageSize, this.sortBy, this.isAscending);
+      this.loadCategories(
+        this.currentPage,
+        this.pageSize,
+        this.sortBy,
+        this.isAscending
+      );
     }
   }
 
   changeSortOrder(sortBy: string): void {
     this.sortBy = sortBy;
     this.isAscending = !this.isAscending;
-    this.loadCategories(this.currentPage, this.pageSize, this.sortBy, this.isAscending);
+    this.loadCategories(
+      this.currentPage,
+      this.pageSize,
+      this.sortBy,
+      this.isAscending
+    );
+  }
+
+  getPagesToShow(): number[] {
+    let startPage = Math.max(DEFAULT_PAGE, this.currentPage - HALF_VISIBLE_PAGES);
+    let endPage = Math.min(this.totalPages - 1, this.currentPage + HALF_VISIBLE_PAGES);
+
+    if (this.currentPage < HALF_VISIBLE_PAGES) {
+      endPage = Math.min(VISIBLE_PAGES - 1, this.totalPages - 1);
+    }
+
+    if (this.currentPage + HALF_VISIBLE_PAGES >= this.totalPages) {
+      startPage = Math.max(DEFAULT_PAGE, this.totalPages - VISIBLE_PAGES);
+    }
+
+    const pages: number[] = [];
+    for (let i = startPage; i <= endPage; i++) {
+      pages.push(i);
+    }
+
+    return pages;
+  }
+
+  shouldShowEllipsis(): boolean {
+    return this.currentPage + ELLIPSIS_THRESHOLD < this.totalPages - 1;
+  }
+
+  shouldShowLastPage(): boolean {
+    return this.totalPages > 1 && this.currentPage + LAST_PAGE_THRESHOLD < this.totalPages;
+  }
+
+  onKeyDown(event: KeyboardEvent, sortField: string): void {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      this.changeSortOrder(sortField);
+    }
+  }
+
+  onKeyDownButton(event: KeyboardEvent): void {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      this.openModal();
+    }
   }
 }
