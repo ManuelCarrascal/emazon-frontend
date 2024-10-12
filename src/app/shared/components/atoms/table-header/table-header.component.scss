@@ -1,0 +1,11 @@
+@use "styles" as *;
+
+.dynamic-table {
+  &__header {
+    background-color: $white;
+    padding: 1.5rem;
+    border-top: 0.2rem solid $spacer_light;
+    border-bottom: 0.2rem solid $spacer_light;
+    font-size: 1.4rem;
+  }
+}

@@ -15,11 +15,14 @@ import {
   SUCCESS_MESSAGES,
   REGEX_PATTERNS,
   FIELD_NAMES,
-  GENERIC_ERROR_MESSAGE,
 } from 'src/app/shared/constants/categoriesComponent';
 
 const MIN_LENGTH = 3;
-
+const DEFAULT_PAGE = 0;
+const DEFAULT_PAGE_SIZE = 5;
+const DEFAULT_SORT_BY = 'categoryName';
+const ELLIPSIS_THRESHOLD = 2;
+const LAST_PAGE_THRESHOLD = 3;
 
 @Component({
   selector: 'app-categories',
@@ -28,6 +31,13 @@ const MIN_LENGTH = 3;
 })
 export class CategoriesComponent implements OnInit {
   public createCategoryForm: FormGroup;
+  public categories: Category[] = [];
+  public totalElements: number = 0;
+  public totalPages: number = 0;
+  public currentPage: number = DEFAULT_PAGE;
+  public isAscending: boolean = true;
+  public sortBy: string = DEFAULT_SORT_BY;
+  public pageSize: number = DEFAULT_PAGE_SIZE;
 
   constructor(
     private readonly formBuilder: FormBuilder,
@@ -55,7 +65,32 @@ export class CategoriesComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // Initialize form
+    this.loadCategories();
+  }
+
+  loadCategories(
+    page: number = DEFAULT_PAGE,
+    size: number = DEFAULT_PAGE_SIZE,
+    sortBy: string = DEFAULT_SORT_BY,
+    isAscending: boolean = true
+  ): void {
+    this.categoryService
+      .getCategories(page, size, sortBy, isAscending)
+      .subscribe({
+        next: (data) => {
+          this.categories = data.content;
+          this.totalElements = data.totalElements;
+          this.totalPages = data.totalPages;
+          this.currentPage = data.currentPage;
+        },
+        error: (error) => {
+          const message =
+            ERROR_MESSAGES_BY_CODE[
+              error.status as keyof typeof ERROR_MESSAGES_BY_CODE
+            ];
+          this.toastService.showToast(message, ToastType.Error);
+        },
+      });
   }
 
   get categoryName() {
@@ -97,13 +132,14 @@ export class CategoriesComponent implements OnInit {
               categoryName: '',
               categoryDescription: '',
             });
+            this.loadCategories();
           }
         },
         error: (error) => {
           const message =
             ERROR_MESSAGES_BY_CODE[
               error.status as keyof typeof ERROR_MESSAGES_BY_CODE
-            ] || GENERIC_ERROR_MESSAGE;
+            ];
           this.toastService.showToast(message, ToastType.Error);
         },
       });
@@ -138,5 +174,101 @@ export class CategoriesComponent implements OnInit {
 
   confirmDelete() {
     this.closeModal();
+  }
+
+  changePage(page: number): void {
+    if (page >= DEFAULT_PAGE && page < this.totalPages) {
+      this.currentPage = page;
+      this.loadCategories(
+        this.currentPage,
+        this.pageSize,
+        this.sortBy,
+        this.isAscending
+      );
+    }
+  }
+
+  changeSortOrder(sortBy: string): void {
+    this.sortBy = sortBy;
+    this.isAscending = !this.isAscending;
+    this.loadCategories(
+      this.currentPage,
+      this.pageSize,
+      this.sortBy,
+      this.isAscending
+    );
+  }
+
+  getPagesToShow(): number[] {
+    const pages: number[] = [];
+    const totalPages = this.totalPages;
+    const currentPage = this.currentPage;
+
+    const addRange = (start: number, end: number) => {
+        for (let i = start; i <= end; i++) {
+            pages.push(i);
+        }
+    };
+
+    const configurations = [
+        {
+            condition: totalPages <= 5,
+            action: () => addRange(0, totalPages - 1)
+        },
+        {
+            condition: currentPage <= 2,
+            action: () => {
+                addRange(0, 4);
+                pages.push(-1, totalPages - 1);
+            }
+        },
+        {
+            condition: currentPage >= totalPages - 3,
+            action: () => {
+                pages.push(0, -1);
+                addRange(totalPages - 5, totalPages - 1);
+            }
+        },
+        {
+            condition: true,
+            action: () => {
+                pages.push(0, -1);
+                addRange(currentPage - 1, currentPage + 1);
+                pages.push(-1, totalPages - 1);
+            }
+        }
+    ];
+
+    const config = configurations.find(config => config.condition);
+    if (config) {
+        config.action();
+    }
+
+    return pages;
+}
+  
+  
+  
+  shouldShowEllipsis(): boolean {
+    return this.currentPage + ELLIPSIS_THRESHOLD < this.totalPages - 1;
+  }
+  
+  shouldShowLastPage(): boolean {
+    return this.totalPages > 1 && this.currentPage + LAST_PAGE_THRESHOLD < this.totalPages;
+  }
+  
+
+  onKeyDown(event: KeyboardEvent, sortField: string): void {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      this.changeSortOrder(sortField);
+    }
+  }
+
+  onKeyDownButton(event: KeyboardEvent): void {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      this.openModal();
+    }
   }
 }
