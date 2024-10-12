@@ -37,16 +37,16 @@
       <tr class="table__header">
         <th
           class="table__cell center-y"
-          (click)="changeSortOrder('categoryName')"
-          (keydown)="onKeyDown($event, 'categoryName')"
-          tabindex="0"
-          aria-label="Sort by Category Name"
         >
           Category Name
+          <button
+          (click)="changeSortOrder('categoryName')"
+        >
           <lucide-icon
             [name]="isAscending ? 'arrow-down-a-z' : 'arrow-up-a-z'"
             size="16"
           ></lucide-icon>
+        </button>
         </th>
         <th class="table__cell">Category Description</th>
       </tr>
@@ -62,38 +62,32 @@
   <div class="pagination">
     <button
       class="pagination__button"
-      (click)="changePage(currentPage - 1)"
       [disabled]="currentPage === 0"
+      (click)="changePage(currentPage - 1)"
     >
-      <lucide-icon name="MoveLeft" size="14"></lucide-icon>
+    <lucide-icon name="MoveLeft" size="14"></lucide-icon>
     </button>
 
-    <ng-container *ngFor="let page of getPagesToShow(); let i = index">
+    <ng-container *ngFor="let page of getPagesToShow()">
       <button
+        *ngIf="page !== -1"
         class="pagination__page"
         [class.active]="currentPage === page"
         (click)="changePage(page)"
       >
         {{ page + 1 }}
       </button>
+
+      <span *ngIf="page === -1">...</span>
     </ng-container>
-
-    <span *ngIf="shouldShowEllipsis()">...</span>
-
-    <button
-      *ngIf="shouldShowLastPage()"
-      class="pagination__page"
-      (click)="changePage(totalPages - 1)"
-    >
-      {{ totalPages }}
-    </button>
 
     <button
       class="pagination__button"
+      [disabled]="currentPage === totalPages - 1"
       (click)="changePage(currentPage + 1)"
-      [disabled]="currentPage + 1 === totalPages"
     >
-      <lucide-icon name="MoveRight" size="14"></lucide-icon>
+    <lucide-icon name="MoveRight" size="14"></lucide-icon>
+
     </button>
   </div>
 </div>

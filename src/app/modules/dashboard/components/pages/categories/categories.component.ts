@@ -19,10 +19,8 @@ import {
 
 const MIN_LENGTH = 3;
 const DEFAULT_PAGE = 0;
-const DEFAULT_PAGE_SIZE = 2;
+const DEFAULT_PAGE_SIZE = 5;
 const DEFAULT_SORT_BY = 'categoryName';
-const VISIBLE_PAGES = 5;
-const HALF_VISIBLE_PAGES = Math.floor(VISIBLE_PAGES / 2);
 const ELLIPSIS_THRESHOLD = 2;
 const LAST_PAGE_THRESHOLD = 3;
 
@@ -202,32 +200,63 @@ export class CategoriesComponent implements OnInit {
   }
 
   getPagesToShow(): number[] {
-    let startPage = Math.max(DEFAULT_PAGE, this.currentPage - HALF_VISIBLE_PAGES);
-    let endPage = Math.min(this.totalPages - 1, this.currentPage + HALF_VISIBLE_PAGES);
-
-    if (this.currentPage < HALF_VISIBLE_PAGES) {
-      endPage = Math.min(VISIBLE_PAGES - 1, this.totalPages - 1);
-    }
-
-    if (this.currentPage + HALF_VISIBLE_PAGES >= this.totalPages) {
-      startPage = Math.max(DEFAULT_PAGE, this.totalPages - VISIBLE_PAGES);
-    }
-
     const pages: number[] = [];
-    for (let i = startPage; i <= endPage; i++) {
-      pages.push(i);
+    const totalPages = this.totalPages;
+    const currentPage = this.currentPage;
+
+    const addRange = (start: number, end: number) => {
+        for (let i = start; i <= end; i++) {
+            pages.push(i);
+        }
+    };
+
+    const configurations = [
+        {
+            condition: totalPages <= 5,
+            action: () => addRange(0, totalPages - 1)
+        },
+        {
+            condition: currentPage <= 2,
+            action: () => {
+                addRange(0, 4);
+                pages.push(-1, totalPages - 1);
+            }
+        },
+        {
+            condition: currentPage >= totalPages - 3,
+            action: () => {
+                pages.push(0, -1);
+                addRange(totalPages - 5, totalPages - 1);
+            }
+        },
+        {
+            condition: true,
+            action: () => {
+                pages.push(0, -1);
+                addRange(currentPage - 1, currentPage + 1);
+                pages.push(-1, totalPages - 1);
+            }
+        }
+    ];
+
+    const config = configurations.find(config => config.condition);
+    if (config) {
+        config.action();
     }
 
     return pages;
-  }
-
+}
+  
+  
+  
   shouldShowEllipsis(): boolean {
     return this.currentPage + ELLIPSIS_THRESHOLD < this.totalPages - 1;
   }
-
+  
   shouldShowLastPage(): boolean {
     return this.totalPages > 1 && this.currentPage + LAST_PAGE_THRESHOLD < this.totalPages;
   }
+  
 
   onKeyDown(event: KeyboardEvent, sortField: string): void {
     if (event.key === 'Enter' || event.key === ' ') {
