@@ -1,14 +1,20 @@
 <aside>
     <div class="sidebar">
-        <div class="sidebar__header">
-        <div class="sidebar__header__title">Dashboard</div>
-        </div>
-        <div class="sidebar__content">
-        <ul class="sidebar__content__list">
-            <li class="sidebar__content__list__item">
-                <a routerLink="/dashboard/brands" routerLinkActive="active">Brands</a>
-              </li>
+      <header class="sidebar__header">
+        <h2 class="sidebar__header-title">Dashboard</h2>
+      </header>
+      <nav class="sidebar__navigation">
+        <ul class="sidebar__navigation-list">
+          <li class="sidebar__navigation-item">
+            <a routerLink="/dashboard/home" routerLinkActive="active">Home</a>
+          </li>
+          <li class="sidebar__navigation-item">
+            <a routerLink="/dashboard/categories" routerLinkActive="active">Categories</a>
+          </li>
+          <li class="sidebar__navigation-item">
+            <a routerLink="/dashboard/brands" routerLinkActive="active">Brands</a>
+          </li>
         </ul>
-        </div>
+      </nav>
     </div>
-</aside>
+  </aside>

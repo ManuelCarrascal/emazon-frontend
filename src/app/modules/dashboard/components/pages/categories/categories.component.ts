@@ -40,6 +40,12 @@ export class CategoriesComponent implements OnInit {
   public pageSize: number = DEFAULT_PAGE_SIZE;
   public isModalVisible: boolean = false;
 
+  public tableColumns = [
+    { key: 'categoryName', label: 'Category Name', sortable: true },
+    { key: 'categoryDescription', label: 'Category Description', sortable: false },
+  ];
+
+
   constructor(
     private readonly formBuilder: FormBuilder,
     private readonly categoryService: CategoryService,
@@ -71,7 +77,6 @@ export class CategoriesComponent implements OnInit {
     this.loadCategories();
   }
 
-  // Form related methods
   get categoryName() {
     return this.createCategoryForm.get('categoryName');
   }
@@ -135,7 +140,6 @@ export class CategoriesComponent implements OnInit {
       });
   }
 
-  // Category loading methods
   loadCategories(
     page: number = DEFAULT_PAGE,
     size: number = DEFAULT_PAGE_SIZE,
@@ -161,7 +165,6 @@ export class CategoriesComponent implements OnInit {
       });
   }
 
-  // Pagination and sorting methods
   changePage(page: number): void {
     if (page >= DEFAULT_PAGE && page < this.totalPages) {
       this.currentPage = page;
@@ -185,66 +188,6 @@ export class CategoriesComponent implements OnInit {
     );
   }
 
-  getPagesToShow(): number[] {
-    const pages: number[] = [];
-    const totalPages = this.totalPages;
-    const currentPage = this.currentPage;
-
-    const addRange = (start: number, end: number) => {
-      for (let i = start; i <= end; i++) {
-        pages.push(i);
-      }
-    };
-
-    const configurations = [
-      {
-        condition: totalPages <= 5,
-        action: () => addRange(0, totalPages - 1),
-      },
-      {
-        condition: currentPage <= 2,
-        action: () => {
-          addRange(0, 4);
-          pages.push(-1, totalPages - 1);
-        },
-      },
-      {
-        condition: currentPage >= totalPages - 3,
-        action: () => {
-          pages.push(0, -1);
-          addRange(totalPages - 5, totalPages - 1);
-        },
-      },
-      {
-        condition: true,
-        action: () => {
-          pages.push(0, -1);
-          addRange(currentPage - 1, currentPage + 1);
-          pages.push(-1, totalPages - 1);
-        },
-      },
-    ];
-
-    const config = configurations.find((config) => config.condition);
-    if (config) {
-      config.action();
-    }
-
-    return pages;
-  }
-
-  shouldShowEllipsis(): boolean {
-    return this.currentPage + ELLIPSIS_THRESHOLD < this.totalPages - 1;
-  }
-
-  shouldShowLastPage(): boolean {
-    return (
-      this.totalPages > 1 &&
-      this.currentPage + LAST_PAGE_THRESHOLD < this.totalPages
-    );
-  }
-
-  // Modal related methods
   openModal() {
     this.isModalVisible = true;
   }
@@ -263,18 +206,25 @@ export class CategoriesComponent implements OnInit {
     this.closeModal();
   }
 
-  // Event handling methods
-  onKeyDown(event: KeyboardEvent, sortField: string): void {
-    if (event.key === 'Enter' || event.key === ' ') {
-      event.preventDefault();
-      this.changeSortOrder(sortField);
-    }
-  }
-
   onKeyDownButton(event: KeyboardEvent): void {
     if (event.key === 'Enter' || event.key === ' ') {
       event.preventDefault();
       this.openModal();
+    }
+  }
+
+  onSortChange(sortField: string): void {
+    if (
+      this.tableColumns.find((column) => column.key === sortField)?.sortable
+    ) {
+      this.sortBy = sortField;
+      this.isAscending = !this.isAscending;
+      this.loadCategories(
+        this.currentPage,
+        this.pageSize,
+        this.sortBy,
+        this.isAscending
+      );
     }
   }
 }

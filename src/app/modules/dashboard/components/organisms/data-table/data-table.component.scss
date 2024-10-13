@@ -1,36 +1,85 @@
-@use 'styles' as *;
+@use "styles" as *;
 
 .table {
-    width: 95%;
-    border-collapse: collapse;
-    margin: 0 auto;
-    margin-top: 2rem;
+  width: 95%;
+  border-collapse: collapse;
+  margin: 0 auto;
+  margin-top: 2rem;
 
-    &__header {
-        background-color: $white;
-        color: $black;
-        text-align: left;
-        font-weight: bold;
-        border-top: 0.2rem solid $spacer_light;
-        border-bottom: 0.2rem solid $spacer_light;
-        font-size: 1.4rem;
-      }
+  &__header {
+    background-color: $white;
+    color: $black;
+    text-align: left;
+    font-weight: bold;
+    border-top: 0.2rem solid $spacer_light;
+    border-bottom: 0.2rem solid $spacer_light;
+    font-size: 1.4rem;
+  }
 
-    &__row {
-        border-bottom: 1px solid #dddddd;
-        font-size: 1.4rem;
-    
-        &:nth-of-type(even) {
-          background-color: #f3f3f3;
-        }
-    
-        &:last-of-type {
-          border-bottom: 2px solid $purple;
-        }
-    
-        &:hover {
-          background-color: lighten($purple, $amount: 30%);
-        }
-      }
+  &__row {
+    border-bottom: 1px solid #dddddd;
+    font-size: 1.4rem;
+
+    &:nth-of-type(even) {
+      background-color: #f3f3f3;
+    }
+
+    &:last-of-type {
+      border-bottom: 2px solid $purple;
+    }
+
+    &:hover {
+      background-color: lighten($purple, $amount: 30%);
+    }
+  }
 }
 
+.pagination-table{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin: 20px 0;
+
+  &__page {
+    background: none;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+    padding: 5px 10px;
+    color: $black;
+  }
+
+  &__button {
+    color: $purple;
+    display: flex;
+    align-items: center;
+    background: none;
+    border: none;
+    cursor: pointer;
+    
+    &:disabled {
+      display: none;
+      cursor: not-allowed;
+    }
+  }
+
+  &__info {
+    font-size: 18px;
+    margin: 0 10px;
+  }
+}
+
+.pagination-table__page.active {
+  font-weight: bold;
+  color: $purple;
+}
+
+.pagination-table__page:hover {
+  text-decoration: underline;
+}
+
+span {
+  font-size: 16px;
+  color: $black;
+}

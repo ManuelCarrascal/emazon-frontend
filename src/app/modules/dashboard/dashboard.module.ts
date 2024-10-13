@@ -25,6 +25,7 @@ import { TableHeaderComponent } from './components/molecules/table-header/table-
 import { TableCellComponent } from './components/atoms/table-cell/table-cell.component';
 import { SidebarComponent } from './components/organisms/sidebar/sidebar.component';
 import { BrandsPageComponent } from './components/pages/brands-page/brands-page.component';
+import { HomePageComponent } from './components/pages/home-page/home-page.component';
 
 @NgModule({
   declarations: [
@@ -42,6 +43,7 @@ import { BrandsPageComponent } from './components/pages/brands-page/brands-page.
     TableCellComponent,
     SidebarComponent,
     BrandsPageComponent,
+    HomePageComponent,
   ],
   imports: [
     CommonModule,

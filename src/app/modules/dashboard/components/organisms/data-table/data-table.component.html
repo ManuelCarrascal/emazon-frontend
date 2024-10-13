@@ -19,9 +19,9 @@
     </tbody>
   </table>
 
-  <div class="pagination">
+  <div class="pagination-table">
     <button
-      class="pagination__button"
+      class="pagination-table__button"
       [disabled]="currentPage === 0"
       (click)="changePage(currentPage - 1)"
     >
@@ -31,7 +31,7 @@
     <ng-container *ngFor="let page of getPagesToShow()">
       <button
         *ngIf="page !== -1"
-        class="pagination__page"
+        class="pagination-table__page"
         [class.active]="currentPage === page"
         (click)="changePage(page)"
       >
@@ -42,7 +42,7 @@
     </ng-container>
 
     <button
-      class="pagination__button"
+      class="pagination-table__button"
       [disabled]="currentPage === totalPages - 1"
       (click)="changePage(currentPage + 1)"
     >
