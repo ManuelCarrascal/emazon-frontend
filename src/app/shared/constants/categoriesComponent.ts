@@ -2,6 +2,8 @@ export const ERROR_MESSAGES = {
     required: (fieldName: string) => `${fieldName} is required.`,
     minlength: (fieldName: string, error: any) =>
       `${fieldName} must be at least ${error.requiredLength} characters.`,
+    maxlength: (fieldName: string, error: any) =>
+      `${fieldName} must be at most ${error.requiredLength} characters.`,
     pattern: () =>
       `forbidden characters.`,
   } as const;

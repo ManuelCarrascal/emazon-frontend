@@ -38,6 +38,7 @@ export class CategoriesComponent implements OnInit {
   public isAscending: boolean = true;
   public sortBy: string = DEFAULT_SORT_BY;
   public pageSize: number = DEFAULT_PAGE_SIZE;
+  public isModalVisible: boolean = false;
 
   constructor(
     private readonly formBuilder: FormBuilder,
@@ -50,6 +51,7 @@ export class CategoriesComponent implements OnInit {
         [
           Validators.required,
           Validators.minLength(MIN_LENGTH),
+          Validators.maxLength(50),
           Validators.pattern(REGEX_PATTERNS.FORBIDDEN_CHARACTERS),
         ],
       ],
@@ -58,6 +60,7 @@ export class CategoriesComponent implements OnInit {
         [
           Validators.required,
           Validators.minLength(MIN_LENGTH),
+          Validators.maxLength(90),
           Validators.pattern(REGEX_PATTERNS.FORBIDDEN_CHARACTERS),
         ],
       ],
@@ -68,31 +71,7 @@ export class CategoriesComponent implements OnInit {
     this.loadCategories();
   }
 
-  loadCategories(
-    page: number = DEFAULT_PAGE,
-    size: number = DEFAULT_PAGE_SIZE,
-    sortBy: string = DEFAULT_SORT_BY,
-    isAscending: boolean = true
-  ): void {
-    this.categoryService
-      .getCategories(page, size, sortBy, isAscending)
-      .subscribe({
-        next: (data) => {
-          this.categories = data.content;
-          this.totalElements = data.totalElements;
-          this.totalPages = data.totalPages;
-          this.currentPage = data.currentPage;
-        },
-        error: (error) => {
-          const message =
-            ERROR_MESSAGES_BY_CODE[
-              error.status as keyof typeof ERROR_MESSAGES_BY_CODE
-            ];
-          this.toastService.showToast(message, ToastType.Error);
-        },
-      });
-  }
-
+  // Form related methods
   get categoryName() {
     return this.createCategoryForm.get('categoryName');
   }
@@ -110,6 +89,17 @@ export class CategoriesComponent implements OnInit {
       return ERROR_MESSAGES[firstKey](fieldName, error);
     }
     return '';
+  }
+
+  get categoryNameError(): string {
+    return this.getErrorMessage(this.categoryName, FIELD_NAMES.CATEGORY_NAME);
+  }
+
+  get categoryDescriptionError(): string {
+    return this.getErrorMessage(
+      this.categoryDescription,
+      FIELD_NAMES.CATEGORY_DESCRIPTION
+    );
   }
 
   createCategory(): void {
@@ -145,37 +135,33 @@ export class CategoriesComponent implements OnInit {
       });
   }
 
-  get categoryNameError(): string {
-    return this.getErrorMessage(this.categoryName, FIELD_NAMES.CATEGORY_NAME);
+  // Category loading methods
+  loadCategories(
+    page: number = DEFAULT_PAGE,
+    size: number = DEFAULT_PAGE_SIZE,
+    sortBy: string = DEFAULT_SORT_BY,
+    isAscending: boolean = true
+  ): void {
+    this.categoryService
+      .getCategories(page, size, sortBy, isAscending)
+      .subscribe({
+        next: (data) => {
+          this.categories = data.content;
+          this.totalElements = data.totalElements;
+          this.totalPages = data.totalPages;
+          this.currentPage = data.currentPage;
+        },
+        error: (error) => {
+          const message =
+            ERROR_MESSAGES_BY_CODE[
+              error.status as keyof typeof ERROR_MESSAGES_BY_CODE
+            ];
+          this.toastService.showToast(message, ToastType.Error);
+        },
+      });
   }
 
-  get categoryDescriptionError(): string {
-    return this.getErrorMessage(
-      this.categoryDescription,
-      FIELD_NAMES.CATEGORY_DESCRIPTION
-    );
-  }
-
-  isModalVisible: boolean = false;
-
-  openModal() {
-    this.isModalVisible = true;
-  }
-
-  closeModal() {
-    this.isModalVisible = false;
-    this.createCategoryForm.reset({
-      categoryName: '',
-      categoryDescription: '',
-    });
-    this.createCategoryForm.markAsPristine();
-    this.createCategoryForm.markAsUntouched();
-  }
-
-  confirmDelete() {
-    this.closeModal();
-  }
-
+  // Pagination and sorting methods
   changePage(page: number): void {
     if (page >= DEFAULT_PAGE && page < this.totalPages) {
       this.currentPage = page;
@@ -205,59 +191,79 @@ export class CategoriesComponent implements OnInit {
     const currentPage = this.currentPage;
 
     const addRange = (start: number, end: number) => {
-        for (let i = start; i <= end; i++) {
-            pages.push(i);
-        }
+      for (let i = start; i <= end; i++) {
+        pages.push(i);
+      }
     };
 
     const configurations = [
-        {
-            condition: totalPages <= 5,
-            action: () => addRange(0, totalPages - 1)
+      {
+        condition: totalPages <= 5,
+        action: () => addRange(0, totalPages - 1),
+      },
+      {
+        condition: currentPage <= 2,
+        action: () => {
+          addRange(0, 4);
+          pages.push(-1, totalPages - 1);
         },
-        {
-            condition: currentPage <= 2,
-            action: () => {
-                addRange(0, 4);
-                pages.push(-1, totalPages - 1);
-            }
+      },
+      {
+        condition: currentPage >= totalPages - 3,
+        action: () => {
+          pages.push(0, -1);
+          addRange(totalPages - 5, totalPages - 1);
         },
-        {
-            condition: currentPage >= totalPages - 3,
-            action: () => {
-                pages.push(0, -1);
-                addRange(totalPages - 5, totalPages - 1);
-            }
+      },
+      {
+        condition: true,
+        action: () => {
+          pages.push(0, -1);
+          addRange(currentPage - 1, currentPage + 1);
+          pages.push(-1, totalPages - 1);
         },
-        {
-            condition: true,
-            action: () => {
-                pages.push(0, -1);
-                addRange(currentPage - 1, currentPage + 1);
-                pages.push(-1, totalPages - 1);
-            }
-        }
+      },
     ];
 
-    const config = configurations.find(config => config.condition);
+    const config = configurations.find((config) => config.condition);
     if (config) {
-        config.action();
+      config.action();
     }
 
     return pages;
-}
-  
-  
-  
+  }
+
   shouldShowEllipsis(): boolean {
     return this.currentPage + ELLIPSIS_THRESHOLD < this.totalPages - 1;
   }
-  
-  shouldShowLastPage(): boolean {
-    return this.totalPages > 1 && this.currentPage + LAST_PAGE_THRESHOLD < this.totalPages;
-  }
-  
 
+  shouldShowLastPage(): boolean {
+    return (
+      this.totalPages > 1 &&
+      this.currentPage + LAST_PAGE_THRESHOLD < this.totalPages
+    );
+  }
+
+  // Modal related methods
+  openModal() {
+    this.isModalVisible = true;
+  }
+
+  closeModal() {
+    this.isModalVisible = false;
+    this.createCategoryForm.reset({
+      categoryName: '',
+      categoryDescription: '',
+    });
+    this.createCategoryForm.markAsPristine();
+    this.createCategoryForm.markAsUntouched();
+  }
+
+  confirmDelete() {
+    this.closeModal();
+  }
+
+  // Event handling methods
   onKeyDown(event: KeyboardEvent, sortField: string): void {
     if (event.key === 'Enter' || event.key === ' ') {
       event.preventDefault();
