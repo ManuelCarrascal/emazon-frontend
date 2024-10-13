@@ -1,0 +1,13 @@
+<th *ngFor="let column of columns" class="table__cell">
+  {{ column.label }}
+  <button *ngIf="column.sortable" (click)="onSortChange(column.key)">
+    <lucide-icon
+      [name]="
+        currentSort === column.key && isAscending
+          ? 'arrow-down-a-z'
+          : 'arrow-up-a-z'
+      "
+      size="16"
+    ></lucide-icon>
+  </button>
+</th>

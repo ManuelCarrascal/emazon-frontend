@@ -1,0 +1,36 @@
+@use 'styles' as *;
+
+.table {
+    width: 95%;
+    border-collapse: collapse;
+    margin: 0 auto;
+    margin-top: 2rem;
+
+    &__header {
+        background-color: $white;
+        color: $black;
+        text-align: left;
+        font-weight: bold;
+        border-top: 0.2rem solid $spacer_light;
+        border-bottom: 0.2rem solid $spacer_light;
+        font-size: 1.4rem;
+      }
+
+    &__row {
+        border-bottom: 1px solid #dddddd;
+        font-size: 1.4rem;
+    
+        &:nth-of-type(even) {
+          background-color: #f3f3f3;
+        }
+    
+        &:last-of-type {
+          border-bottom: 2px solid $purple;
+        }
+    
+        &:hover {
+          background-color: lighten($purple, $amount: 30%);
+        }
+      }
+}
+

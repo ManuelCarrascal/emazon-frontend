@@ -1,0 +1,43 @@
+<div class="container">
+  <div class="flex-end-container">
+    <app-button (click)="openModal()" (keydown)="onKeyDownButton($event)">
+      Add Brand
+    </app-button>
+  </div>
+
+  <app-modal [isVisible]="isModalVisible" (close)="closeModal()">
+    <h2 class="mb-2rem">Create Brand</h2>
+    <form [formGroup]="createBrandForm" (ngSubmit)="createBrand()" class="form">
+      <div class="container-inputs">
+        <app-input-with-error
+          formControlName="brandName"
+          [errorMessage]="brandNameError"
+          [control]="brandName"
+          placeholder="Brand Name"
+        ></app-input-with-error>
+
+        <app-text-area-with-error
+          formControlName="brandDescription"
+          [errorMessage]="brandDescriptionError"
+          [control]="brandDescription"
+          placeholder="Brand Description"
+        ></app-text-area-with-error>
+      </div>
+
+      <div class="center">
+        <app-button>Create Brand</app-button>
+      </div>
+    </form>
+  </app-modal>
+
+  <app-data-table
+    [data]="brands"
+    [columns]="tableColumns"
+    [totalPages]="totalPages"
+    [currentPage]="currentPage"
+    [isAscending]="isAscending"
+    [sortBy]="sortBy"
+    (pageChange)="changePage($event)"
+    (sortChange)="onSortChange($event)"
+  ></app-data-table>
+</div>
