@@ -1,5 +1,6 @@
 @use "styles" as *;
 
+
 .layout-wrapper {
   height: 100vh;
   display: grid;
@@ -21,6 +22,12 @@
 
   &__header {
     grid-area: header;
+    z-index: 1;
+  }
+
+  &__sidebar {
+    grid-area: sidebar;
+    background-color: red;
   }
 
   &__content {

@@ -6,18 +6,20 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
   styleUrls: ['./table-header.component.scss']
 })
 export class TableHeaderComponent implements OnInit {
+  @Input() columns!: { key: string; label: string; sortable?: boolean }[];
+  @Input() currentSort!: string;
+  @Input() isAscending!: boolean;
+  @Output() sortChange = new EventEmitter<string>();
 
-  @Input() header!: string;
-  @Output() sort = new EventEmitter<string>();
+ 
 
   constructor() { }
 
   ngOnInit(): void {
-    // initialize
   }
 
-  onSort(): void {
-    this.sort.emit(this.header);
+  onSortChange(columnKey: string) {
+    this.sortChange.emit(columnKey);
   }
 
 }

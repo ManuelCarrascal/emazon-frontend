@@ -1,12 +1,12 @@
 <div class="container">
-  <div class="container-header-button">
+  <div class="flex-end-container">
     <app-button (click)="openModal()" (keydown)="onKeyDownButton($event)"
       >Add Category</app-button
     >
   </div>
 
   <app-modal [isVisible]="isModalVisible" (close)="closeModal()">
-    <h2 class="poppins-regular modal-title">Create Category</h2>
+    <h2 class="mb-2rem">Create Category</h2>
     <form
       [formGroup]="createCategoryForm"
       (ngSubmit)="createCategory()"

@@ -5,8 +5,7 @@
       [disabled]="disabled"
       [ngClass]="{'text-area--error': hasError}"
       class="poppins-regular text-area"
-      maxlength="90"
-      placeholder="Category Description"
+      [placeholder]="placeholder"
     ></textarea>
     <div class="error-message poppins-regular" *ngIf="errorMessage">{{ errorMessage }}</div>
 

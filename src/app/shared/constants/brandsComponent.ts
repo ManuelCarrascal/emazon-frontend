@@ -4,12 +4,11 @@ export const ERROR_MESSAGES = {
       `${fieldName} must be at least ${error.requiredLength} characters.`,
     maxlength: (fieldName: string, error: any) =>
       `${fieldName} must be at most ${error.requiredLength} characters.`,
-    pattern: () =>
-      `forbidden characters.`,
+    pattern: () => `forbidden characters.`,
   } as const;
   
   export const SUCCESS_MESSAGES = {
-    CATEGORY_CREATED: 'Category created successfully!',
+    BRAND_CREATED: 'Brand created successfully!',
     UNEXPECTED_RESPONSE: 'Unexpected response from server',
   } as const;
   
@@ -20,8 +19,8 @@ export const ERROR_MESSAGES = {
   } as const;
   
   export const ERROR_MESSAGES_BY_CODE = {
-    [ERROR_CODES.BAD_REQUEST]: 'An error occurred while creating the category.',
-    [ERROR_CODES.CONFLICT]: 'Category already exists.',
+    [ERROR_CODES.BAD_REQUEST]: 'An error occurred while creating the brand.',
+    [ERROR_CODES.CONFLICT]: 'Brand already exists.',
     [ERROR_CODES.SERVER_ERROR]: 'Server error. Please try again later.',
   } as const;
   
@@ -30,10 +29,9 @@ export const ERROR_MESSAGES = {
   } as const;
   
   export const FIELD_NAMES = {
-    CATEGORY_NAME: 'CategoryName',
-    CATEGORY_DESCRIPTION: 'CategoryDescription',
+    BRAND_NAME: 'BrandName',
+    BRAND_DESCRIPTION: 'BrandDescription',
   } as const;
-  
   
   type ErrorMessageKeys = keyof typeof ERROR_MESSAGES;
   type SuccessMessageKeys = keyof typeof SUCCESS_MESSAGES;

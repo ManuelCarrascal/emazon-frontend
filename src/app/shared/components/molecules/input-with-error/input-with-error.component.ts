@@ -1,10 +1,7 @@
 import {
   Component,
-  EventEmitter,
   forwardRef,
   Input,
-  OnInit,
-  Output,
 } from '@angular/core';
 import { AbstractControl, ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
@@ -25,6 +22,7 @@ export class InputWithErrorComponent implements ControlValueAccessor {
   @Input() disabled: boolean = false;
   @Input() errorMessage: string = '';
   @Input() control: AbstractControl | null = null;
+  @Input() placeholder: string = '';
 
   onChange: any = () => {};
   onTouched: any = () => {};

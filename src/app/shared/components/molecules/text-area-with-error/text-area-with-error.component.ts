@@ -18,6 +18,7 @@ export class TextAreaWithErrorComponent implements ControlValueAccessor {
   @Input() disabled: boolean = false;
   @Input() errorMessage: string = '';
   @Input() control: AbstractControl | null = null;
+  @Input() placeholder: string = '';
 
   onChange: any = () => {};
   onTouched: any = () => {};
