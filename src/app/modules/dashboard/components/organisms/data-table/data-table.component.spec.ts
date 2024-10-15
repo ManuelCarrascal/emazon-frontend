@@ -160,4 +160,5 @@ describe('DataTableComponent', () => {
     select.triggerEventHandler('change', { target: { value: '10' } });
     expect(component.onRowsPerPageChange).toHaveBeenCalled();
   });
+  
 });

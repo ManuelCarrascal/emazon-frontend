@@ -17,7 +17,7 @@
           formControlName="categoryName"
           [errorMessage]="categoryNameError"
           [control]="categoryName"
-          placeholder="Category Name"	
+          placeholder="Category Name"
         ></app-input-with-error>
 
         <app-text-area-with-error
@@ -29,7 +29,9 @@
       </div>
 
       <div class="flex-center">
-        <app-button [disabled]="createCategoryForm.invalid" >Create Category</app-button>
+        <app-button [disabled]="createCategoryForm.invalid"
+          >Create Category</app-button
+        >
       </div>
     </form>
   </app-modal>
@@ -44,5 +46,4 @@
     (sortChange)="onSortChange($event)"
     (rowsPerPageChange)="onRowsPerPageChange($event)"
   ></app-data-table>
-
 </div>

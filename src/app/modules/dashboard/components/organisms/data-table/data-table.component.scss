@@ -1,8 +1,5 @@
 @use "styles" as *;
 
-
-
-
 .table {
   width: 95%;
   border-collapse: collapse;
@@ -19,7 +16,7 @@
     font-size: 1.4rem;
     display: flex;
   }
-  
+
   &__cell {
     padding: 12px 15px;
     width: auto;
@@ -48,7 +45,7 @@
   }
 }
 
-.pagination-table{
+.pagination-table {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -71,7 +68,7 @@
     background: none;
     border: none;
     cursor: pointer;
-    
+
     &:disabled {
       display: none;
       cursor: not-allowed;

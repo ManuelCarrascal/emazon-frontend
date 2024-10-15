@@ -3,10 +3,9 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 @Component({
   selector: 'app-data-table',
   templateUrl: './data-table.component.html',
-  styleUrls: ['./data-table.component.scss']
+  styleUrls: ['./data-table.component.scss'],
 })
 export class DataTableComponent implements OnInit {
-
   @Input() data!: any[];
   @Input() columns!: { key: string; label: string; sortable?: boolean }[];
   @Input() totalPages!: number;
@@ -15,16 +14,19 @@ export class DataTableComponent implements OnInit {
   @Input() isAscending: boolean = true;
 
   @Output() pageChange = new EventEmitter<number>();
-  @Output() sortChange = new EventEmitter<{ sortBy: string, isAscending: boolean }>();
+  @Output() sortChange = new EventEmitter<{
+    sortBy: string;
+    isAscending: boolean;
+  }>();
   @Output() rowsPerPageChange = new EventEmitter<number>();
 
   rowsPerPage = 5;
 
-  constructor() { }
+  constructor() {}
 
   ngOnInit(): void {
     if (!this.currentSort && this.columns.length > 0) {
-      this.currentSort = this.columns[0].key; 
+      this.currentSort = this.columns[0].key;
       this.isAscending = true;
     }
   }
@@ -48,10 +50,12 @@ export class DataTableComponent implements OnInit {
       this.currentSort = sortBy;
       this.isAscending = true;
     }
-  
-    this.sortChange.emit({ sortBy: this.currentSort, isAscending: this.isAscending });
+
+    this.sortChange.emit({
+      sortBy: this.currentSort,
+      isAscending: this.isAscending,
+    });
   }
-  
 
   getPagesToShow(): number[] {
     const pages: number[] = [];

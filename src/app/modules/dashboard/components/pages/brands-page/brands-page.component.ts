@@ -232,4 +232,5 @@ export class BrandsPageComponent implements OnInit {
       this.isAscending
     );
   }
+  
 }

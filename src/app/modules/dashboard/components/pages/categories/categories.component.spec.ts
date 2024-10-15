@@ -176,10 +176,12 @@ describe('CategoriesComponent', () => {
 
   it('should show error toast on loadCategories error', () => {
     const mockError = { status: 404 };
-    jest.spyOn(categoryService, 'getCategories').mockReturnValue(throwError(() => mockError));
-  
+    jest
+      .spyOn(categoryService, 'getCategories')
+      .mockReturnValue(throwError(() => mockError));
+
     component.loadCategories();
-  
+
     expect(toastService.showToast).toHaveBeenCalledWith(
       ERROR_MESSAGES_BY_CODE[404],
       ToastType.Error
@@ -256,12 +258,14 @@ describe('CategoriesComponent', () => {
       categoryDescription: '',
     });
 
-    const markAllAsTouchedSpy = jest.spyOn(component.createCategoryForm, 'markAllAsTouched');
-    
+    const markAllAsTouchedSpy = jest.spyOn(
+      component.createCategoryForm,
+      'markAllAsTouched'
+    );
+
     component.createCategory();
 
     expect(markAllAsTouchedSpy).toHaveBeenCalled();
     expect(categoryService.createCategory).not.toHaveBeenCalled();
   });
-
 });

@@ -22,7 +22,6 @@ const DEFAULT_PAGE = 0;
 const DEFAULT_PAGE_SIZE = 5;
 const DEFAULT_SORT_BY = 'categoryName';
 
-
 @Component({
   selector: 'app-categories',
   templateUrl: './categories.component.html',
@@ -40,9 +39,12 @@ export class CategoriesComponent implements OnInit {
   public isModalVisible: boolean = false;
   public tableColumns = [
     { key: 'categoryName', label: 'Category Name', sortable: true },
-    { key: 'categoryDescription', label: 'Category Description', sortable: false },
+    {
+      key: 'categoryDescription',
+      label: 'Category Description',
+      sortable: false,
+    },
   ];
-
 
   constructor(
     private readonly formBuilder: FormBuilder,
@@ -118,7 +120,7 @@ export class CategoriesComponent implements OnInit {
           const message =
             response.status === HttpStatusCode.Created
               ? SUCCESS_MESSAGES.CATEGORY_CREATED
-              : SUCCESS_MESSAGES.UNEXPECTED_RESPONSE; 
+              : SUCCESS_MESSAGES.UNEXPECTED_RESPONSE;
           this.toastService.showToast(message, ToastType.Success);
           if (response.status === HttpStatusCode.Created) {
             this.createCategoryForm.reset({
