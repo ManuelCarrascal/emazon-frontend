@@ -25,7 +25,7 @@
       </div>
 
       <div class="flex-center">
-        <app-button>Create Brand</app-button>
+        <app-button [disabled]="createBrandForm.invalid">Create Brand</app-button>
       </div>
     </form>
   </app-modal>
@@ -36,8 +36,8 @@
     [totalPages]="totalPages"
     [currentPage]="currentPage"
     [isAscending]="isAscending"
-    [sortBy]="sortBy"
     (pageChange)="changePage($event)"
     (sortChange)="onSortChange($event)"
+    (rowsPerPageChange)="onRowsPerPageChange($event)"
   ></app-data-table>
 </div>

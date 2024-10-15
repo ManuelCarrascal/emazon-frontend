@@ -29,7 +29,7 @@
       </div>
 
       <div class="flex-center">
-        <app-button>Create Category</app-button>
+        <app-button [disabled]="createCategoryForm.invalid" >Create Category</app-button>
       </div>
     </form>
   </app-modal>
@@ -40,9 +40,9 @@
     [totalPages]="totalPages"
     [currentPage]="currentPage"
     [isAscending]="isAscending"
-    [sortBy]="sortBy"
     (pageChange)="changePage($event)"
     (sortChange)="onSortChange($event)"
+    (rowsPerPageChange)="onRowsPerPageChange($event)"
   ></app-data-table>
 
 </div>

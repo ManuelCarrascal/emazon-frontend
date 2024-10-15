@@ -21,8 +21,7 @@ const MIN_LENGTH = 3;
 const DEFAULT_PAGE = 0;
 const DEFAULT_PAGE_SIZE = 5;
 const DEFAULT_SORT_BY = 'categoryName';
-const ELLIPSIS_THRESHOLD = 2;
-const LAST_PAGE_THRESHOLD = 3;
+
 
 @Component({
   selector: 'app-categories',
@@ -35,11 +34,10 @@ export class CategoriesComponent implements OnInit {
   public totalElements: number = 0;
   public totalPages: number = 0;
   public currentPage: number = DEFAULT_PAGE;
-  public isAscending: boolean = true;
+  public isAscending!: boolean;
   public sortBy: string = DEFAULT_SORT_BY;
   public pageSize: number = DEFAULT_PAGE_SIZE;
   public isModalVisible: boolean = false;
-
   public tableColumns = [
     { key: 'categoryName', label: 'Category Name', sortable: true },
     { key: 'categoryDescription', label: 'Category Description', sortable: false },
@@ -120,7 +118,7 @@ export class CategoriesComponent implements OnInit {
           const message =
             response.status === HttpStatusCode.Created
               ? SUCCESS_MESSAGES.CATEGORY_CREATED
-              : SUCCESS_MESSAGES.UNEXPECTED_RESPONSE;
+              : SUCCESS_MESSAGES.UNEXPECTED_RESPONSE; 
           this.toastService.showToast(message, ToastType.Success);
           if (response.status === HttpStatusCode.Created) {
             this.createCategoryForm.reset({
@@ -138,6 +136,18 @@ export class CategoriesComponent implements OnInit {
           this.toastService.showToast(message, ToastType.Error);
         },
       });
+  }
+
+  changePage(page: number): void {
+    if (page >= DEFAULT_PAGE && page < this.totalPages) {
+      this.currentPage = page;
+      this.loadCategories(
+        this.currentPage,
+        this.pageSize,
+        this.sortBy,
+        this.isAscending
+      );
+    }
   }
 
   loadCategories(
@@ -163,18 +173,6 @@ export class CategoriesComponent implements OnInit {
           this.toastService.showToast(message, ToastType.Error);
         },
       });
-  }
-
-  changePage(page: number): void {
-    if (page >= DEFAULT_PAGE && page < this.totalPages) {
-      this.currentPage = page;
-      this.loadCategories(
-        this.currentPage,
-        this.pageSize,
-        this.sortBy,
-        this.isAscending
-      );
-    }
   }
 
   changeSortOrder(sortBy: string): void {
@@ -213,18 +211,24 @@ export class CategoriesComponent implements OnInit {
     }
   }
 
-  onSortChange(sortField: string): void {
-    if (
-      this.tableColumns.find((column) => column.key === sortField)?.sortable
-    ) {
-      this.sortBy = sortField;
-      this.isAscending = !this.isAscending;
-      this.loadCategories(
-        this.currentPage,
-        this.pageSize,
-        this.sortBy,
-        this.isAscending
-      );
-    }
+  onSortChange(event: { sortBy: string; isAscending: boolean }): void {
+    this.sortBy = event.sortBy;
+    this.isAscending = event.isAscending;
+    this.loadCategories(
+      this.currentPage,
+      this.pageSize,
+      this.sortBy,
+      this.isAscending
+    );
+  }
+
+  onRowsPerPageChange(rowsPerPage: number): void {
+    this.pageSize = rowsPerPage;
+    this.loadCategories(
+      this.currentPage,
+      this.pageSize,
+      this.sortBy,
+      this.isAscending
+    );
   }
 }

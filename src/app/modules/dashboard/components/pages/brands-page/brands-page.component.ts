@@ -33,7 +33,7 @@ export class BrandsPageComponent implements OnInit {
   public totalElements: number = 0;
   public totalPages: number = 0;
   public currentPage: number = DEFAULT_PAGE;
-  public isAscending: boolean = true;
+  public isAscending!: boolean;
   public sortBy: string = DEFAULT_SORT_BY;
   public pageSize: number = DEFAULT_PAGE_SIZE;
   public isModalVisible: boolean = false;
@@ -182,20 +182,21 @@ export class BrandsPageComponent implements OnInit {
     );
   }
 
-  onSortChange(sortField: string): void {
-    if (
-      this.tableColumns.find((column) => column.key === sortField)?.sortable
-    ) {
-      this.sortBy = sortField;
-      this.isAscending = !this.isAscending;
-      this.loadBrands(
-        this.currentPage,
-        this.pageSize,
-        this.sortBy,
-        this.isAscending
-      );
+  onSortChange(event: { sortBy: string; isAscending: boolean }): void {
+    const sortableColumns = ['brandName']; 
+    if (!sortableColumns.includes(event.sortBy)) {
+      return;
     }
+    this.sortBy = event.sortBy;
+    this.isAscending = event.isAscending;
+    this.loadBrands(
+      this.currentPage,
+      this.pageSize,
+      this.sortBy,
+      this.isAscending
+    );
   }
+
 
   openModal() {
     this.isModalVisible = true;
@@ -220,5 +221,15 @@ export class BrandsPageComponent implements OnInit {
       event.preventDefault();
       this.openModal();
     }
+  }
+
+  onRowsPerPageChange(rowsPerPage: number): void {
+    this.pageSize = rowsPerPage;
+    this.loadBrands(
+      this.currentPage,
+      this.pageSize,
+      this.sortBy,
+      this.isAscending
+    );
   }
 }

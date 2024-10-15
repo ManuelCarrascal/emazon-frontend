@@ -15,12 +15,14 @@ export const ERROR_MESSAGES = {
   
   export const ERROR_CODES = {
     BAD_REQUEST: 400,
+    NOT_FOUND: 404,
     CONFLICT: 409,
     SERVER_ERROR: 500,
   } as const;
   
   export const ERROR_MESSAGES_BY_CODE = {
     [ERROR_CODES.BAD_REQUEST]: 'An error occurred while creating the category.',
+    [ERROR_CODES.NOT_FOUND]: 'Category not found.',
     [ERROR_CODES.CONFLICT]: 'Category already exists.',
     [ERROR_CODES.SERVER_ERROR]: 'Server error. Please try again later.',
   } as const;

@@ -21,7 +21,6 @@ import {
   MoveLeft,
 } from 'lucide-angular';
 import { DataTableComponent } from './components/organisms/data-table/data-table.component';
-import { TableHeaderComponent } from './components/molecules/table-header/table-header.component';
 import { TableCellComponent } from './components/atoms/table-cell/table-cell.component';
 import { SidebarComponent } from './components/organisms/sidebar/sidebar.component';
 import { BrandsPageComponent } from './components/pages/brands-page/brands-page.component';
@@ -39,7 +38,6 @@ import { HomePageComponent } from './components/pages/home-page/home-page.compon
     DividerComponent,
     CategoriesComponent,
     DataTableComponent,
-    TableHeaderComponent,
     TableCellComponent,
     SidebarComponent,
     BrandsPageComponent,
