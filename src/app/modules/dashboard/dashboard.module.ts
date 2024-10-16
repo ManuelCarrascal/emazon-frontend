@@ -21,10 +21,11 @@ import {
   MoveLeft,
 } from 'lucide-angular';
 import { DataTableComponent } from './components/organisms/data-table/data-table.component';
-import { TableHeaderComponent } from './components/molecules/table-header/table-header.component';
 import { TableCellComponent } from './components/atoms/table-cell/table-cell.component';
 import { SidebarComponent } from './components/organisms/sidebar/sidebar.component';
 import { BrandsPageComponent } from './components/pages/brands-page/brands-page.component';
+import { HomePageComponent } from './components/pages/home-page/home-page.component';
+import { ProductsPageComponent } from './components/pages/products-page/products-page.component';
 
 @NgModule({
   declarations: [
@@ -38,10 +39,11 @@ import { BrandsPageComponent } from './components/pages/brands-page/brands-page.
     DividerComponent,
     CategoriesComponent,
     DataTableComponent,
-    TableHeaderComponent,
     TableCellComponent,
     SidebarComponent,
     BrandsPageComponent,
+    HomePageComponent,
+    ProductsPageComponent,
   ],
   imports: [
     CommonModule,

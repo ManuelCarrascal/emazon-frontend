@@ -17,4 +17,9 @@
         background-color: darken($color: $purple, $amount: 5);
     }
 
+    &:disabled{
+        background-color: $disabled;
+        cursor: not-allowed;
+    }
+
 }

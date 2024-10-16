@@ -17,77 +17,33 @@
           formControlName="categoryName"
           [errorMessage]="categoryNameError"
           [control]="categoryName"
+          placeholder="Category Name"
         ></app-input-with-error>
 
         <app-text-area-with-error
           formControlName="categoryDescription"
           [errorMessage]="categoryDescriptionError"
           [control]="categoryDescription"
+          placeholder="Category Description"
         ></app-text-area-with-error>
       </div>
 
-      <div class="center">
-        <app-button>Create Category</app-button>
+      <div class="flex-center">
+        <app-button [disabled]="createCategoryForm.invalid"
+          >Create Category</app-button
+        >
       </div>
     </form>
   </app-modal>
 
-  <table class="table">
-    <thead>
-      <tr class="table__header">
-        <th
-          class="table__cell center-y"
-        >
-          Category Name
-          <button
-          (click)="changeSortOrder('categoryName')"
-        >
-          <lucide-icon
-            [name]="isAscending ? 'arrow-down-a-z' : 'arrow-up-a-z'"
-            size="16"
-          ></lucide-icon>
-        </button>
-        </th>
-        <th class="table__cell">Category Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr class="table__row" *ngFor="let category of categories">
-        <td class="table__cell">{{ category.categoryName }}</td>
-        <td class="table__cell">{{ category.categoryDescription }}</td>
-      </tr>
-    </tbody>
-  </table>
-
-  <div class="pagination">
-    <button
-      class="pagination__button"
-      [disabled]="currentPage === 0"
-      (click)="changePage(currentPage - 1)"
-    >
-    <lucide-icon name="MoveLeft" size="14"></lucide-icon>
-    </button>
-
-    <ng-container *ngFor="let page of getPagesToShow()">
-      <button
-        *ngIf="page !== -1"
-        class="pagination__page"
-        [class.active]="currentPage === page"
-        (click)="changePage(page)"
-      >
-        {{ page + 1 }}
-      </button>
-
-      <span *ngIf="page === -1">...</span>
-    </ng-container>
-
-    <button
-      class="pagination__button"
-      [disabled]="currentPage === totalPages - 1"
-      (click)="changePage(currentPage + 1)"
-    >
-    <lucide-icon name="MoveRight" size="14"></lucide-icon>
-
-    </button>
-  </div>
+  <app-data-table
+    [data]="categories"
+    [columns]="tableColumns"
+    [totalPages]="totalPages"
+    [currentPage]="currentPage"
+    [isAscending]="isAscending"
+    (pageChange)="changePage($event)"
+    (sortChange)="onSortChange($event)"
+    (rowsPerPageChange)="onRowsPerPageChange($event)"
+  ></app-data-table>
 </div>

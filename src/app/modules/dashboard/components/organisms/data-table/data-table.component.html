@@ -1,51 +1,65 @@
 <table class="table">
-    <thead>
-      <tr class="table__header">
-        <app-table-header
-          [columns]="columns"
-          [currentSort]="sortBy"
-          [isAscending]="isAscending"
-          (sortChange)="onSortChange($event)"
-        ></app-table-header>
-      </tr>
-    </thead>
-    <tbody>
-      <tr class="table__row" *ngFor="let row of data">
-        <app-table-cell
-          *ngFor="let column of columns"
-          [content]="row[column.key]"
-        ></app-table-cell>
-      </tr>
-    </tbody>
-  </table>
+  <thead>
+    <tr class="table__header">
+      <th *ngFor="let column of columns" class="table__cell">
+        {{ column.label }}
+        <button *ngIf="column.sortable" (click)="onSortChange(column.key)">
+          <lucide-icon
+            [name]="
+              currentSort === column.key && isAscending
+                ? 'arrow-down-a-z'
+                : 'arrow-up-a-z'
+            "
+            size="16"
+          ></lucide-icon>
+        </button>
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr class="table__row" *ngFor="let row of data">
+      <app-table-cell
+        *ngFor="let column of columns"
+        [content]="row[column.key]"
+      ></app-table-cell>
+    </tr>
+  </tbody>
+</table>
 
-  <div class="pagination">
+<div class="pagination-table">
+  <button
+    class="pagination-table__button"
+    [disabled]="currentPage === 0"
+    (click)="changePage(currentPage - 1)"
+  >
+    <lucide-icon name="MoveLeft" size="14"></lucide-icon>
+  </button>
+
+  <ng-container *ngFor="let page of getPagesToShow()">
     <button
-      class="pagination__button"
-      [disabled]="currentPage === 0"
-      (click)="changePage(currentPage - 1)"
+      *ngIf="page !== -1"
+      class="pagination-table__page"
+      [class.active]="currentPage === page"
+      (click)="changePage(page)"
     >
-      <lucide-icon name="MoveLeft" size="14"></lucide-icon>
+      {{ page + 1 }}
     </button>
 
-    <ng-container *ngFor="let page of getPagesToShow()">
-      <button
-        *ngIf="page !== -1"
-        class="pagination__page"
-        [class.active]="currentPage === page"
-        (click)="changePage(page)"
-      >
-        {{ page + 1 }}
-      </button>
+    <span *ngIf="page === -1">...</span>
+  </ng-container>
 
-      <span *ngIf="page === -1">...</span>
-    </ng-container>
+  <button
+    class="pagination-table__button"
+    [disabled]="currentPage === totalPages - 1"
+    (click)="changePage(currentPage + 1)"
+  >
+    <lucide-icon name="MoveRight" size="14"></lucide-icon>
+  </button>
+</div>
 
-    <button
-      class="pagination__button"
-      [disabled]="currentPage === totalPages - 1"
-      (click)="changePage(currentPage + 1)"
-    >
-      <lucide-icon name="MoveRight" size="14"></lucide-icon>
-    </button>
-  </div>
+<div class="pagination-table__info">
+  <label for="rowsPerPage">Show by</label>
+  <select id="rowsPerPage" (change)="onRowsPerPageChange($event)">
+    <option *ngFor="let size of [5, 10]" [value]="size">{{ size }}</option>
+  </select>
+</div>

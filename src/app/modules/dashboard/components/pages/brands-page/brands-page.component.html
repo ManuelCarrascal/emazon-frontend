@@ -19,13 +19,13 @@
         <app-text-area-with-error
           formControlName="brandDescription"
           [errorMessage]="brandDescriptionError"
-          [control]="brandDescription"
+          [control]="brandDescription"  
           placeholder="Brand Description"
         ></app-text-area-with-error>
       </div>
 
-      <div class="center">
-        <app-button>Create Brand</app-button>
+      <div class="flex-center">
+        <app-button [disabled]="createBrandForm.invalid">Create Brand</app-button>
       </div>
     </form>
   </app-modal>
@@ -36,8 +36,9 @@
     [totalPages]="totalPages"
     [currentPage]="currentPage"
     [isAscending]="isAscending"
-    [sortBy]="sortBy"
     (pageChange)="changePage($event)"
     (sortChange)="onSortChange($event)"
+    (rowsPerPageChange)="onRowsPerPageChange($event)"
   ></app-data-table>
 </div>
+

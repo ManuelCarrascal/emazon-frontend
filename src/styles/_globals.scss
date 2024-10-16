@@ -1,6 +1,10 @@
 @use 'mixins' as *;
+@use 'variables' as *;
+
 html{
   font-size: 62.5%;
+  scrollbar-gutter: always;
+  scroll-behavior: smooth;
 }
 
 *{
@@ -8,9 +12,34 @@ html{
   padding: 0;
   box-sizing: border-box;
 }
+::-webkit-scrollbar {
+  width: 0.8rem;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: $spacer_light;
+  border-radius: 0.5rem; 
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: darken($spacer_light, $amount: 10);
+}
 
 body{
   height: 100%;
+}
+
+a{
+  text-decoration: none;
+  color: $black;
+}
+
+li{
+  list-style: none;
 }
 
 button{
@@ -35,6 +64,12 @@ button{
   @include desktop {
     margin-right: 3.9rem;
   }
+}
+
+.flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .form {
