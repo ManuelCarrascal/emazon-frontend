@@ -19,6 +19,8 @@ import {
   ArrowUpAZ,
   MoveRight,
   MoveLeft,
+  Search,
+  X 
 } from 'lucide-angular';
 import { DataTableComponent } from './components/organisms/data-table/data-table.component';
 import { TableCellComponent } from './components/atoms/table-cell/table-cell.component';
@@ -51,7 +53,7 @@ import { ProductsPageComponent } from './components/pages/products-page/products
     FormsModule,
     SharedModule,
     ReactiveFormsModule,
-    LucideAngularModule.pick({ ArrowDownAZ, ArrowUpAZ, MoveRight, MoveLeft }),
+    LucideAngularModule.pick({ ArrowDownAZ, ArrowUpAZ, MoveRight, MoveLeft,Search,X  }),
   ],
 })
 export class DashboardModule {}

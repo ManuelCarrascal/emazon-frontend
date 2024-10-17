@@ -5,7 +5,6 @@ import {
   FormGroup,
   Validators,
 } from '@angular/forms';
-import { CategoryService } from '../../../services/category.service';
 import { ToastService, ToastType } from 'src/app/core/services/toast.service';
 import { HttpResponse, HttpStatusCode } from '@angular/common/http';
 import { Category } from '../../../interfaces/category.interface';
@@ -16,6 +15,7 @@ import {
   REGEX_PATTERNS,
   FIELD_NAMES,
 } from 'src/app/shared/constants/categoriesComponent';
+import { CategoryService } from '../../../services/category/category.service';
 
 const MIN_LENGTH = 3;
 const DEFAULT_PAGE = 0;

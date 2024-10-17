@@ -4,6 +4,7 @@ import { CategoriesComponent } from './components/pages/categories/categories.co
 import { DashboardTemplateComponent } from './components/templates/dashboard-template/dashboard-template.component';
 import { BrandsPageComponent } from './components/pages/brands-page/brands-page.component';
 import { HomePageComponent } from './components/pages/home-page/home-page.component';
+import { ProductsPageComponent } from './components/pages/products-page/products-page.component';
 
 const routes: Routes = [
   {
@@ -12,7 +13,8 @@ const routes: Routes = [
     children: [
       {path: 'home', component: HomePageComponent},
       { path: 'categories', component: CategoriesComponent },
-      {path: 'brands', component: BrandsPageComponent}
+      {path: 'brands', component: BrandsPageComponent},
+      {path: 'products', component: ProductsPageComponent},
     ]
   },
   

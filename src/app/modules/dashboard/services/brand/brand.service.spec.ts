@@ -2,9 +2,9 @@ import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { BrandService } from './brand.service';
 import { environment } from '@/environments/environment';
-import { Brand, BrandResponse } from '../interfaces/brand.interface';
+import { Brand, BrandResponse } from '../../interfaces/brand.interface';
 import { HttpResponse, HttpHeaders } from '@angular/common/http';
-import { Pagination } from '../interfaces/category.interface';
+import { Pagination } from '../../interfaces/category.interface';
 
 describe('BrandService', () => {
   let service: BrandService;

@@ -2,8 +2,8 @@ import { environment } from '@/environments/environment';
 import { HttpClient, HttpHeaders, HttpParams, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
-import { Brand, BrandResponse } from '../interfaces/brand.interface';
-import { Pagination } from '../interfaces/category.interface';
+import { Brand, BrandResponse } from '../../interfaces/brand.interface';
+import { Pagination } from '../../interfaces/category.interface';
 
 @Injectable({
   providedIn: 'root',

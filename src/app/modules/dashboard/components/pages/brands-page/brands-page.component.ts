@@ -6,7 +6,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { ToastService, ToastType } from '@/app/core/services/toast.service';
-import { BrandService } from '../../../services/brand.service';
+import { BrandService } from '../../../services/brand/brand.service';
 import { HttpResponse, HttpStatusCode } from '@angular/common/http';
 import { Brand } from '../../../interfaces/brand.interface';
 import {

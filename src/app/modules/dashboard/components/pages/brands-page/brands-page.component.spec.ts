@@ -3,7 +3,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { BrandsPageComponent } from './brands-page.component';
 import { ToastService, ToastType } from '@/app/core/services/toast.service';
-import { BrandService } from '../../../services/brand.service';
+import { BrandService } from '../../../services/brand/brand.service';
 import { of, throwError } from 'rxjs';
 import { HttpResponse } from '@angular/common/http';
 import { ModalComponent } from '@/app/shared/components/modal/modal.component';

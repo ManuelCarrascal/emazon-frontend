@@ -1,1 +1,76 @@
-<p>products-page works!</p>
+<div class="container">
+  <div class="flex-end-container">
+    <app-button (click)="openModal()" (keydown)="onKeyDownButton($event)">Add Product</app-button>
+  </div>
+</div>
+
+<app-modal [isVisible]="isModalVisible" (close)="closeModal()">
+  <h2 class="mb-2rem">Create Product</h2>
+  <form [formGroup]="createProductForm" (ngSubmit)="createProduct()" class="form">
+    <div class="container-inputs">
+      <app-input-with-error
+        formControlName="productName"
+        [errorMessage]="productNameError"
+        [control]="productName"
+        placeholder="Product Name"
+      ></app-input-with-error>
+
+      <app-text-area-with-error
+        formControlName="productDescription"
+        [errorMessage]="productDescriptionError"
+        [control]="productDescription"
+        placeholder="Product Description"
+      ></app-text-area-with-error>
+
+      <!-- Dropdown Tormento-->
+      <div class="dropdown">
+        <div class="dropdown__search-input-wrapper">
+          <input
+            type="text"
+            placeholder="Search categories"
+            formControlName="searchTerm"
+            (input)="filterCategories()"
+            class="dropdown__search-input"
+          />
+          <lucide-icon
+            name="search"
+            class="dropdown__search-icon"
+          ></lucide-icon>
+        </div>
+
+        <ul *ngIf="filteredCategories.length > 0" class="dropdown__list">
+          <li
+            *ngFor="let category of filteredCategories"
+            (click)="selectCategory(category)"
+            class="dropdown__list-item"
+          >
+            {{ category.categoryName }}
+          </li>
+        </ul>
+      </div>
+
+      <div
+        *ngIf="selectedCategories.length > 0"
+        class="dropdown__selected-categories"
+      >
+        <span
+          *ngFor="let category of selectedCategories"
+          class="dropdown__selected-category"
+        >
+          {{ category.categoryName }}
+          <button
+            type="button"
+            (click)="removeCategory(category)"
+            class="dropdown__selected-category__remove-button"
+          >
+            <lucide-icon name="x" size="13"></lucide-icon>
+          </button>
+        </span>
+      </div>
+    </div>
+
+    <div class="flex-center">
+      <app-button [disabled]="createProductForm.invalid">Create Product</app-button>
+    </div>
+  </form>
+</app-modal>

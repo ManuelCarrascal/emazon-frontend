@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders, HttpParams, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Category, CategoryResponse, Pagination } from '../interfaces/category.interface';
+import { Category, CategoryResponse, Pagination } from '../../interfaces/category.interface';
 import { map, Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
@@ -43,5 +43,13 @@ export class CategoryService {
         }))
       }))
     );
+  }
+
+  getAllCategories(): Observable<CategoryResponse[]> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+    });
+
+    return this.http.get<CategoryResponse[]>(`${this.apiUrl}/all`, { headers });
   }
 }
