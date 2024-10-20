@@ -1,0 +1,12 @@
+<div class="text-area-container mb-4rem">
+    <textarea
+      [value]="value"
+      (input)="onInput($event)"
+      [disabled]="disabled"
+      [ngClass]="{'text-area--error': hasError}"
+      class="poppins-regular text-area"
+      [placeholder]="placeholder"
+    ></textarea>
+    <div class="error-message poppins-regular" *ngIf="errorMessage">{{ errorMessage }}</div>
+
+  </div>

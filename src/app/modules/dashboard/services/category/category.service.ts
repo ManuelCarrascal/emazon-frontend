@@ -52,4 +52,5 @@ export class CategoryService {
 
     return this.http.get<CategoryResponse[]>(`${this.apiUrl}/all`, { headers });
   }
+  
 }

@@ -47,4 +47,12 @@ export class BrandService {
       }))
     );
   }
+
+  getAllBrands():Observable<BrandResponse[]>{
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+    });
+
+    return this.http.get<BrandResponse[]>(`${this.apiUrl}/all`, { headers });
+  }
 }

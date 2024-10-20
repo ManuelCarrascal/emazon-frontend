@@ -1,0 +1,25 @@
+@use 'styles' as *;
+
+.button{
+    padding: 1rem 4rem;
+    background-color: $purple;
+    color: $white;
+    border-radius: 0.4rem;
+    border: none;
+    cursor: pointer;
+    margin-top: 0.5rem;
+    @include desktop{
+        padding: 1rem 4rem;
+        font-size: 2rem;
+    }
+
+    &:hover{
+        background-color: darken($color: $purple, $amount: 5);
+    }
+
+    &:disabled{
+        background-color: $disabled;
+        cursor: not-allowed;
+    }
+
+}

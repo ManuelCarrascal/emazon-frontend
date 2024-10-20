@@ -1,4 +1,4 @@
-import { Toast, ToastService, ToastType } from '@/app/core/services/toast.service';
+import { Toast, ToastService, ToastType } from '@/app/shared/services/toast.service';
 import { TestBed } from '@angular/core/testing';
 
 

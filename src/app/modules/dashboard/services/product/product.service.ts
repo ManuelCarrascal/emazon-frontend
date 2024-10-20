@@ -8,7 +8,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class ProductService {
-  private readonly apiUrl = `${environment.stock_service_url}/categories`;
+  private readonly apiUrl = `${environment.stock_service_url}/products`;
   private readonly token = environment.auth_token;
 
   constructor(private readonly http: HttpClient) {}

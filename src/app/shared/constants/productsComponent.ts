@@ -6,6 +6,8 @@ export const ERROR_MESSAGES = {
       `${fieldName} must be at most ${error.requiredLength} characters.`,
     pattern: () =>
       `forbidden characters.`,
+    min: (fieldName: string, error: any) =>
+      `${fieldName} must be at least ${error.min}.`,
 } as const;
 
 export const SUCCESS_MESSAGES = {
@@ -32,8 +34,11 @@ export const REGEX_PATTERNS = {
 } as const;
 
 export const FIELD_NAMES = {
-    PRODUCT_NAME: 'ProductName',
-    PRODUCT_DESCRIPTION: 'ProductDescription',
+    PRODUCT_NAME: 'Product Name',
+    PRODUCT_DESCRIPTION: 'Product Description',
+    PRODUCT_QUANTITY: 'Product Quantity',
+    PRODUCT_PRICE: 'Product Price',
+    BRAND_ID: 'Brand ID',
 } as const;
 
 type ErrorMessageKeys = keyof typeof ERROR_MESSAGES;

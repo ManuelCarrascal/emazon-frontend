@@ -1,0 +1,44 @@
+<div class="dropdown">
+  <div class="dropdown__search-input-wrapper">
+    <input
+      type="text"
+      [placeholder]="placeholder"
+      [value]="searchTerm"
+      (input)="onSearchTermChange($event)"
+      class="dropdown__search-input"
+    />
+    <lucide-icon
+      name="search"
+      class="dropdown__search-icon"
+    ></lucide-icon>
+  </div>
+
+  <ul *ngIf="filteredItems.length > 0 && activeDropdown" class="dropdown__list">
+    <li
+      *ngFor="let item of filteredItems"
+      (click)="onSelectItem(item)"
+      class="dropdown__list-item"
+    >
+      {{ item[displayProperty] }}
+    </li>
+  </ul>
+</div>
+
+<div
+  *ngIf="selectedItems.length > 0"
+  class="dropdown__selected-items"
+>
+  <span
+    *ngFor="let item of selectedItems"
+    class="dropdown__selected-item"
+  >
+    {{ item[displayProperty] }}
+    <button
+      type="button"
+      (click)="onRemoveItem(item)"
+      class="dropdown__selected-item__remove-button"
+    >
+      <lucide-icon name="x" size="13"></lucide-icon>
+    </button>
+  </span>
+</div>
