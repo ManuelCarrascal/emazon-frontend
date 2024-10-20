@@ -23,6 +23,7 @@ export class InputWithErrorComponent implements ControlValueAccessor {
   @Input() errorMessage: string = '';
   @Input() control: AbstractControl | null = null;
   @Input() placeholder: string = '';
+  @Input() type: string = 'text';
 
   onChange: any = () => {};
   onTouched: any = () => {};

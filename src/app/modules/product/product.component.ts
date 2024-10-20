@@ -64,7 +64,7 @@ export class ProductComponent implements OnInit {
         '',
         [
           Validators.required,
-          Validators.min(0.01),
+          Validators.min(0.0),
         ],
       ],
       brandId: [null, [Validators.required]],
