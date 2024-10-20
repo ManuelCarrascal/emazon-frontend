@@ -1,0 +1,14 @@
+<div class="input-container">
+  <input
+    [value]="value"
+    (input)="onInput($event)"
+    [disabled]="disabled"
+    class="input poppins-regular"
+    [type]="type"
+    [placeholder]="placeholder"
+    [ngClass]="{'input--error': hasError}"
+  />
+  <div class="error-message poppins-regular" *ngIf="errorMessage">
+    {{ errorMessage }}
+  </div>
+</div>

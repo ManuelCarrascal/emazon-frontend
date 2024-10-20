@@ -50,6 +50,10 @@ button{
   cursor: pointer;
 }
 
+input[type="number"]::-webkit-outer-spin-button, ::-webkit-inner-spin-button{
+  appearance: none;
+}
+
 .container {
   padding: 0 1.5rem;
   margin: 1.6rem 0;
@@ -78,7 +82,7 @@ button{
   gap: 3.5rem;
 
   @include desktop {
-    gap: 6.5rem;
+    gap: 5.8rem;
   }
 }
 
@@ -94,6 +98,10 @@ button{
 
 .mb-2rem {
   margin-bottom: 2rem;
+}
+
+.mb-4rem {
+  margin-bottom: 4rem;
 }
 
 .poppins-thin {
