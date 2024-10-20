@@ -1,5 +1,5 @@
+import { Toast, ToastService, ToastType } from '@/app/shared/services/toast/toast.service';
 import { Component, OnInit } from '@angular/core';
-import { Toast, ToastService, ToastType } from '@/app/shared/services/toast.service';
 
 
 const TOAST_VISIBILITY_DURATION = 4000;

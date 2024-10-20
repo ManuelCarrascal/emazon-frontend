@@ -5,7 +5,6 @@ import {
   FormGroup,
   Validators,
 } from '@angular/forms';
-import { ToastService, ToastType } from '@/app/shared/services/toast.service';
 import { HttpResponse, HttpStatusCode } from '@angular/common/http';
 import {
   ERROR_MESSAGES,
@@ -14,8 +13,9 @@ import {
   REGEX_PATTERNS,
   FIELD_NAMES,
 } from '@/app/shared/constants/brandsComponent';
-import { Brand } from '../dashboard/interfaces/brand.interface';
-import { BrandService } from '../dashboard/services/brand/brand.service';
+import { Brand } from '@/app/shared/interfaces/brand.interface';
+import { BrandService } from '@/app/shared/services/brand/brand.service';
+import { ToastService, ToastType } from '@/app/shared/services/toast/toast.service';
 
 const MIN_LENGTH = 3;
 const DEFAULT_PAGE = 0;
@@ -74,7 +74,6 @@ export class BrandComponent implements OnInit {
     this.loadBrands();
   }
 
-  // Form related methods
   get brandName() {
     return this.createBrandForm.get('brandName');
   }

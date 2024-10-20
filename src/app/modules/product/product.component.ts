@@ -2,12 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ERROR_MESSAGES, FIELD_NAMES, REGEX_PATTERNS } from '@/app/shared/constants/productsComponent';
 import { categoriesCountValidator } from '@/app/shared/validators/categories-count-validator';
-import { CategoryResponse } from '../dashboard/interfaces/category.interface';
-import { BrandResponse } from '../dashboard/interfaces/brand.interface';
-import { CategoryService } from '../dashboard/services/category/category.service';
-import { BrandService } from '../dashboard/services/brand/brand.service';
-import { ProductService } from '../dashboard/services/product/product.service';
-import { ToastService, ToastType } from '@/app/shared/services/toast.service';
+import { CategoryService } from '@/app/shared/services/category/category.service';
+import { BrandService } from '@/app/shared/services/brand/brand.service';
+import { ProductService } from '@/app/shared/services/product/product.service';
+import { ToastService, ToastType } from '@/app/shared/services/toast/toast.service';
+import { CategoryResponse } from '@/app/shared/interfaces/category.interface';
+import { BrandResponse } from '@/app/shared/interfaces/brand.interface';
+
 
 const MIN_LENGTH = 3;
 const MAX_CATEGORIES = 3;

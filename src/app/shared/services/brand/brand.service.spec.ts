@@ -111,7 +111,15 @@ describe('BrandService', () => {
         }
       );
 
-      const req = httpMock.expectOne(apiUrl);
+      const req = httpMock.expectOne((request) => {
+        return (
+          request.url === apiUrl &&
+          request.params.get('page') === '0' &&
+          request.params.get('size') === '10' &&
+          request.params.get('sortBy') === 'brandName' &&
+          request.params.get('isAscending') === 'true'
+        );
+      });
       req.flush(null, { status: 400, statusText: 'Bad Request' });
     });
   });

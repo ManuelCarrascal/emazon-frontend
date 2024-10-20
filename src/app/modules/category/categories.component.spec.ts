@@ -1,11 +1,11 @@
 import { TestBed } from '@angular/core/testing';
 import { CategoriesComponent } from './categories.component';
-import { ToastService, ToastType } from '@/app/shared/services/toast.service';
 import { of, throwError } from 'rxjs';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpResponse, HttpStatusCode } from '@angular/common/http';
 import { ERROR_MESSAGES_BY_CODE } from '@/app/shared/constants/categoriesComponent';
-import { CategoryService } from '../../../services/category/category.service';
+import { ToastService, ToastType } from '@/app/shared/services/toast/toast.service';
+import { CategoryService } from '@/app/shared/services/category/category.service';
 
 describe('CategoriesComponent', () => {
   let component: CategoriesComponent;

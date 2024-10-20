@@ -9,7 +9,6 @@ import { NavComponent } from './components/organisms/nav/nav.component';
 import { NavLinkComponent } from './components/atoms/nav-link/nav-link.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SidebarComponent } from './components/organisms/sidebar/sidebar.component';
-import { UiModule } from '@/app/ui/ui.module';
 import {
   LucideAngularModule,
   ArrowDownAZ,
@@ -19,6 +18,7 @@ import {
   Search,
   X 
 } from 'lucide-angular';
+import { UiModule } from '@/app/ui/ui.module';
 
 @NgModule({
   declarations: [
@@ -33,8 +33,8 @@ import {
     CommonModule,
     DashboardRoutingModule,
     FormsModule,
-    ReactiveFormsModule,
     UiModule,
+    ReactiveFormsModule,
     LucideAngularModule.pick({ ArrowDownAZ, ArrowUpAZ, MoveRight, MoveLeft,Search,X  }),
   ],
   exports: [DashboardTemplateComponent],
