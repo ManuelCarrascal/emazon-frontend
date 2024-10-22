@@ -45,7 +45,7 @@ export class ProductComponent implements OnInit {
     { key: 'productQuantity', label: 'Product Quantity', sortable: false },
     { key: 'productPrice', label: 'Product Price', sortable: false },
     { key: 'brandName', label: 'Brand Name', sortable: true },
-    { key: 'categoryNames', label: 'Categories', sortable: false },
+    { key: 'categoryNames', label: 'Categories', sortable: true },
   ];
 
   constructor(
@@ -272,7 +272,7 @@ export class ProductComponent implements OnInit {
   }
 
   changeSortOrder(sortBy: string): void {
-    this.sortBy = sortBy;
+    this.sortBy = sortBy === 'categoryNames' ? 'numberOfCategories' : sortBy;
     this.isAscending = !this.isAscending;
     this.loadProducts(
       this.currentPage,
@@ -281,9 +281,9 @@ export class ProductComponent implements OnInit {
       this.isAscending
     );
   }
-
+  
   onSortChange(event: { sortBy: string; isAscending: boolean }): void {
-    this.sortBy = event.sortBy;
+    this.sortBy = event.sortBy === 'categoryNames' ? 'numberOfCategories' : event.sortBy;
     this.isAscending = event.isAscending;
     this.loadProducts(
       this.currentPage,

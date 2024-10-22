@@ -30,5 +30,5 @@ export interface ProductView {
     productCategories: number[];
     brandName: string;
     categoryIds: number[];
-    categoryNames: string; 
+    categoryNames: string;
 }
