@@ -37,13 +37,13 @@
   </app-modal>
 
   <app-data-table
-    [data]="categories"
-    [columns]="tableColumns"
-    [totalPages]="totalPages"
-    [currentPage]="currentPage"
-    [isAscending]="isAscending"
     (pageChange)="changePage($event)"
-    (sortChange)="onSortChange($event)"
     (rowsPerPageChange)="onRowsPerPageChange($event)"
+    (sortChange)="onSortChange($event)"
+    [columns]="tableColumns"
+    [currentPage]="currentPage"
+    [data]="categories"
+    [isAscending]="isAscending"
+    [totalPages]="totalPages"
   ></app-data-table>
 </div>

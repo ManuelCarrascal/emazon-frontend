@@ -73,3 +73,14 @@
     </div>
   </form>
 </app-modal>
+
+  <app-data-table
+  (pageChange)="changePage($event)"
+  (rowsPerPageChange)="onRowsPerPageChange($event)"
+  (sortChange)="onSortChange($event)"
+  [columns]="tableColumns"
+  [currentPage]="currentPage"
+  [data]="products"
+  [isAscending]="isAscending"
+  [totalPages]="totalPages"
+></app-data-table>

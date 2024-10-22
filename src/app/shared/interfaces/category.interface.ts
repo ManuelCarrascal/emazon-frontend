@@ -4,6 +4,11 @@ export interface Category{
     categoryDescription: string;
 }
 
+export interface CategoryProduct{
+  categoryId: number;
+  categoryName: string;
+}
+
 export interface CategoryResponse {
     categoryId: number;
     categoryName: string;

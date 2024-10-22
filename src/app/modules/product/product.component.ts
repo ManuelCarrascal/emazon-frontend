@@ -8,10 +8,13 @@ import { ProductService } from '@/app/shared/services/product/product.service';
 import { ToastService, ToastType } from '@/app/shared/services/toast/toast.service';
 import { CategoryResponse } from '@/app/shared/interfaces/category.interface';
 import { BrandResponse } from '@/app/shared/interfaces/brand.interface';
-
+import { Product, ProductResponse, ProductView } from '@/app/shared/interfaces/product.interface';
 
 const MIN_LENGTH = 3;
 const MAX_CATEGORIES = 3;
+const DEFAULT_PAGE = 0;
+const DEFAULT_PAGE_SIZE = 5;
+const DEFAULT_SORT_BY = 'productName';
 
 @Component({
   selector: 'app-product',
@@ -28,6 +31,22 @@ export class ProductComponent implements OnInit {
   public filteredBrands: BrandResponse[] = [];
   public selectedBrand: BrandResponse | null = null;
   public dropdownState: { [key: string]: { searchTerm: string, active: boolean } };
+
+  public products: ProductView[] = [];
+  public totalElements: number = 0;
+  public totalPages: number = 0;
+  public currentPage: number = DEFAULT_PAGE;
+  public isAscending: boolean = true;
+  public sortBy: string = DEFAULT_SORT_BY;
+  public pageSize: number = DEFAULT_PAGE_SIZE;
+  public tableColumns = [
+    { key: 'productName', label: 'Product Name', sortable: true },
+    { key: 'productDescription', label: 'Product Description', sortable: false },
+    { key: 'productQuantity', label: 'Product Quantity', sortable: false },
+    { key: 'productPrice', label: 'Product Price', sortable: false },
+    { key: 'brandName', label: 'Brand Name', sortable: true },
+    { key: 'categoryNames', label: 'Categories', sortable: false },
+  ];
 
   constructor(
     private readonly formBuilder: FormBuilder,
@@ -81,8 +100,9 @@ export class ProductComponent implements OnInit {
   ngOnInit(): void {
     this.loadCategories();
     this.loadBrands();
+    this.loadProducts();
   }
-  
+
   openModal() {
     this.isModalVisible = true;
   }
@@ -175,6 +195,7 @@ export class ProductComponent implements OnInit {
     this.productService.createProduct(productData).subscribe({
       next: (product) => {
         this.toastService.showToast('Product created successfully', ToastType.Success);
+        this.loadProducts();
       },
       error: (error) => {
         this.toastService.showToast('Error creating product', ToastType.Error);
@@ -203,6 +224,83 @@ export class ProductComponent implements OnInit {
         this.toastService.showToast('Error loading brands', ToastType.Error);
       },
     });
+  }
+
+  loadProducts(
+    page: number = DEFAULT_PAGE,
+    size: number = DEFAULT_PAGE_SIZE,
+    sortBy: string = DEFAULT_SORT_BY,
+    isAscending: boolean = true
+  ): void {
+    this.productService.getProducts(page, size, sortBy, isAscending).subscribe({
+      next: (data) => {
+        this.products = data.content.map(productResponse => this.transformProductResponse(productResponse));
+        this.totalElements = data.totalElements;
+        this.totalPages = data.totalPages;
+        this.currentPage = data.currentPage;
+      },
+      error: (error) => {
+        this.toastService.showToast('Error loading products', ToastType.Error);
+      },
+    });
+  }
+
+  transformProductResponse(productResponse: ProductResponse): ProductView {
+    return {
+      productId: productResponse.productId,
+      productName: productResponse.productName,
+      productDescription: productResponse.productDescription,
+      productQuantity: productResponse.productQuantity,
+      productPrice: productResponse.productPrice,
+      productCategories: productResponse.categories.map(category => category.categoryId),
+      brandName: productResponse.brand.brandName,
+      categoryIds: productResponse.categories.map(category => category.categoryId),
+      categoryNames: productResponse.categories.map(category => category.categoryName).join(', ') 
+    };
+  }
+
+  changePage(page: number): void {
+    if (page >= DEFAULT_PAGE && page < this.totalPages) {
+      this.currentPage = page;
+      this.loadProducts(
+        this.currentPage,
+        this.pageSize,
+        this.sortBy,
+        this.isAscending
+      );
+    }
+  }
+
+  changeSortOrder(sortBy: string): void {
+    this.sortBy = sortBy;
+    this.isAscending = !this.isAscending;
+    this.loadProducts(
+      this.currentPage,
+      this.pageSize,
+      this.sortBy,
+      this.isAscending
+    );
+  }
+
+  onSortChange(event: { sortBy: string; isAscending: boolean }): void {
+    this.sortBy = event.sortBy;
+    this.isAscending = event.isAscending;
+    this.loadProducts(
+      this.currentPage,
+      this.pageSize,
+      this.sortBy,
+      this.isAscending
+    );
+  }
+
+  onRowsPerPageChange(rowsPerPage: number): void {
+    this.pageSize = rowsPerPage;
+    this.loadProducts(
+      this.currentPage,
+      this.pageSize,
+      this.sortBy,
+      this.isAscending
+    );
   }
 
   filterCategories(): void {

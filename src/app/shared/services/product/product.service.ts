@@ -1,8 +1,9 @@
 import { environment } from '@/environments/environment';
-import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Product } from '../../interfaces/product.interface';
+import { ProductResponse } from '../../interfaces/product.interface';
 import { Observable } from 'rxjs';
+import { Pagination } from '../../interfaces/category.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -13,16 +14,29 @@ export class ProductService {
 
   constructor(private readonly http: HttpClient) {}
 
-  createProduct(product:Product):
-  Observable<HttpResponse<Product>> {
+  createProduct(product: ProductResponse): Observable<HttpResponse<ProductResponse>> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
       'Content-Type': 'application/json',
-    })
+    });
 
-    return this.http.post<Product>(this.apiUrl,product,{
+    return this.http.post<ProductResponse>(this.apiUrl, product, {
       headers,
       observe: 'response',
-    })
+    });
+  }
+
+  getProducts(page: number, pageSize: number, sortBy: string, isAscending: boolean): Observable<Pagination<ProductResponse>> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+    });
+
+    let params = new HttpParams()
+      .set('page', page.toString())
+      .set('size', pageSize.toString())
+      .set('sortBy', sortBy)
+      .set('isAscending', isAscending.toString());
+
+    return this.http.get<Pagination<ProductResponse>>(this.apiUrl, { headers, params });
   }
 }
