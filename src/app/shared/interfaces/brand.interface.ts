@@ -3,6 +3,10 @@ export interface Brand {
     brandDescription: string;
 }
 
+export interface BrandName{
+    brandName: string;
+}
+
 export interface BrandResponse {
     brandId: number;
     brandName: string;
