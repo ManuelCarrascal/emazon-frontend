@@ -8,7 +8,7 @@ import { ProductService } from '@/app/shared/services/product/product.service';
 import { ToastService, ToastType } from '@/app/shared/services/toast/toast.service';
 import { CategoryResponse } from '@/app/shared/interfaces/category.interface';
 import { BrandResponse } from '@/app/shared/interfaces/brand.interface';
-import { Product, ProductResponse, ProductView } from '@/app/shared/interfaces/product.interface';
+import {  ProductResponse, ProductView } from '@/app/shared/interfaces/product.interface';
 
 const MIN_LENGTH = 3;
 const MAX_CATEGORIES = 3;
@@ -196,12 +196,12 @@ export class ProductComponent implements OnInit {
       next: (product) => {
         this.toastService.showToast('Product created successfully', ToastType.Success);
         this.loadProducts();
+        this.closeModal();
       },
       error: (error) => {
         this.toastService.showToast('Error creating product', ToastType.Error);
       },
     });
-    this.closeModal();
   }
 
   loadCategories(): void {

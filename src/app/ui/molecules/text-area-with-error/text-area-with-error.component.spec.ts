@@ -65,16 +65,19 @@ describe('TextAreaWithErrorComponent', () => {
     component.control = new FormControl('', { validators: [] });
     component.control.markAsTouched();
     component.control.setErrors({ required: true });
+    component.errorMessage = 'This field is required'; // Set the error message
     fixture.detectChanges();
 
     const errorMessageElement = fixture.debugElement.query(By.css('.error-message'));
     expect(errorMessageElement).toBeTruthy();
+    expect(errorMessageElement.nativeElement.textContent).toContain('This field is required');
   });
 
   it('should not display error message when control is valid', () => {
     component.control = new FormControl('', { validators: [] });
     component.control.markAsTouched();
     component.control.setErrors(null);
+    component.errorMessage = ''; 
     fixture.detectChanges();
 
     const errorMessageElement = fixture.debugElement.query(By.css('.error-message'));

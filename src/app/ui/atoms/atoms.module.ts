@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { DividerComponent } from './divider/divider.component';
 import { HamburgerButtonComponent } from './hamburger-button/hamburger-button.component';
 import { ButtonComponent } from './button/button.component';
-import { TableCellComponent } from './table-cell/table-cell.component';
 import { LogoComponent } from './logo/logo.component';
 import { LoaderComponent } from './loader/loader.component';
 
@@ -12,7 +11,6 @@ import { LoaderComponent } from './loader/loader.component';
     DividerComponent,
     HamburgerButtonComponent,
     ButtonComponent,
-    TableCellComponent,
     LogoComponent,
     LoaderComponent,
   ],
@@ -21,7 +19,6 @@ import { LoaderComponent } from './loader/loader.component';
     DividerComponent,
     HamburgerButtonComponent,
     ButtonComponent,
-    TableCellComponent,
     LogoComponent,
     LoaderComponent
   ],

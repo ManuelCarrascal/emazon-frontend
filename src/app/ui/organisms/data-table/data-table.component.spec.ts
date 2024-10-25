@@ -2,7 +2,6 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DataTableComponent } from './data-table.component';
 import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
-import { TableCellComponent } from '../../atoms/table-cell/table-cell.component';
 
 describe('DataTableComponent', () => {
   let component: DataTableComponent;
@@ -102,12 +101,14 @@ describe('DataTableComponent', () => {
   });
 
   it('should render table rows correctly', () => {
+    fixture.detectChanges();
+
     const rows = fixture.debugElement.queryAll(By.css('.table__row'));
     expect(rows.length).toBe(1);
 
-    const cells = rows[0].queryAll(By.directive(TableCellComponent));
+    const cells = rows[0].queryAll(By.css('td'));
     expect(cells.length).toBe(component.columns.length);
-    expect(cells[0].componentInstance.content).toBe('Test');
+    expect(cells[0].nativeElement.textContent.trim()).toBe('Test');
   });
 
   it('should disable previous button on first page', () => {
@@ -149,9 +150,11 @@ describe('DataTableComponent', () => {
     fixture.detectChanges();
 
     const header = fixture.debugElement.query(By.css('th .table__cell button'));
-    header.nativeElement.click();
+    if (header) {
+      header.nativeElement.click();
+    }
 
-    expect(component.onSortChange).toHaveBeenCalledWith('brandName');
+    expect(component.onSortChange).toHaveBeenCalledWith('name');
   });
 
   it('should call onRowsPerPageChange on rows per page change', () => {
@@ -160,5 +163,4 @@ describe('DataTableComponent', () => {
     select.triggerEventHandler('change', { target: { value: '10' } });
     expect(component.onRowsPerPageChange).toHaveBeenCalled();
   });
-  
 });

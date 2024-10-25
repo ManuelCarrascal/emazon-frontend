@@ -1,8 +1,8 @@
-import { environment } from '@/environments/environment';
-import { HttpClient, HttpHeaders, HttpParams, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { ProductResponse } from '../../interfaces/product.interface';
+import { HttpClient, HttpHeaders, HttpParams, HttpResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from '@/environments/environment';
+import { Product, ProductResponse } from '../../interfaces/product.interface';
 import { Pagination } from '../../interfaces/category.interface';
 
 @Injectable({
@@ -14,7 +14,7 @@ export class ProductService {
 
   constructor(private readonly http: HttpClient) {}
 
-  createProduct(product: ProductResponse): Observable<HttpResponse<ProductResponse>> {
+  createProduct(product: Product): Observable<HttpResponse<ProductResponse>> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
       'Content-Type': 'application/json',

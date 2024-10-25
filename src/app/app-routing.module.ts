@@ -45,6 +45,12 @@ const routes: Routes = [
         loadChildren: ()=> import( './pages/product-page/product-page.module').then(
           (m) => m.ProductPageModule
         ),
+      },
+      {
+        path: 'warehouse-assistant',
+        loadChildren: ()=> import('./pages/warehouse-assistant-page/warehouse-assistant-page.module').then(
+          (m) => m.WarehouseAssistantPageModule
+        ),
       }
     ]
    

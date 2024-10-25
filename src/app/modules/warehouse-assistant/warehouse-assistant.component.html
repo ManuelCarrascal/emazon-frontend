@@ -1,0 +1,62 @@
+<div class="container-content">
+  <h1>Register a new warehouse assistant</h1>
+
+  <form [formGroup]="warehouseAssistantForm" (ngSubmit)="onSubmit()">
+    <app-input-with-error
+      formControlName="userName"
+      [errorMessage]="userNameError"
+      [control]="userName"
+      placeholder="User Name"
+    ></app-input-with-error>
+
+    <app-input-with-error
+      formControlName="userLastName"
+      [errorMessage]="userLastNameError"
+      [control]="userLastName"
+      placeholder="Enter the last name of the warehouse assistant"
+      type="text"
+    ></app-input-with-error>
+
+    <app-input-with-error
+      formControlName="userIdentityDocument"
+      [errorMessage]="userIdentityDocumentError"
+      [control]="userIdentityDocument"
+      placeholder="Enter the identity document of the warehouse assistant"
+      type="number"
+    ></app-input-with-error>
+
+    <app-input-with-error
+      formControlName="userPhone"
+      [errorMessage]="userPhoneError"
+      [control]="userPhone"
+      placeholder="Enter the phone number of the warehouse assistant"
+      type="tel"
+    ></app-input-with-error>
+
+    <app-input-with-error
+      formControlName="userEmail"
+      [errorMessage]="userEmailError"
+      [control]="userEmail"
+      placeholder="Enter the email of the warehouse assistant"
+      type="email"
+    ></app-input-with-error>
+
+    <app-input-with-error
+      formControlName="userPassword"
+      [errorMessage]="userPasswordError"
+      [control]="userPassword"
+      placeholder="Enter the password for the warehouse assistant"
+      type="password"
+    ></app-input-with-error>
+
+    <app-input-with-error
+      formControlName="userBirthdate"
+      [errorMessage]="userBirthdateError"
+      [control]="userBirthdate"
+      placeholder="Enter the birthdate of the warehouse assistant"
+      type="date"
+    ></app-input-with-error>
+
+    <button type="submit">Submit</button>
+  </form>
+</div>

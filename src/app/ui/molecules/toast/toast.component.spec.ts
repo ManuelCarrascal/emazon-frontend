@@ -1,9 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ToastComponent } from './toast.component';
-import { ToastService, Toast, ToastType } from '@/app/shared/services/toast.service';
 import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
 import { of } from 'rxjs';
+import { Toast, ToastService, ToastType } from '@/app/shared/services/toast/toast.service';
 
 describe('ToastComponent', () => {
   let component: ToastComponent;

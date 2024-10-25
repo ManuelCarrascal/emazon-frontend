@@ -52,7 +52,7 @@ export class DataTableComponent implements OnInit {
     }
 
     this.sortChange.emit({
-      sortBy: this.currentSort,
+      sortBy,
       isAscending: this.isAscending,
     });
   }

@@ -1,9 +1,5 @@
-import {
-  Component,
-  forwardRef,
-  Input,
-} from '@angular/core';
-import { AbstractControl, ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { Component, forwardRef, Input } from '@angular/core';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR, AbstractControl } from '@angular/forms';
 
 @Component({
   selector: 'app-input-with-error',
@@ -31,7 +27,6 @@ export class InputWithErrorComponent implements ControlValueAccessor {
   get hasError(): boolean {
     return this.control?.touched && this.control?.invalid || false;
   }
-
 
   writeValue(value: string): void {
     this.value = value;

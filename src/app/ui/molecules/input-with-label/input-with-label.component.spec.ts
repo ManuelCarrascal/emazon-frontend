@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { TableCellComponent } from './table-cell.component';
+import { InputWithLabelComponent } from './input-with-label.component';
 
-describe('TableCellComponent', () => {
-  let component: TableCellComponent;
-  let fixture: ComponentFixture<TableCellComponent>;
+describe('InputWithLabelComponent', () => {
+  let component: InputWithLabelComponent;
+  let fixture: ComponentFixture<InputWithLabelComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ TableCellComponent ]
+      declarations: [ InputWithLabelComponent ]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(TableCellComponent);
+    fixture = TestBed.createComponent(InputWithLabelComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

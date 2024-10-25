@@ -7,6 +7,7 @@ import { InputWithErrorComponent } from './input-with-error/input-with-error.com
 import { TextAreaWithErrorComponent } from './text-area-with-error/text-area-with-error.component';
 import { DropdownSearchInputComponent } from './dropdown-search-input/dropdown-search-input.component';
 import { LucideAngularModule, Search } from 'lucide-angular';
+import { InputWithLabelComponent } from './input-with-label/input-with-label.component';
 
 
 @NgModule({
@@ -16,6 +17,7 @@ import { LucideAngularModule, Search } from 'lucide-angular';
     InputWithErrorComponent,
     TextAreaWithErrorComponent,
     DropdownSearchInputComponent,
+    InputWithLabelComponent,
   ],
   imports: [
     CommonModule,
@@ -28,6 +30,7 @@ import { LucideAngularModule, Search } from 'lucide-angular';
     InputWithErrorComponent,
     TextAreaWithErrorComponent,
     DropdownSearchInputComponent,
+    InputWithLabelComponent,
   ]
 })
 export class MoleculesModule { }

@@ -10,7 +10,6 @@ import { OrganismsModule } from './organisms/organisms.module';
     AtomsModule,
     MoleculesModule,
     OrganismsModule,
-
   ],
   exports: [
     AtomsModule,
