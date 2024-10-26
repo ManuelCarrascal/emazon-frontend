@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { DashboardTemplateComponent } from './modules/dashboard/components/templates/dashboard-template/dashboard-template.component';
+import { DashboardTemplateComponent } from './ui/templates/dashboard-template/dashboard-template.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -18,7 +18,7 @@ const routes: Routes = [
       {
         path: '',
         loadChildren: () =>
-          import('./modules/dashboard/dashboard.module').then(
+          import('./pages/dashboard-page/dashboard.module').then(
             (m) => m.DashboardModule
           ),
       },
