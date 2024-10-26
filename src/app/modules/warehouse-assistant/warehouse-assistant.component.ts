@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/fo
 import { ToastService, ToastType } from '@/app/shared/services/toast/toast.service';
 import { User } from '@/app/shared/interfaces/user.interface';
 import { WarehouseAssistantService } from '@/app/shared/services/warehouse-assistant/warehouse-assistant.service';
+import { adultValidator } from '@/app/shared/validators/adult-validator';
 
 @Component({
   selector: 'app-warehouse-assistant',
@@ -21,10 +22,10 @@ export class WarehouseAssistantComponent implements OnInit {
       userName: ['', [Validators.required, Validators.minLength(3)]],
       userLastName: ['', [Validators.required, Validators.minLength(3)]],
       userIdentityDocument: ['', [Validators.required, Validators.minLength(8)]],
-      userPhone: ['', [Validators.required, Validators.minLength(9)]],
+      userPhone: ['', [Validators.required, Validators.pattern(/^\+\d{1,3}\d{10}$/)]],
       userEmail: ['', [Validators.required, Validators.email]],
       userPassword: ['', [Validators.required, Validators.minLength(8)]],
-      userBirthdate: ['', [Validators.required]], 
+      userBirthdate: ['', [Validators.required, adultValidator()]],
     });
   }
 
@@ -103,8 +104,8 @@ export class WarehouseAssistantComponent implements OnInit {
       if (control.errors['required']) {
         return 'Phone number is required';
       }
-      if (control.errors['minlength']) {
-        return `Phone number must be at least ${control.errors['minlength'].requiredLength} characters long`;
+      if (control.errors['pattern']) {
+        return 'Phone number must be in the format +573142734677';
       }
     }
     return '';
@@ -142,6 +143,9 @@ export class WarehouseAssistantComponent implements OnInit {
       if (control.errors['required']) {
         return 'Birthdate is required';
       }
+      if (control.errors['notAdult']) {
+        return 'User must be an adult';
+      }
     }
     return '';
   }
@@ -153,7 +157,7 @@ export class WarehouseAssistantComponent implements OnInit {
     }
 
     const assistant: User = this.warehouseAssistantForm.value;
-    assistant.userBirthdate = formatDate(assistant.userBirthdate); 
+    assistant.userBirthdate = formatDate(assistant.userBirthdate); // Formatear la fecha a dd/MM/yyyy
     console.log('Form submitted:', assistant);
 
     this.warehouseAssistantService.registerAssistant(assistant).subscribe({
@@ -168,7 +172,14 @@ export class WarehouseAssistantComponent implements OnInit {
       }
     });
   }
+  
+  restrictPhoneInput(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    input.value = input.value.replace(/[^+\d]/g, '');
+  }
 }
+
+
 
 function formatDate(date: string): string {
   const d = new Date(date);

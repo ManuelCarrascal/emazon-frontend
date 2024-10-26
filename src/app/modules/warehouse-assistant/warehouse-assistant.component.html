@@ -30,6 +30,7 @@
       [errorMessage]="userPhoneError"
       [control]="userPhone"
       placeholder="Enter the phone number of the warehouse assistant"
+      (input)="restrictPhoneInput($event)"
       type="tel"
     ></app-input-with-error>
 
