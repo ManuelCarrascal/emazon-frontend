@@ -1,12 +1,20 @@
-<div class="container-content mb-3 flex-column-center">
-  <h1 class="title text-center text-5xl mb-4rem">Register a new <span class="title__highlight">warehouse assistant</span></h1>
 
-  <form [formGroup]="warehouseAssistantForm" (ngSubmit)="onSubmit()" class="form max-w-screen-sm ">
+<div class="container-content mb-3 flex-column-center glass-background">
+  <h1 class="title text-center text-5xl mb-4rem">
+    Register a new <span class="title__highlight">warehouse assistant</span>
+  </h1>
+  <form
+    [formGroup]="warehouseAssistantForm"
+    (ngSubmit)="onSubmit()"
+    class="form max-w-screen-sm"
+  >
     <app-input-with-error
       formControlName="userName"
       [errorMessage]="userNameError"
       [control]="userName"
-      placeholder="User Name"
+      placeholder="Enter the name of the warehouse assistant"
+      label="Name"
+      ngClass="mb-2-5"
     ></app-input-with-error>
 
     <app-input-with-error
@@ -15,6 +23,8 @@
       [control]="userLastName"
       placeholder="Enter the last name of the warehouse assistant"
       type="text"
+      label="Last Name"
+      ngClass="mb-2-5"
     ></app-input-with-error>
 
     <app-input-with-error
@@ -23,6 +33,8 @@
       [control]="userIdentityDocument"
       placeholder="Enter the identity document of the warehouse assistant"
       type="number"
+      ngClass="mb-2-5"
+      label="Identity Document"
     ></app-input-with-error>
 
     <app-input-with-error
@@ -32,6 +44,8 @@
       placeholder="Enter the phone number of the warehouse assistant"
       (input)="restrictPhoneInput($event)"
       type="tel"
+      ngClass="mb-2-5"
+      label="Phone"
     ></app-input-with-error>
 
     <app-input-with-error
@@ -40,6 +54,8 @@
       [control]="userEmail"
       placeholder="Enter the email of the warehouse assistant"
       type="email"
+      ngClass="mb-2-5"
+      label="Email"
     ></app-input-with-error>
 
     <app-input-with-error
@@ -48,6 +64,8 @@
       [control]="userPassword"
       placeholder="Enter the password for the warehouse assistant"
       type="password"
+      ngClass="mb-2-5"
+      label="Password"
     ></app-input-with-error>
 
     <app-input-with-error
@@ -56,9 +74,14 @@
       [control]="userBirthdate"
       placeholder="Enter the birthdate of the warehouse assistant"
       type="date"
+      ngClass="mb-2-5"
+      label="Birthdate"
     ></app-input-with-error>
 
     <div class="flex-center">
-      <app-button [disabled]="warehouseAssistantForm.invalid">Create Product</app-button>
-    </div>  </form>
+      <app-button [disabled]="warehouseAssistantForm.invalid"
+        >Create Product</app-button
+      >
+    </div>
+  </form>
 </div>
