@@ -34,8 +34,8 @@ describe('ProductComponent', () => {
       createProduct: jest.fn().mockReturnValue(of({})),
       getProducts: jest.fn().mockReturnValue(of({
         content: [],
-        totalElements: 0,
-        totalPages: 0,
+        totalElements: 10,
+        totalPages: 5,
         currentPage: 0,
         isAscending: true,
       })),
@@ -73,7 +73,7 @@ describe('ProductComponent', () => {
 
   it('should load categories on initialization', () => {
     const mockCategories: CategoryResponse[] = [{ categoryId: 1, categoryName: 'Dairy', categoryDescription: 'Milk and cheese' }];
-    categoryService.getAllCategories = jest.fn().mockReturnValue(of(mockCategories));
+    categoryService.getAllCategories.mockReturnValue(of(mockCategories));
 
     component.ngOnInit();
 
@@ -91,7 +91,7 @@ describe('ProductComponent', () => {
 
   it('should load brands on initialization', () => {
     const mockBrands: BrandResponse[] = [{ brandId: 1, brandName: 'Brand 1', brandDescription: 'Description' }];
-    brandService.getAllBrands = jest.fn().mockReturnValue(of(mockBrands));
+    brandService.getAllBrands.mockReturnValue(of(mockBrands));
 
     component.ngOnInit();
 
@@ -136,6 +136,8 @@ describe('ProductComponent', () => {
       brand: { brandName: 'Brand A' },
     };
 
+    productService.createProduct = jest.fn().mockReturnValue(of(mockProductResponse));
+
     component.createProductForm.setValue({
       productName: 'Milk',
       productDescription: 'Fresh Milk',
@@ -145,12 +147,17 @@ describe('ProductComponent', () => {
       categoryIds: [1],
     });
 
-    productService.createProduct = jest.fn().mockReturnValue(of(mockProductResponse));
-
     component.createProduct();
 
     expect(toastService.showToast).toHaveBeenCalledWith('Product created successfully', 'success');
-    expect(productService.createProduct).toHaveBeenCalledWith(component.createProductForm.value);
+    expect(productService.createProduct).toHaveBeenCalledWith({
+      productName: 'Milk',
+      productDescription: 'Fresh Milk',
+      productQuantity: 10,
+      productPrice: 5.0,
+      brandId: 1,
+      categoryIds: [1],
+    });
   });
 
   it('should not create a product when form is invalid', () => {

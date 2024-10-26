@@ -179,8 +179,6 @@ export class WarehouseAssistantComponent implements OnInit {
   }
 }
 
-
-
 function formatDate(date: string): string {
   const d = new Date(date);
   const day = d.getDate().toString().padStart(2, '0');
