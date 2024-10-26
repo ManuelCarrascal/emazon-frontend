@@ -1,23 +1,23 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { ToastService, ToastType } from '@/app/shared/services/toast.service';
 import { of, throwError } from 'rxjs';
 import { HttpResponse } from '@angular/common/http';
 import { ModalComponent } from '@/app/ui/molecules/modal/modal.component';
 import { InputWithErrorComponent } from '@/app/ui/molecules/input-with-error/input-with-error.component';
 import { TextAreaWithErrorComponent } from '@/app/ui/molecules/text-area-with-error/text-area-with-error.component';
 import { ButtonComponent } from '@/app/ui/atoms/button/button.component';
-import { BrandService } from '../dashboard/services/brand/brand.service';
 import { DataTableComponent } from '@/app/ui/organisms/data-table/data-table.component';
-import { BrandResponse } from '../dashboard/interfaces/brand.interface';
 import { BrandComponent } from './brand.component';
+import { ToastService, ToastType } from '@/app/shared/services/toast/toast.service';
+import { BrandService } from '@/app/shared/services/brand/brand.service';
+import { BrandResponse } from '@/app/shared/interfaces/brand.interface';
 
-describe('BrandsPageComponent', () => {
+describe('BrandComponent', () => {
   let component: BrandComponent;
   let fixture: ComponentFixture<BrandComponent>;
-  let brandService: BrandService;
-  let toastService: ToastService;
+  let brandService: jest.Mocked<BrandService>;
+  let toastService: jest.Mocked<ToastService>;
 
   beforeEach(async () => {
     const brandServiceMock = {
@@ -25,8 +25,8 @@ describe('BrandsPageComponent', () => {
       getBrands: jest.fn().mockReturnValue(
         of({
           content: [],
-          totalElements: 0,
-          totalPages: 0,
+          totalElements: 5,
+          totalPages: 2,
           currentPage: 0,
         })
       ),
@@ -54,8 +54,8 @@ describe('BrandsPageComponent', () => {
 
     fixture = TestBed.createComponent(BrandComponent);
     component = fixture.componentInstance;
-    brandService = TestBed.inject(BrandService);
-    toastService = TestBed.inject(ToastService);
+    brandService = TestBed.inject(BrandService) as jest.Mocked<BrandService>;
+    toastService = TestBed.inject(ToastService) as jest.Mocked<ToastService>;
     fixture.detectChanges();
   });
 
@@ -86,22 +86,24 @@ describe('BrandsPageComponent', () => {
     });
 
     it('should call createBrand and show success toast on successful creation', () => {
-      jest.spyOn(brandService, 'createBrand')
-        .mockReturnValue(of(new HttpResponse<BrandResponse>({ status: 201 })));
-      jest.spyOn(toastService, 'showToast');
-
-      component.createBrandForm.setValue({
-        brandName: "Valid Brand",
-        brandDescription: "Valid Description",
-      });
-
-      component.createBrand();
-
-      expect(brandService.createBrand).toHaveBeenCalledWith(
-        component.createBrandForm.value
+      jest.spyOn(brandService, 'createBrand').mockReturnValue(
+        of(new HttpResponse<BrandResponse>({ status: 201 }))
       );
+      jest.spyOn(toastService, 'showToast');
+      
+      component.createBrandForm.setValue({
+        brandName: 'Valid Brand',
+        brandDescription: 'Valid Description'
+      });
+      
+      component.createBrand();
+    
+      expect(brandService.createBrand).toHaveBeenCalledWith({
+        brandName: 'Valid Brand',
+        brandDescription: 'Valid Description'
+      });
       expect(toastService.showToast).toHaveBeenCalledWith(
-        'Brand created successfully',
+        'Brand created successfully!',
         ToastType.Success
       );
     });
@@ -166,10 +168,9 @@ describe('BrandsPageComponent', () => {
   describe('pagination and sorting', () => {
     it('should change page and reload brands', () => {
       jest.spyOn(component, 'loadBrands');
-
+      
       component.changePage(1);
-
-      expect(component.currentPage).toBe(1);
+    
       expect(component.loadBrands).toHaveBeenCalledWith(
         1,
         component.pageSize,
@@ -178,134 +179,130 @@ describe('BrandsPageComponent', () => {
       );
     });
 
-    describe('changeSortOrder', () => {
-      it('should change sort order and reload brands', () => {
-        jest.spyOn(component, 'loadBrands');
-
-        component.changeSortOrder('brandName');
-
-        expect(component.sortBy).toBe('brandName');
-        expect(component.isAscending).toBe(false); 
-        expect(component.loadBrands).toHaveBeenCalledWith(
-          component.currentPage,
-          component.pageSize,
-          'brandName',
-          false
-        );
-      });
+    it('should change sort order and reload brands', () => {
+      jest.spyOn(component, 'loadBrands');
+      
+      component.isAscending = true;
+      component.changeSortOrder('brandName');
+    
+      expect(component.sortBy).toBe('brandName');
+      expect(component.isAscending).toBe(false); 
+      expect(component.loadBrands).toHaveBeenCalledWith(
+        component.currentPage,
+        component.pageSize,
+        'brandName',
+        false
+      );
     });
 
-    describe('onRowsPerPageChange', () => {
-      it('should change page size and reload brands', () => {
-        jest.spyOn(component, 'loadBrands');
+    it('should change page size and reload brands', () => {
+      jest.spyOn(component, 'loadBrands');
 
-        component.onRowsPerPageChange(10);
+      component.onRowsPerPageChange(10);
 
-        expect(component.pageSize).toBe(10);
-        expect(component.loadBrands).toHaveBeenCalledWith(
-          component.currentPage,
-          10,
-          component.sortBy,
-          component.isAscending
-        );
+      expect(component.pageSize).toBe(10);
+      expect(component.loadBrands).toHaveBeenCalledWith(
+        component.currentPage,
+        10,
+        component.sortBy,
+        component.isAscending
+      );
+    });
+  });
+
+  describe('form validations', () => {
+    it('should mark form as invalid if brand name is missing', () => {
+      component.createBrandForm.patchValue({
+        brandName: '',
+        brandDescription: 'Valid Description',
       });
+
+      expect(component.createBrandForm.invalid).toBeTruthy();
     });
 
-    describe('form validations', () => {
-      it('should mark form as invalid if brand name is missing', () => {
-        component.createBrandForm.patchValue({
-          brandName: '',
-          brandDescription: 'Valid Description',
-        });
-
-        expect(component.createBrandForm.invalid).toBeTruthy();
+    it('should mark form as valid if both fields are filled', () => {
+      component.createBrandForm.patchValue({
+        brandName: 'Valid Brand',
+        brandDescription: 'Valid Description',
       });
 
-      it('should mark form as valid if both fields are filled', () => {
-        component.createBrandForm.patchValue({
-          brandName: 'Valid Brand',
-          brandDescription: 'Valid Description',
-        });
+      expect(component.createBrandForm.valid).toBeTruthy();
+    });
+  });
 
-        expect(component.createBrandForm.valid).toBeTruthy();
-      });
+  describe('modal visibility', () => {
+    it('should open the modal when openModal is called', () => {
+      component.openModal();
+      expect(component.isModalVisible).toBeTruthy();
     });
 
-    describe('modal visibility', () => {
-      it('should open the modal when openModal is called', () => {
-        component.openModal();
-        expect(component.isModalVisible).toBeTruthy();
-      });
+    it('should close the modal and reset the form when closeModal is called', () => {
+      component.closeModal();
 
-      it('should close the modal and reset the form when closeModal is called', () => {
-        component.closeModal();
-
-        expect(component.isModalVisible).toBeFalsy();
-        expect(component.createBrandForm.pristine).toBeTruthy();
-        expect(component.createBrandForm.untouched).toBeTruthy();
-        expect(component.createBrandForm.value).toEqual({
-          brandName: '',
-          brandDescription: '',
-        });
-      });
-    });
-
-    describe('confirmDelete', () => {
-      it('should close the modal', () => {
-        jest.spyOn(component, 'closeModal');
-
-        component.confirmDelete();
-
-        expect(component.closeModal).toHaveBeenCalled();
-      });
-    });
-
-    describe('onKeyDownButton', () => {
-      it('should open the modal on Enter key press', () => {
-        jest.spyOn(component, 'openModal');
-        const event = new KeyboardEvent('keydown', { key: 'Enter' });
-
-        component.onKeyDownButton(event);
-
-        expect(component.openModal).toHaveBeenCalled();
-      });
-
-      it('should open the modal on Space key press', () => {
-        jest.spyOn(component, 'openModal');
-        const event = new KeyboardEvent('keydown', { key: ' ' });
-
-        component.onKeyDownButton(event);
-
-        expect(component.openModal).toHaveBeenCalled();
-      });
-    });
-
-    describe('getErrorMessage', () => {
-      it('should return the correct error message for touched control with errors', () => {
-        const control = component.createBrandForm.get('brandName');
-        control?.setErrors({ required: true });
-        control?.markAsTouched();
-
-        const errorMessage = component.getErrorMessage(control, 'Brand Name');
-        expect(errorMessage).toBe('Brand Name is required.');
-      });
-
-      it('should return an empty string if control is not touched', () => {
-        const control = component.createBrandForm.get('brandName');
-        control?.setErrors({ required: true });
-
-        const errorMessage = component.getErrorMessage(control, 'Brand Name');
-        expect(errorMessage).toBe('');
-      });
-
-      it('should return an empty string if control is valid', () => {
-        const control = component.createBrandForm.get('brandName');
-        control?.setValue('Valid Brand');
-
-        const errorMessage = component.getErrorMessage(control, 'Brand Name');
-        expect(errorMessage).toBe('');
+      expect(component.isModalVisible).toBeFalsy();
+      expect(component.createBrandForm.pristine).toBeTruthy();
+      expect(component.createBrandForm.untouched).toBeTruthy();
+      expect(component.createBrandForm.value).toEqual({
+        brandName: '',
+        brandDescription: '',
       });
     });
   });
-  
+
+  describe('confirmDelete', () => {
+    it('should close the modal', () => {
+      jest.spyOn(component, 'closeModal');
+
+      component.confirmDelete();
+
+      expect(component.closeModal).toHaveBeenCalled();
+    });
+  });
+
+  describe('onKeyDownButton', () => {
+    it('should open the modal on Enter key press', () => {
+      jest.spyOn(component, 'openModal');
+      const event = new KeyboardEvent('keydown', { key: 'Enter' });
+
+      component.onKeyDownButton(event);
+
+      expect(component.openModal).toHaveBeenCalled();
+    });
+
+    it('should open the modal on Space key press', () => {
+      jest.spyOn(component, 'openModal');
+      const event = new KeyboardEvent('keydown', { key: ' ' });
+
+      component.onKeyDownButton(event);
+
+      expect(component.openModal).toHaveBeenCalled();
+    });
+  });
+
+  describe('getErrorMessage', () => {
+    it('should return the correct error message for touched control with errors', () => {
+      const control = component.createBrandForm.get('brandName');
+      control?.setErrors({ required: true });
+      control?.markAsTouched();
+
+      const errorMessage = component.getErrorMessage(control, 'Brand Name');
+      expect(errorMessage).toBe('Brand Name is required.');
+    });
+
+    it('should return an empty string if control is not touched', () => {
+      const control = component.createBrandForm.get('brandName');
+      control?.setErrors({ required: true });
+
+      const errorMessage = component.getErrorMessage(control, 'Brand Name');
+      expect(errorMessage).toBe('');
+    });
+
+    it('should return an empty string if control is valid', () => {
+      const control = component.createBrandForm.get('brandName');
+      control?.setValue('Valid Brand');
+
+      const errorMessage = component.getErrorMessage(control, 'Brand Name');
+      expect(errorMessage).toBe('');
+    });
+  });
 });

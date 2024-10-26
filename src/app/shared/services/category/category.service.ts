@@ -11,7 +11,7 @@ export class CategoryService {
 
   constructor(private readonly http: HttpClient) {}
 
-  createCategory(category: Category): Observable<HttpResponse<Category>> {
+  createCategory(category: Category): Observable<HttpResponse<{ categoryName: string; categoryDescription: string }>> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
       'Content-Type': 'application/json',

@@ -1,13 +1,17 @@
 <div class="input-container">
-  <input
-    [value]="value"
-    (input)="onInput($event)"
-    [disabled]="disabled"
-    class="input poppins-regular"
-    [type]="type"
-    [placeholder]="placeholder"
-    [ngClass]="{'input--error': hasError}"
-  />
+  <label *ngIf="label" [for]="inputId" class="input-label poppins-regular">{{ label }}</label>
+  <div class="input-wrapper">
+    <input
+      [id]="inputId"
+      [value]="value"
+      (input)="onInput($event)"
+      [disabled]="disabled"
+      class="input poppins-regular"
+      [type]="type"
+      [placeholder]="placeholder"
+      [ngClass]="{'input--error': hasError}"
+    />
+  </div>
   <div class="error-message poppins-regular" *ngIf="errorMessage">
     {{ errorMessage }}
   </div>

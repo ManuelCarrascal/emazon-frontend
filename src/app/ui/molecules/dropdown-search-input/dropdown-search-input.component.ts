@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, forwardRef, Input, Output, EventEmitter } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 @Component({
@@ -8,10 +8,10 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
-      useExisting: DropdownSearchInputComponent,
-      multi: true
-    }
-  ]
+      useExisting: forwardRef(() => DropdownSearchInputComponent),
+      multi: true,
+    },
+  ],
 })
 export class DropdownSearchInputComponent implements ControlValueAccessor {
   @Input() items: any[] = [];
@@ -20,7 +20,7 @@ export class DropdownSearchInputComponent implements ControlValueAccessor {
   @Input() displayProperty: string = 'name';
   @Input() idProperty: string = 'id';
   @Input() maxSelection: number = 1;
-  @Input() placeholder: string = 'Search'; // Nueva propiedad de entrada para el placeholder
+  @Input() placeholder: string = 'Search';
   @Output() searchTermChange = new EventEmitter<string>();
   @Output() filterItems = new EventEmitter<void>();
   @Output() selectItem = new EventEmitter<any>();
@@ -42,6 +42,10 @@ export class DropdownSearchInputComponent implements ControlValueAccessor {
 
   registerOnTouched(fn: () => void): void {
     this.onTouched = fn;
+  }
+
+  setDisabledState(isDisabled: boolean): void {
+    // Handle the disabled state if necessary
   }
 
   onSearchTermChange(event: Event) {

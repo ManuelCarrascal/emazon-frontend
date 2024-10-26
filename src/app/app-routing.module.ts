@@ -1,56 +1,65 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { DashboardTemplateComponent } from './modules/dashboard/components/templates/dashboard-template/dashboard-template.component';
+import { DashboardTemplateComponent } from './ui/templates/dashboard-template/dashboard-template.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
   {
     path: 'login',
     loadChildren: () =>
-      import('./modules/login/login.module').then((m) => m.LoginModule),
+      import('./pages/login-page/login-page.module').then(
+        (m) => m.LoginPageModule
+      ),
   },
   {
     path: 'dashboard',
     component: DashboardTemplateComponent,
-    children:[
-       {
-         path: '',
-         loadChildren: () =>
-           import('./modules/dashboard/dashboard.module').then(
-             (m) => m.DashboardModule
-           ),
-       },
-       {
+    children: [
+      {
+        path: '',
+        loadChildren: () =>
+          import('./pages/dashboard-page/dashboard.module').then(
+            (m) => m.DashboardModule
+          ),
+      },
+      {
         path: 'home',
         loadChildren: () =>
           import('./pages/home-page/home-page.module').then(
             (m) => m.HomePageModule
           ),
-       },
+      },
       {
         path: 'categories',
         loadChildren: () =>
-        import('./pages/category-page/category-page.module').then(
-          (m) => m.CategoryPageModule
-        ),
+          import('./pages/category-page/category-page.module').then(
+            (m) => m.CategoryPageModule
+          ),
       },
-      { 
+      {
         path: 'brands',
-        loadChildren: ()=> import('./pages/brand-page/brand-page.module').then(
-          (m) => m.BrandPageModule
-        ),
+        loadChildren: () =>
+          import('./pages/brand-page/brand-page.module').then(
+            (m) => m.BrandPageModule
+          ),
       },
       {
         path: 'products',
-        loadChildren: ()=> import( './pages/product-page/product-page.module').then(
-          (m) => m.ProductPageModule
-        ),
-      }
-    ]
-   
+        loadChildren: () =>
+          import('./pages/product-page/product-page.module').then(
+            (m) => m.ProductPageModule
+          ),
+      },
+      {
+        path: 'warehouse-assistant',
+        loadChildren: () =>
+          import(
+            './pages/warehouse-assistant-page/warehouse-assistant-page.module'
+          ).then((m) => m.WarehouseAssistantPageModule),
+      },
+    ],
   },
 ];
-
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],

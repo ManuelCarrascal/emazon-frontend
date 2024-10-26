@@ -33,6 +33,12 @@ body{
   height: 100%;
 }
 
+.title{
+  &__highlight{
+    color: $purple;
+  }
+}
+
 a{
   text-decoration: none;
   color: $black;
@@ -59,6 +65,11 @@ input[type="number"]::-webkit-outer-spin-button, ::-webkit-inner-spin-button{
   margin: 1.6rem 0;
 }
 
+.container-content{
+  width: 80%;
+  margin: 0 auto;
+}
+
 .flex-end-container {
   display: flex;
   justify-content: flex-end;
@@ -74,16 +85,6 @@ input[type="number"]::-webkit-outer-spin-button, ::-webkit-inner-spin-button{
   display: flex;
   justify-content: center;
   align-items: center;
-}
-
-.form {
-  display: flex;
-  flex-direction: column;
-  gap: 3.5rem;
-
-  @include desktop {
-    gap: 5.8rem;
-  }
 }
 
 .container-inputs {

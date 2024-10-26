@@ -4,9 +4,9 @@ import {
   HttpTestingController,
 } from '@angular/common/http/testing';
 import { ProductService } from './product.service';
-import { Product } from '../../interfaces/product.interface';
+import { Product, ProductResponse } from '../../interfaces/product.interface';
 import { environment } from '@/environments/environment';
-import { HttpResponse } from '@angular/common/http'; 
+import { HttpResponse } from '@angular/common/http';
 
 describe('ProductService', () => {
   let service: ProductService;
@@ -32,21 +32,35 @@ describe('ProductService', () => {
   it('should create a product', () => {
     const dummyProduct: Product = {
       productName: 'Test Product',
-      productDescription: 'Description',
+      productDescription: 'Test Description',
       productCategories: [1, 2],
       productQuantity: 10,
       productPrice: 100,
       brandId: 1,
       categoryIds: [1, 2],
     };
+
+    const dummyProductResponse: ProductResponse = {
+      productId: 1,
+      productName: 'Test Product',
+      productDescription: 'Test Description',
+      productQuantity: 10,
+      productPrice: 100,
+      brand: { brandName: 'Test Brand' },
+      categories: [
+        { categoryId: 1, categoryName: 'Category 1' },
+        { categoryId: 2, categoryName: 'Category 2' },
+      ],
+    };
+
     const dummyResponse = new HttpResponse({
       status: 201,
-      body: dummyProduct,
+      body: dummyProductResponse,
     });
 
     service.createProduct(dummyProduct).subscribe((response) => {
       expect(response.status).toBe(201);
-      expect(response.body).toEqual(dummyProduct);
+      expect(response.body).toEqual(dummyProductResponse);
     });
 
     const req = httpMock.expectOne(
