@@ -1,7 +1,7 @@
-<div class="container-content">
-  <h1>Register a new warehouse assistant</h1>
+<div class="container-content mb-3 flex-column-center">
+  <h1 class="title text-center text-5xl mb-4rem">Register a new <span class="title__highlight">warehouse assistant</span></h1>
 
-  <form [formGroup]="warehouseAssistantForm" (ngSubmit)="onSubmit()">
+  <form [formGroup]="warehouseAssistantForm" (ngSubmit)="onSubmit()" class="form max-w-screen-sm ">
     <app-input-with-error
       formControlName="userName"
       [errorMessage]="userNameError"
@@ -57,6 +57,7 @@
       type="date"
     ></app-input-with-error>
 
-    <button type="submit">Submit</button>
-  </form>
+    <div class="flex-center">
+      <app-button [disabled]="warehouseAssistantForm.invalid">Create Product</app-button>
+    </div>  </form>
 </div>

@@ -149,10 +149,8 @@ describe('DataTableComponent', () => {
     jest.spyOn(component, 'onSortChange');
     fixture.detectChanges();
 
-    const header = fixture.debugElement.query(By.css('th .table__cell button'));
-    if (header) {
-      header.nativeElement.click();
-    }
+    const header = fixture.debugElement.query(By.css('thead th button'));
+    header.nativeElement.click();
 
     expect(component.onSortChange).toHaveBeenCalledWith('name');
   });
