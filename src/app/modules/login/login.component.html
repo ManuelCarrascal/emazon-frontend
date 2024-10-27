@@ -1,1 +1,31 @@
-<button (click)="goToDashboard()">Ir al Dashboard</button>
+<section class="w-full h-full-vh align-center flex-column">
+    <div class="flex-center mb-3 text-3xl">
+      <app-logo></app-logo>
+    </div>
+    <div class="card max-w-screen-md">
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="form form-md">
+        <app-input-with-error
+          formControlName="userEmail"
+          [errorMessage]="userEmailError"
+          [control]="userEmail"
+          placeholder="Enter your email"
+          label="Email"
+        ></app-input-with-error>
+  
+        <app-input-with-error
+          formControlName="userPassword"
+          [errorMessage]="userPasswordError"
+          [control]="userPassword"
+          placeholder="Enter your password"
+          label="Password"
+          type="password"
+        ></app-input-with-error>
+  
+        <div class="flex-center">
+            <app-button [disabled]="loginForm.invalid" ngClass="w-full"
+              >Login</app-button
+            >
+          </div>
+      </form>
+    </div>
+  </section>
