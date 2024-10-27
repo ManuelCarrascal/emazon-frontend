@@ -105,6 +105,14 @@ input[type="number"]::-webkit-outer-spin-button, ::-webkit-inner-spin-button{
   margin-bottom: 4rem;
 }
 
+.card{
+  background-color: $white;
+  border-radius: 1rem;
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+  padding: 1.5rem;
+  margin: 0 auto;
+}
+
 .poppins-thin {
   font-family: "Poppins", sans-serif;
   font-weight: 100;

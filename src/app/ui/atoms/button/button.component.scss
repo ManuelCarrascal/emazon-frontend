@@ -8,9 +8,11 @@
     border: none;
     cursor: pointer;
     margin-top: 0.5rem;
+    
     @include desktop{
         padding: 1rem 4rem;
         font-size: 2rem;
+        width: 100%;
     }
 
     &:hover{
