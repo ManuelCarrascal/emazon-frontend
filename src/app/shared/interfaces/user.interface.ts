@@ -10,3 +10,7 @@ export interface User {
 
 export interface UserResponse extends Omit<User, 'userPassword'> {
 }
+
+export interface UserLogin extends Pick<User, 'userEmail' | 'userPassword'> {
+  
+}

@@ -1,6 +1,8 @@
+import { AuthService } from '@/app/shared/services/auth/auth.service';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
 import { Router } from '@angular/router';
+import { UserLogin } from '@/app/shared/interfaces/user.interface';
 
 @Component({
   selector: 'app-login',
@@ -12,7 +14,8 @@ export class LoginComponent implements OnInit {
 
   constructor(
     private readonly router: Router,
-    private readonly formBuilder: FormBuilder
+    private readonly formBuilder: FormBuilder,
+    private readonly authService: AuthService
   ) {
     this.loginForm = this.formBuilder.group({
       userEmail: ['', [Validators.required, Validators.email]],
@@ -49,7 +52,6 @@ export class LoginComponent implements OnInit {
       if (control.errors['required']) {
         return 'Password is required';
       }
-     
     }
     return '';
   }
@@ -60,8 +62,20 @@ export class LoginComponent implements OnInit {
       return;
     }
 
-    console.log('Form submitted:', this.loginForm.value);
-    this.goToDashboard();
+    const userLogin: UserLogin = {
+      userEmail: this.userEmail?.value,
+      userPassword: this.userPassword?.value,
+    };
+
+    this.authService.login(userLogin).subscribe(response => {
+      if (response.token) {
+        this.goToDashboard();
+      } else {
+        // Manejar error de autenticación
+        console.error('Login failed');
+        console.log(response.error);
+      }
+    });
   }
 
   goToDashboard() {

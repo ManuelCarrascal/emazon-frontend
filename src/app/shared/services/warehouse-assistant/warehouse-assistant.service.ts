@@ -8,7 +8,7 @@ import { environment } from '@/environments/environment';
   providedIn: 'root',
 })
 export class WarehouseAssistantService {
-  private readonly apiUrl = `${environment.user_service_url}/api/v1/users/warehouse-asst`;
+  private readonly apiUrl = `${environment.user_service_url}/v1/users/warehouse-asst`;
   private readonly token = environment.auth_token;
 
   constructor(private readonly http: HttpClient) {}
