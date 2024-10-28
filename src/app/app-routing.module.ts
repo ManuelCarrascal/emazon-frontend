@@ -17,6 +17,7 @@ const routes: Routes = [
     component: DashboardTemplateComponent,
     canActivate: [AuthGuard],
     children: [
+      { path: '', redirectTo: '/dashboard/home', pathMatch: 'full' },
       {
         path: '',
         loadChildren: () =>

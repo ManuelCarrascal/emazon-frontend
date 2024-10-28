@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
 import { Router } from '@angular/router';
 import { UserLogin } from '@/app/shared/interfaces/user.interface';
+import { ToastService, ToastType } from '@/app/shared/services/toast/toast.service';
 
 @Component({
   selector: 'app-login',
@@ -15,7 +16,8 @@ export class LoginComponent implements OnInit {
   constructor(
     private readonly router: Router,
     private readonly formBuilder: FormBuilder,
-    private readonly authService: AuthService
+    private readonly authService: AuthService,
+    private readonly toastService: ToastService
   ) {
     this.loginForm = this.formBuilder.group({
       userEmail: ['', [Validators.required, Validators.email]],
@@ -71,9 +73,7 @@ export class LoginComponent implements OnInit {
       if (response.token) {
         this.goToDashboard();
       } else {
-        // Manejar error de autenticación
-        console.error('Login failed');
-        console.log(response.error);
+        this.toastService.showToast('Invalid Credentials', ToastType.Error);
       }
     });
   }
