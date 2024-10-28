@@ -10,13 +10,17 @@ import { Pagination } from '../../interfaces/category.interface';
 })
 export class ProductService {
   private readonly apiUrl = `${environment.stock_service_url}/products`;
-  private readonly token = environment.auth_token;
 
   constructor(private readonly http: HttpClient) {}
 
+  private getToken(): string | null {
+    return localStorage.getItem('token');
+  }
+
   createProduct(product: Product): Observable<HttpResponse<ProductResponse>> {
+    const token = this.getToken();
     const headers = new HttpHeaders({
-      Authorization: `Bearer ${this.token}`,
+      Authorization: `Bearer ${token}`,
       'Content-Type': 'application/json',
     });
 
@@ -27,8 +31,9 @@ export class ProductService {
   }
 
   getProducts(page: number, pageSize: number, sortBy: string, isAscending: boolean): Observable<Pagination<ProductResponse>> {
+    const token = this.getToken();
     const headers = new HttpHeaders({
-      Authorization: `Bearer ${this.token}`,
+      Authorization: `Bearer ${token}`,
     });
 
     let params = new HttpParams()

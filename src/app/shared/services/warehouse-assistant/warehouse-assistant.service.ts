@@ -9,13 +9,17 @@ import { environment } from '@/environments/environment';
 })
 export class WarehouseAssistantService {
   private readonly apiUrl = `${environment.user_service_url}/v1/users/warehouse-asst`;
-  private readonly token = environment.auth_token;
 
   constructor(private readonly http: HttpClient) {}
 
+  private getToken(): string | null {
+    return localStorage.getItem('token');
+  }
+
   registerAssistant(user: User): Observable<HttpResponse<UserResponse>> {
+    const token = this.getToken();
     const headers = new HttpHeaders({
-      Authorization: `Bearer ${this.token}`,
+      Authorization: `Bearer ${token}`,
       'Content-Type': 'application/json',
     });
 

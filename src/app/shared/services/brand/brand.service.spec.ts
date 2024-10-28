@@ -3,7 +3,7 @@ import { HttpClientTestingModule, HttpTestingController } from '@angular/common/
 import { BrandService } from './brand.service';
 import { environment } from '@/environments/environment';
 import { Brand, BrandResponse } from '../../interfaces/brand.interface';
-import { HttpResponse, HttpHeaders } from '@angular/common/http';
+import { HttpResponse } from '@angular/common/http';
 import { Pagination } from '../../interfaces/category.interface';
 
 describe('BrandService', () => {

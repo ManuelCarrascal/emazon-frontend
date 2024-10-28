@@ -10,13 +10,17 @@ import { Pagination } from '../../interfaces/category.interface';
 })
 export class BrandService {
   private readonly apiUrl = `${environment.stock_service_url}/brands`;
-  private readonly token = environment.auth_token;
 
   constructor(private readonly http: HttpClient) {}
 
+  private getToken(): string | null {
+    return localStorage.getItem('token');
+  }
+
   createBrand(brand: Brand): Observable<HttpResponse<Brand>> {
+    const token = this.getToken();
     const headers = new HttpHeaders({
-      Authorization: `Bearer ${this.token}`,
+      Authorization: `Bearer ${token}`,
       'Content-Type': 'application/json',
     });
 
@@ -27,8 +31,9 @@ export class BrandService {
   }
 
   getBrands(page: number, size: number, sortBy: string, isAscending: boolean): Observable<Pagination<Brand>> {
+    const token = this.getToken();
     const headers = new HttpHeaders({
-      Authorization: `Bearer ${this.token}`,
+      Authorization: `Bearer ${token}`,
     });
 
     let params = new HttpParams()
@@ -48,9 +53,10 @@ export class BrandService {
     );
   }
 
-  getAllBrands():Observable<BrandResponse[]>{
+  getAllBrands(): Observable<BrandResponse[]> {
+    const token = this.getToken();
     const headers = new HttpHeaders({
-      Authorization: `Bearer ${this.token}`,
+      Authorization: `Bearer ${token}`,
     });
 
     return this.http.get<BrandResponse[]>(`${this.apiUrl}/all`, { headers });

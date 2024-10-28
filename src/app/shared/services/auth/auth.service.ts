@@ -9,7 +9,7 @@ import { UserLogin } from '@/app/shared/interfaces/user.interface';
   providedIn: 'root'
 })
 export class AuthService {
-  private readonly apiUrl = 'http://localhost:9092/api/auth'; // Cambia esto a tu URL de autenticación
+  private readonly apiUrl = 'http://localhost:9092/api/auth'; 
 
   constructor(private readonly http: HttpClient, private readonly router: Router) {}
 

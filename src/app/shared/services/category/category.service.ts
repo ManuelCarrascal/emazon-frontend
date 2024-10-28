@@ -7,13 +7,17 @@ import { environment } from 'src/environments/environment';
 @Injectable({ providedIn: 'root' })
 export class CategoryService {
   private readonly apiUrl = `${environment.stock_service_url}/categories`;
-  private readonly token = environment.auth_token;
 
   constructor(private readonly http: HttpClient) {}
 
+  private getToken(): string | null {
+    return localStorage.getItem('token');
+  }
+
   createCategory(category: Category): Observable<HttpResponse<{ categoryName: string; categoryDescription: string }>> {
+    const token = this.getToken();
     const headers = new HttpHeaders({
-      Authorization: `Bearer ${this.token}`,
+      Authorization: `Bearer ${token}`,
       'Content-Type': 'application/json',
     });
 
@@ -24,8 +28,9 @@ export class CategoryService {
   }
 
   getCategories(page: number, size: number, sortBy: string, isAscending: boolean): Observable<Pagination<Category>> {
+    const token = this.getToken();
     const headers = new HttpHeaders({
-      Authorization: `Bearer ${this.token}`,
+      Authorization: `Bearer ${token}`,
     });
 
     let params = new HttpParams()
@@ -46,11 +51,11 @@ export class CategoryService {
   }
 
   getAllCategories(): Observable<CategoryResponse[]> {
+    const token = this.getToken();
     const headers = new HttpHeaders({
-      Authorization: `Bearer ${this.token}`,
+      Authorization: `Bearer ${token}`,
     });
 
     return this.http.get<CategoryResponse[]>(`${this.apiUrl}/all`, { headers });
   }
-  
 }
