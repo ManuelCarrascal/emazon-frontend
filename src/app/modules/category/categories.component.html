@@ -1,6 +1,6 @@
 <div class="container">
   <div class="flex-end-container">
-    <app-button (click)="openModal()" (keydown)="onKeyDownButton($event)"
+    <app-button (click)="openModal()" (keydown)="onKeyDownButton($event)" *appRole="'ROLE_ADMIN'"
       >Add Category</app-button
     >
   </div>

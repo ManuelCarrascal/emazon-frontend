@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { CategoriesComponent } from './categories.component';
 import { UiModule } from '@/app/ui/ui.module';
 import { ReactiveFormsModule } from '@angular/forms';
+import { SharedModule } from '@/app/shared/shared.module';
 
 
 @NgModule({
@@ -10,7 +11,9 @@ import { ReactiveFormsModule } from '@angular/forms';
   imports: [
     CommonModule,
     UiModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    SharedModule
+
   ],
   exports: [CategoriesComponent]
 })

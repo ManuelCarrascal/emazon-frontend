@@ -10,7 +10,7 @@ import { adultValidator } from '@/app/shared/validators/adult-validator';
   templateUrl: './warehouse-assistant.component.html',
   styleUrls: ['./warehouse-assistant.component.scss']
 })
-export class WarehouseAssistantComponent implements OnInit {
+export class WarehouseAssistantComponent {
   public warehouseAssistantForm: FormGroup;
 
   constructor(
@@ -29,7 +29,6 @@ export class WarehouseAssistantComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void {}
 
   get userName(): AbstractControl | null {
     return this.warehouseAssistantForm.get('userName');
