@@ -150,9 +150,7 @@ export class BrandComponent implements OnInit {
       },
       error: (error) => {
         const message =
-          ERROR_MESSAGES_BY_CODE[
-            error.status as keyof typeof ERROR_MESSAGES_BY_CODE
-          ];
+          ERROR_MESSAGES_BY_CODE.BRAND_LOAD_ERROR || 'An unexpected error occurred';
         this.toastService.showToast(message, ToastType.Error);
       },
     });

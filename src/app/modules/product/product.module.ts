@@ -4,6 +4,7 @@ import { ProductComponent } from './product.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { UiModule } from '@/app/ui/ui.module';
 import { LucideAngularModule, X } from 'lucide-angular';
+import { SharedModule } from '@/app/shared/shared.module';
 
 @NgModule({
   declarations: [ProductComponent],
@@ -11,6 +12,7 @@ import { LucideAngularModule, X } from 'lucide-angular';
     CommonModule,
     UiModule,
     ReactiveFormsModule,
+    SharedModule,
     LucideAngularModule.pick({ X }),
   ],
   exports: [ProductComponent]

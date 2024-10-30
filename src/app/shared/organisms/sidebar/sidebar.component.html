@@ -17,7 +17,7 @@
           <li class="sidebar__navigation-item">
             <a routerLink="/dashboard/products" routerLinkActive="active">Products</a>
           </li>
-          <li class="sidebar__navigation-item">
+          <li class="sidebar__navigation-item" *appRole="'ROLE_ADMIN'">
             <a routerLink="/dashboard/warehouse-assistant" routerLinkActive="active">
               Warehouse Asst
             </a>

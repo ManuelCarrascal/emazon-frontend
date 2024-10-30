@@ -10,3 +10,19 @@ export interface User {
 
 export interface UserResponse extends Omit<User, 'userPassword'> {
 }
+
+export interface UserLogin extends Pick<User, 'userEmail' | 'userPassword'> {
+}
+
+export interface UserLoginResponse {
+  token: string;
+
+}
+
+export interface TokenPayload {
+  email: string;
+  authorities: string;
+  sub: string;
+  iat: number;
+  exp: number;
+}

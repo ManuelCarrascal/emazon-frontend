@@ -134,7 +134,7 @@ export class CategoriesComponent implements OnInit {
           const message =
             ERROR_MESSAGES_BY_CODE[
               error.status as keyof typeof ERROR_MESSAGES_BY_CODE
-            ];
+            ] || 'An unexpected error occurred';
           this.toastService.showToast(message, ToastType.Error);
         },
       });
@@ -168,11 +168,7 @@ export class CategoriesComponent implements OnInit {
           this.currentPage = data.currentPage;
         },
         error: (error) => {
-          const message =
-            ERROR_MESSAGES_BY_CODE[
-              error.status as keyof typeof ERROR_MESSAGES_BY_CODE
-            ];
-          this.toastService.showToast(message, ToastType.Error);
+          this.toastService.showToast('Error loading categories', ToastType.Error);
         },
       });
   }

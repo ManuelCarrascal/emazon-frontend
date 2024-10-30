@@ -15,3 +15,17 @@
     }
   }
 }
+
+.logout-container{
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 0.25rem;
+
+  &:hover{
+    color: $purple;
+    background-color: $bg-light-grey;
+  }
+}

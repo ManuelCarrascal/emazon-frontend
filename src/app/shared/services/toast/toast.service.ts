@@ -15,12 +15,15 @@ export interface Toast {
 @Injectable({
   providedIn: 'root',
 })
-
 export class ToastService {
   private readonly toastSubject = new Subject<Toast>();
   toastState = this.toastSubject.asObservable();
 
   showToast(message: string, type: ToastType = ToastType.Success) {
     this.toastSubject.next({ message, type });
+  }
+
+  clearToast() {
+    this.toastSubject.next({ message: '', type: ToastType.Success });
   }
 }
