@@ -3,13 +3,18 @@ import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { Observable, of } from 'rxjs';
 import { tap, catchError } from 'rxjs/operators';
-import { TokenPayload, UserLogin, UserLoginResponse } from '@/app/shared/interfaces/user.interface';
+import {
+  TokenPayload,
+  UserLogin,
+  UserLoginResponse,
+} from '@/app/shared/interfaces/user.interface';
+import { environment } from '@/environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  private readonly apiUrl = 'http://localhost:9092/api/auth';
+  private readonly apiUrl = `${environment.user_service_url}/auth`;
   private userRole: string | null = null;
 
   constructor(

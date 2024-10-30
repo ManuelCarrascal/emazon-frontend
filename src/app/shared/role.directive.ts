@@ -8,7 +8,7 @@ export class RoleDirective {
   private readonly currentRole: string | null = null;
 
   constructor(
-    private readonly templateRef: TemplateRef<any>,
+    private readonly templateRef: TemplateRef<unknown>, 
     private readonly viewContainer: ViewContainerRef,
     private readonly authService: AuthService
   ) {

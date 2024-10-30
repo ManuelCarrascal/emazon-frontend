@@ -1,38 +1,41 @@
-@use 'variables' as *;
+@use "variables" as *;
 
-@mixin input-base-styles{
-    padding: 0.8rem 1.2rem;
-    width: 100%;
-    border: .1rem solid $spacer-light;
-    border-radius: 0.2rem;
+@mixin padding($top, $right: $top, $bottom: $top, $left: $right) {
+  padding: $top $right $bottom $left;
+}
+
+@mixin input-base-styles {
+  padding: 0.8rem 1.2rem;
+  width: 100%;
+  border: 0.1rem solid $spacer-light;
+  border-radius: 0.2rem;
+  color: $black;
+
+  &:focus {
+    outline: none;
     color: $black;
+    border: 0.1rem solid $purple;
 
-
-    &:focus {
-        outline: none;
-        color: $black;
-        border: .1rem solid $purple;
-
-        &::placeholder {
-            color: $black;
-        }
+    &::placeholder {
+      color: $black;
     }
+  }
 }
 
-@mixin phone{
-    @media (min-width: $phone){
-        @content;
-    }
+@mixin phone {
+  @media (min-width: $phone) {
+    @content;
+  }
 }
 
-@mixin tablet{
-    @media (min-width: $tablet){
-        @content;
-    }
+@mixin tablet {
+  @media (min-width: $tablet) {
+    @content;
+  }
 }
 
-@mixin desktop{
-    @media (min-width: $desktop){
-        @content;
-    }
+@mixin desktop {
+  @media (min-width: $desktop) {
+    @content;
+  }
 }
