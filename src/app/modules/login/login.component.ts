@@ -1,5 +1,5 @@
 import { AuthService } from '@/app/shared/services/auth/auth.service';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -7,7 +7,6 @@ import {
   AbstractControl,
 } from '@angular/forms';
 import { Router } from '@angular/router';
-import { UserLogin } from '@/app/shared/interfaces/user.interface';
 import {
   ToastService,
   ToastType,
@@ -18,7 +17,7 @@ import {
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent {
   public loginForm: FormGroup;
 
   constructor(
@@ -32,8 +31,6 @@ export class LoginComponent implements OnInit {
       userPassword: ['', [Validators.required]],
     });
   }
-
-  ngOnInit(): void {}
 
   get userEmail(): AbstractControl | null {
     return this.loginForm.get('userEmail');

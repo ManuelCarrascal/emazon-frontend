@@ -26,10 +26,11 @@
   &__cell {
     padding: 12px 15px;
     width: auto;
-    text-align: left;
+    text-align: center;
     text-overflow: ellipsis;
     white-space: nowrap;
-    overflow: hidden;
+    overflow: visible;
+    position: relative;
   }
 
   &__row {
@@ -98,4 +99,12 @@
 span {
   font-size: 16px;
   color: $black;
+}
+
+.action-button{
+
+  &:hover{
+    color: $purple;
+    cursor: pointer;
+  }
 }

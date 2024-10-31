@@ -2,20 +2,28 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DataTableComponent } from './data-table.component';
 import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
+import { AuthService } from '@/app/shared/services/auth/auth.service';
 
 describe('DataTableComponent', () => {
   let component: DataTableComponent;
   let fixture: ComponentFixture<DataTableComponent>;
   let debugElement: DebugElement;
+  let authService: jest.Mocked<AuthService>;
 
   beforeEach(async () => {
+    const authServiceMock = {
+      getUserRole: jest.fn().mockReturnValue('ROLE_AUX_BODEGA'),
+    };
+
     await TestBed.configureTestingModule({
       declarations: [DataTableComponent],
+      providers: [{ provide: AuthService, useValue: authServiceMock }],
     }).compileComponents();
 
     fixture = TestBed.createComponent(DataTableComponent);
     component = fixture.componentInstance;
     debugElement = fixture.debugElement;
+    authService = TestBed.inject(AuthService) as jest.Mocked<AuthService>;
 
     component.data = [{ id: 1, name: 'Test' }];
     component.columns = [{ key: 'name', label: 'Name', sortable: true }];
@@ -160,5 +168,28 @@ describe('DataTableComponent', () => {
     const select = debugElement.query(By.css('#rowsPerPage'));
     select.triggerEventHandler('change', { target: { value: '10' } });
     expect(component.onRowsPerPageChange).toHaveBeenCalled();
+  });
+
+  it('should emit incrementClick event on onIncrementClick', () => {
+    jest.spyOn(component.incrementClick, 'emit');
+    const row = { id: 1, name: 'Test' };
+    component.onIncrementClick(row);
+    expect(component.incrementClick.emit).toHaveBeenCalledWith(row);
+  });
+
+  it('should return true for canShowActions if showActions is true and user role is ROLE_AUX_BODEGA', () => {
+    component.showActions = true;
+    expect(component.canShowActions()).toBe(true);
+  });
+
+  it('should return false for canShowActions if showActions is false', () => {
+    component.showActions = false;
+    expect(component.canShowActions()).toBe(false);
+  });
+
+  it('should return false for canShowActions if user role is not ROLE_AUX_BODEGA', () => {
+    authService.getUserRole.mockReturnValue('ROLE_USER');
+    component.showActions = true;
+    expect(component.canShowActions()).toBe(false);
   });
 });

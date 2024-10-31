@@ -12,6 +12,7 @@ import { BrandComponent } from './brand.component';
 import { ToastService, ToastType } from '@/app/shared/services/toast/toast.service';
 import { BrandService } from '@/app/shared/services/brand/brand.service';
 import { BrandResponse } from '@/app/shared/interfaces/brand.interface';
+import { ERROR_MESSAGES_BY_CODE } from '@/app/shared/constants/brandsComponent';
 
 describe('BrandComponent', () => {
   let component: BrandComponent;
@@ -155,11 +156,12 @@ describe('BrandComponent', () => {
       const mockError = { status: 500 };
       jest.spyOn(brandService, 'getBrands')
         .mockReturnValue(throwError(() => mockError));
-
+    
       component.loadBrands();
-
+    
+      const expectedErrorMessage = ERROR_MESSAGES_BY_CODE.BRAND_LOAD_ERROR || 'An unexpected error occurred';
       expect(toastService.showToast).toHaveBeenCalledWith(
-        'Server error. Please try again later.',
+        expectedErrorMessage,
         ToastType.Error 
       );
     });

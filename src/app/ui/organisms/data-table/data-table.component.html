@@ -15,12 +15,23 @@
             ></lucide-icon>
           </button>
         </th>
+        <th *ngIf="canShowActions()" class="table__cell">Actions</th>
       </tr>
     </thead>
     <tbody>
       <tr class="table__row" *ngFor="let row of data">
         <td class="table__cell" *ngFor="let column of columns">
           {{ row[column.key] }}
+        </td>
+        <td *ngIf="canShowActions()" class="table__cell">
+          <button class="button">
+            <lucide-icon
+              name="package-plus"
+              class="action-button"
+              (click)="onIncrementClick(row)"
+            ></lucide-icon>
+            <div class="tool-tip" role="tooltip">Add Supply</div>
+          </button>
         </td>
       </tr>
     </tbody>

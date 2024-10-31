@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { AuthService } from '@/app/shared/services/auth/auth.service';
 
 @Component({
   selector: 'app-data-table',
@@ -12,6 +13,7 @@ export class DataTableComponent implements OnInit {
   @Input() currentPage!: number;
   @Input() currentSort!: string;
   @Input() isAscending: boolean = true;
+  @Input() showActions: boolean = false; 
 
   @Output() pageChange = new EventEmitter<number>();
   @Output() sortChange = new EventEmitter<{
@@ -19,10 +21,11 @@ export class DataTableComponent implements OnInit {
     isAscending: boolean;
   }>();
   @Output() rowsPerPageChange = new EventEmitter<number>();
+  @Output() incrementClick = new EventEmitter<any>();
 
   rowsPerPage = 5;
 
-  constructor() {}
+  constructor(private readonly authService: AuthService) {}
 
   ngOnInit(): void {
     if (!this.currentSort && this.columns.length > 0) {
@@ -83,5 +86,13 @@ export class DataTableComponent implements OnInit {
     }
 
     return pages;
+  }
+
+  onIncrementClick(row: any): void {
+    this.incrementClick.emit(row);
+  }
+
+  canShowActions(): boolean {
+    return this.showActions && this.authService.getUserRole() === 'ROLE_AUX_BODEGA';
   }
 }

@@ -1,14 +1,14 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 import { NavLinkComponent } from './atoms/nav-link/nav-link.component';
 import { HeaderComponent } from './organisms/header/header.component';
-import { UiModule } from '../ui/ui.module';
 import { SidebarComponent } from './organisms/sidebar/sidebar.component';
-import { RouterModule } from '@angular/router';
 import { NavComponent } from './organisms/nav/nav.component';
 import { FooterComponent } from './organisms/footer/footer.component';
 import { LucideAngularModule, LogOut } from 'lucide-angular';
 import { RoleDirective } from './role.directive';
+import { AtomsModule } from '../ui/atoms/atoms.module';
 
 @NgModule({
   declarations: [
@@ -21,8 +21,8 @@ import { RoleDirective } from './role.directive';
   ],
   imports: [
     CommonModule,
-    UiModule,
     RouterModule,
+    AtomsModule,
     LucideAngularModule.pick({ LogOut }),
   ],
   exports: [
@@ -31,7 +31,7 @@ import { RoleDirective } from './role.directive';
     SidebarComponent,
     NavComponent,
     FooterComponent,
-    RoleDirective
+    RoleDirective,
   ],
 })
 export class SharedModule {}
