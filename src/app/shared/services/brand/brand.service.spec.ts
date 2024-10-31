@@ -11,7 +11,6 @@ describe('BrandService', () => {
   let httpMock: HttpTestingController;
 
   const apiUrl = `${environment.stock_service_url}/brands`;
-  const token = environment.auth_token;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -36,12 +35,12 @@ describe('BrandService', () => {
       const mockResponse = new HttpResponse<Brand>({ status: 201, body: brand });
 
       service.createBrand(brand).subscribe((response) => {
-        expect(response).toEqual(mockResponse);
+        expect(response.body).toEqual(brand);
       });
 
       const req = httpMock.expectOne(apiUrl);
       expect(req.request.method).toBe('POST');
-      expect(req.request.headers.get('Authorization')).toBe(`Bearer ${token}`);
+      expect(req.request.headers.get('Authorization')).toBe(`Bearer ${localStorage.getItem('token')}`);
       expect(req.request.headers.get('Content-Type')).toBe('application/json');
       req.event(mockResponse);
     });
@@ -99,17 +98,17 @@ describe('BrandService', () => {
       });
 
       expect(req.request.method).toBe('GET');
-      expect(req.request.headers.get('Authorization')).toBe(`Bearer ${token}`);
+      expect(req.request.headers.get('Authorization')).toBe(`Bearer ${localStorage.getItem('token')}`);
       req.flush(mockResponse);
     });
 
     it('should handle error response', () => {
-      service.getBrands(0, 10, 'brandName', true).subscribe(
-        () => fail('expected an error, not brands'),
-        (error) => {
+      service.getBrands(0, 10, 'brandName', true).subscribe({
+        next: () => fail('expected an error, not brands'),
+        error: (error) => {
           expect(error.status).toBe(400);
         }
-      );
+      });
 
       const req = httpMock.expectOne((request) => {
         return (
@@ -120,6 +119,36 @@ describe('BrandService', () => {
           request.params.get('isAscending') === 'true'
         );
       });
+      req.flush(null, { status: 400, statusText: 'Bad Request' });
+    });
+  });
+
+  describe('#getAllBrands', () => {
+    it('should return a list of all brands', () => {
+      const mockResponse: BrandResponse[] = [
+        { brandId: 1, brandName: 'Brand 1', brandDescription: 'Description 1' },
+        { brandId: 2, brandName: 'Brand 2', brandDescription: 'Description 2' },
+      ];
+
+      service.getAllBrands().subscribe((response) => {
+        expect(response).toEqual(mockResponse);
+      });
+
+      const req = httpMock.expectOne(`${apiUrl}/all`);
+      expect(req.request.method).toBe('GET');
+      expect(req.request.headers.get('Authorization')).toBe(`Bearer ${localStorage.getItem('token')}`);
+      req.flush(mockResponse);
+    });
+
+    it('should handle error response', () => {
+      service.getAllBrands().subscribe({
+        next: () => fail('expected an error, not brands'),
+        error: (error) => {
+          expect(error.status).toBe(400);
+        }
+      });
+
+      const req = httpMock.expectOne(`${apiUrl}/all`);
       req.flush(null, { status: 400, statusText: 'Bad Request' });
     });
   });

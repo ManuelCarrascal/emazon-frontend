@@ -179,11 +179,12 @@ describe('CategoriesComponent', () => {
     it('should show error toast if loading categories fails', () => {
       const mockError = { status: 500 };
       jest.spyOn(categoryService, 'getCategories').mockReturnValue(throwError(() => mockError));
-
+    
       component.loadCategories();
-
+    
+      const expectedErrorMessage = ERROR_MESSAGES_BY_CODE.CATEGORY_LOAD_ERROR || 'An unexpected error occurred';
       expect(toastService.showToast).toHaveBeenCalledWith(
-        ERROR_MESSAGES_BY_CODE[500],
+        expectedErrorMessage,
         ToastType.Error
       );
     });

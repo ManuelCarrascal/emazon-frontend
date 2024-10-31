@@ -1,14 +1,31 @@
 import { Component, OnInit } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ERROR_MESSAGES, FIELD_NAMES, REGEX_PATTERNS } from '@/app/shared/constants/productsComponent';
+import {
+  AbstractControl,
+  FormBuilder,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
+import {
+  ERROR_MESSAGES,
+  FIELD_NAMES,
+  REGEX_PATTERNS,
+} from '@/app/shared/constants/productsComponent';
 import { categoriesCountValidator } from '@/app/shared/validators/categories-count-validator';
 import { CategoryService } from '@/app/shared/services/category/category.service';
 import { BrandService } from '@/app/shared/services/brand/brand.service';
 import { ProductService } from '@/app/shared/services/product/product.service';
-import { ToastService, ToastType } from '@/app/shared/services/toast/toast.service';
+import {
+  ToastService,
+  ToastType,
+} from '@/app/shared/services/toast/toast.service';
 import { CategoryResponse } from '@/app/shared/interfaces/category.interface';
 import { BrandResponse } from '@/app/shared/interfaces/brand.interface';
-import {  ProductResponse, ProductView } from '@/app/shared/interfaces/product.interface';
+import {
+  ProductResponse,
+  ProductView,
+} from '@/app/shared/interfaces/product.interface';
+import { SupplyService } from '@/app/shared/services/supply/supply.service';
+import { SupplyRequest } from '@/app/shared/interfaces/supply.interface';
 
 const MIN_LENGTH = 3;
 const MAX_CATEGORIES = 3;
@@ -23,14 +40,18 @@ const DEFAULT_SORT_BY = 'productName';
 })
 export class ProductComponent implements OnInit {
   public isModalVisible: boolean = false;
+  public isIncrementModalVisible: boolean = false;
   public createProductForm: FormGroup;
+  public incrementForm: FormGroup;
   public categories: CategoryResponse[] = [];
   public filteredCategories: CategoryResponse[] = [];
   public selectedCategories: CategoryResponse[] = [];
   public brands: BrandResponse[] = [];
   public filteredBrands: BrandResponse[] = [];
   public selectedBrand: BrandResponse | null = null;
-  public dropdownState: { [key: string]: { searchTerm: string, active: boolean } };
+  public dropdownState: {
+    [key: string]: { searchTerm: string; active: boolean };
+  };
 
   public products: ProductView[] = [];
   public totalElements: number = 0;
@@ -41,12 +62,18 @@ export class ProductComponent implements OnInit {
   public pageSize: number = DEFAULT_PAGE_SIZE;
   public tableColumns = [
     { key: 'productName', label: 'Product Name', sortable: true },
-    { key: 'productDescription', label: 'Product Description', sortable: false },
+    {
+      key: 'productDescription',
+      label: 'Product Description',
+      sortable: false,
+    },
     { key: 'productQuantity', label: 'Product Quantity', sortable: false },
     { key: 'productPrice', label: 'Product Price', sortable: false },
     { key: 'brandName', label: 'Brand Name', sortable: true },
     { key: 'categoryNames', label: 'Categories', sortable: true },
   ];
+
+  public selectedProduct: ProductView | null = null;
 
   constructor(
     private readonly formBuilder: FormBuilder,
@@ -54,6 +81,7 @@ export class ProductComponent implements OnInit {
     private readonly brandService: BrandService,
     private readonly productService: ProductService,
     private readonly toastService: ToastService,
+    private readonly supplyService: SupplyService
   ) {
     this.createProductForm = this.formBuilder.group({
       productName: [
@@ -73,22 +101,18 @@ export class ProductComponent implements OnInit {
           Validators.pattern(REGEX_PATTERNS.FORBIDDEN_CHARACTERS),
         ],
       ],
-      productQuantity: [
-        '',
-        [
-          Validators.required,
-          Validators.min(1),
-        ],
-      ],
-      productPrice: [
-        '',
-        [
-          Validators.required,
-          Validators.min(0.0),
-        ],
-      ],
+      productQuantity: ['', [Validators.required, Validators.min(1)]],
+      productPrice: ['', [Validators.required, Validators.min(0.0)]],
       brandId: [null, [Validators.required]],
-      categoryIds: [[], [Validators.required, categoriesCountValidator(1, MAX_CATEGORIES)]],
+      categoryIds: [
+        [],
+        [Validators.required, categoriesCountValidator(1, MAX_CATEGORIES)],
+      ],
+    });
+
+    this.incrementForm = this.formBuilder.group({
+      incrementAmount: ['', [Validators.required, Validators.min(1)]],
+      nextSupplyDate: ['', [Validators.required]],
     });
 
     this.dropdownState = {
@@ -127,6 +151,20 @@ export class ProductComponent implements OnInit {
     };
   }
 
+  openIncrementModal(product: ProductView) {
+    this.selectedProduct = product;
+    this.isIncrementModalVisible = true;
+  }
+
+  closeIncrementModal() {
+    this.isIncrementModalVisible = false;
+    this.incrementForm.reset({
+      incrementAmount: '',
+    });
+    this.incrementForm.markAsPristine();
+    this.incrementForm.markAsUntouched();
+  }
+
   onKeyDownButton(event: KeyboardEvent): void {
     if (event.key === 'Enter' || event.key === ' ') {
       event.preventDefault();
@@ -154,16 +192,26 @@ export class ProductComponent implements OnInit {
     return this.createProductForm.get('brandId');
   }
 
+  get incrementAmount() {
+    return this.incrementForm.get('incrementAmount');
+  }
+
   get productNameError(): string {
     return this.getErrorMessage(this.productName, FIELD_NAMES.PRODUCT_NAME);
   }
 
   get productDescriptionError(): string {
-    return this.getErrorMessage(this.productDescription, FIELD_NAMES.PRODUCT_DESCRIPTION);
+    return this.getErrorMessage(
+      this.productDescription,
+      FIELD_NAMES.PRODUCT_DESCRIPTION
+    );
   }
 
   get productQuantityError(): string {
-    return this.getErrorMessage(this.productQuantity, FIELD_NAMES.PRODUCT_QUANTITY);
+    return this.getErrorMessage(
+      this.productQuantity,
+      FIELD_NAMES.PRODUCT_QUANTITY
+    );
   }
 
   get productPriceError(): string {
@@ -174,9 +222,23 @@ export class ProductComponent implements OnInit {
     return this.getErrorMessage(this.brandId, FIELD_NAMES.BRAND_ID);
   }
 
+  get incrementAmountError(): string {
+    return this.getErrorMessage(this.incrementAmount, 'Increment Amount');
+  }
+
+  get nextSupplyDate() {
+    return this.incrementForm.get('nextSupplyDate');
+  }
+  
+  get nextSupplyDateError(): string {
+    return this.getErrorMessage(this.nextSupplyDate, 'Next Supply Date');
+  }
+
   getErrorMessage(control: AbstractControl | null, fieldName: string): string {
     if (control?.touched && control?.errors) {
-      const firstKey = Object.keys(control.errors)[0] as keyof typeof ERROR_MESSAGES;
+      const firstKey = Object.keys(
+        control.errors
+      )[0] as keyof typeof ERROR_MESSAGES;
       const error = control.errors[firstKey];
       return ERROR_MESSAGES[firstKey](fieldName, error);
     }
@@ -194,7 +256,10 @@ export class ProductComponent implements OnInit {
     }
     this.productService.createProduct(productData).subscribe({
       next: (product) => {
-        this.toastService.showToast('Product created successfully', ToastType.Success);
+        this.toastService.showToast(
+          'Product created successfully',
+          ToastType.Success
+        );
         this.loadProducts();
         this.closeModal();
       },
@@ -204,13 +269,40 @@ export class ProductComponent implements OnInit {
     });
   }
 
+incrementQuantity(): void {
+  if (this.incrementForm.invalid || !this.selectedProduct) {
+    this.incrementForm.markAllAsTouched();
+    return;
+  }
+  const incrementAmount = this.incrementForm.value.incrementAmount;
+  const nextSupplyDate = this.incrementForm.value.nextSupplyDate;
+  const supplyRequest: SupplyRequest = {
+    productQuantity: incrementAmount,
+    nextSupplyDate: nextSupplyDate
+  };
+
+  this.supplyService.addSupply(this.selectedProduct.productId, supplyRequest).subscribe({
+    next: () => {
+      this.toastService.showToast('Product quantity updated successfully', ToastType.Success);
+      this.loadProducts();
+      this.closeIncrementModal();
+    },
+    error: (error) => {
+      this.toastService.showToast('Error updating product quantity', ToastType.Error);
+    },
+  });
+}
+
   loadCategories(): void {
     this.categoryService.getAllCategories().subscribe({
       next: (categories) => {
         this.categories = categories;
       },
       error: (error) => {
-        this.toastService.showToast('Error loading categories', ToastType.Error);
+        this.toastService.showToast(
+          'Error loading categories',
+          ToastType.Error
+        );
       },
     });
   }
@@ -234,7 +326,9 @@ export class ProductComponent implements OnInit {
   ): void {
     this.productService.getProducts(page, size, sortBy, isAscending).subscribe({
       next: (data) => {
-        this.products = data.content.map(productResponse => this.transformProductResponse(productResponse));
+        this.products = data.content.map((productResponse) =>
+          this.transformProductResponse(productResponse)
+        );
         this.totalElements = data.totalElements;
         this.totalPages = data.totalPages;
         this.currentPage = data.currentPage;
@@ -252,10 +346,16 @@ export class ProductComponent implements OnInit {
       productDescription: productResponse.productDescription,
       productQuantity: productResponse.productQuantity,
       productPrice: productResponse.productPrice,
-      productCategories: productResponse.categories.map(category => category.categoryId),
+      productCategories: productResponse.categories.map(
+        (category) => category.categoryId
+      ),
       brandName: productResponse.brand.brandName,
-      categoryIds: productResponse.categories.map(category => category.categoryId),
-      categoryNames: productResponse.categories.map(category => category.categoryName).join(', ') 
+      categoryIds: productResponse.categories.map(
+        (category) => category.categoryId
+      ),
+      categoryNames: productResponse.categories
+        .map((category) => category.categoryName)
+        .join(', '),
     };
   }
 
@@ -281,9 +381,10 @@ export class ProductComponent implements OnInit {
       this.isAscending
     );
   }
-  
+
   onSortChange(event: { sortBy: string; isAscending: boolean }): void {
-    this.sortBy = event.sortBy === 'categoryNames' ? 'numberOfCategories' : event.sortBy;
+    this.sortBy =
+      event.sortBy === 'categoryNames' ? 'numberOfCategories' : event.sortBy;
     this.isAscending = event.isAscending;
     this.loadProducts(
       this.currentPage,
@@ -305,9 +406,9 @@ export class ProductComponent implements OnInit {
 
   filterCategories(): void {
     const searchValue = this.dropdownState['category'].searchTerm.trim();
-    
+
     if (searchValue) {
-      this.filteredCategories = this.categories.filter(category =>
+      this.filteredCategories = this.categories.filter((category) =>
         category.categoryName.toLowerCase().includes(searchValue.toLowerCase())
       );
     } else {
@@ -317,9 +418,9 @@ export class ProductComponent implements OnInit {
 
   filterBrands(): void {
     const searchValue = this.dropdownState['brand'].searchTerm.trim();
-    
+
     if (searchValue) {
-      this.filteredBrands = this.brands.filter(brand =>
+      this.filteredBrands = this.brands.filter((brand) =>
         brand.brandName.toLowerCase().includes(searchValue.toLowerCase())
       );
     } else {
@@ -343,7 +444,9 @@ export class ProductComponent implements OnInit {
     }
     if (!this.selectedCategories.includes(category)) {
       this.selectedCategories.push(category);
-      this.createProductForm.get('categoryIds')?.setValue(this.selectedCategories.map(cat => cat.categoryId));
+      this.createProductForm
+        .get('categoryIds')
+        ?.setValue(this.selectedCategories.map((cat) => cat.categoryId));
       this.dropdownState['category'].searchTerm = '';
       this.filteredCategories = [];
       if (this.selectedCategories.length >= MAX_CATEGORIES) {
@@ -353,10 +456,14 @@ export class ProductComponent implements OnInit {
   }
 
   removeCategory(category: CategoryResponse): void {
-    this.selectedCategories = this.selectedCategories.filter(cat => cat !== category);
-    this.createProductForm.get('categoryIds')?.setValue(this.selectedCategories.map(cat => cat.categoryId));
+    this.selectedCategories = this.selectedCategories.filter(
+      (cat) => cat !== category
+    );
+    this.createProductForm
+      .get('categoryIds')
+      ?.setValue(this.selectedCategories.map((cat) => cat.categoryId));
     if (this.selectedCategories.length < MAX_CATEGORIES) {
-      this.dropdownState['category'].active = true; 
+      this.dropdownState['category'].active = true;
     }
   }
 

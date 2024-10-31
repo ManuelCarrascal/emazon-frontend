@@ -24,7 +24,7 @@ export const ERROR_MESSAGES_BY_CODE = {
   [ERROR_CODES.NOT_FOUND]: 'Category not found.',
   [ERROR_CODES.CONFLICT]: 'Category already exists.',
   [ERROR_CODES.SERVER_ERROR]: 'Server error. Please try again later.',
-  CATEGORY_LOAD_ERROR: 'Error loading categories. Please try again later.',
+  CATEGORY_LOAD_ERROR: 'Error loading categories',
 } as const;
 
 export const REGEX_PATTERNS = {

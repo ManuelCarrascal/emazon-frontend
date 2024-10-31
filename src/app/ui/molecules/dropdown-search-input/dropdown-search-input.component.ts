@@ -29,8 +29,8 @@ export class DropdownSearchInputComponent implements ControlValueAccessor {
   public searchTerm: string = '';
   public activeDropdown: boolean = false;
 
-  private onChange: (value: any[]) => void = () => {};
-  private onTouched: () => void = () => {};
+  public onChange: (value: any[]) => void = () => {};
+  public onTouched: () => void = () => {};
 
   writeValue(value: any[]): void {
     this.selectedItems = this.items.filter(item => value.includes(item[this.idProperty]));
@@ -44,9 +44,6 @@ export class DropdownSearchInputComponent implements ControlValueAccessor {
     this.onTouched = fn;
   }
 
-  setDisabledState(isDisabled: boolean): void {
-    // Handle the disabled state if necessary
-  }
 
   onSearchTermChange(event: Event) {
     const input = event.target as HTMLInputElement;

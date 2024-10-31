@@ -9,6 +9,7 @@ import { Pagination } from '../../interfaces/category.interface';
   providedIn: 'root',
 })
 export class ProductService {
+ 
   private readonly apiUrl = `${environment.stock_service_url}/products`;
 
   constructor(private readonly http: HttpClient) {}
@@ -44,4 +45,5 @@ export class ProductService {
 
     return this.http.get<Pagination<ProductResponse>>(this.apiUrl, { headers, params });
   }
+
 }

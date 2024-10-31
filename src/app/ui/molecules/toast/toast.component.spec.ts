@@ -34,7 +34,9 @@ describe('ToastComponent', () => {
   });
 
   it('should display a toast message when state changes', () => {
-    const toastElement = debugElement.query(By.css('.toast-message'));
+    component.ngOnInit();
+    fixture.detectChanges();
+    const toastElement = debugElement.query(By.css('.toast'));
     expect(toastElement.nativeElement.textContent).toContain('Test Message');
   });
 
@@ -75,5 +77,14 @@ describe('ToastComponent', () => {
     expect(component.message).toBe('Subscription Test');
     expect(component.type).toBe(ToastType.Success);
     expect(component.isVisible).toBe(true);
+  });
+
+  it('should close the toast when close button is clicked', () => {
+    component.ngOnInit();
+    fixture.detectChanges();
+    const closeButton = debugElement.query(By.css('.toast__close-button'));
+    closeButton.triggerEventHandler('click', null);
+    fixture.detectChanges();
+    expect(component.isVisible).toBe(false);
   });
 });

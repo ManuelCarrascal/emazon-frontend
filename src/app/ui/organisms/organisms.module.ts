@@ -10,8 +10,10 @@ import {
   MoveRight,
   MoveLeft,
   Search,
-  X 
+  X,
+  PackagePlus,
 } from 'lucide-angular';
+import { SharedModule } from '@/app/shared/shared.module';
 
 @NgModule({
   declarations: [DataTableComponent],
@@ -19,9 +21,17 @@ import {
     CommonModule,
     AtomsModule,
     MoleculesModule,
-    LucideAngularModule.pick({ ArrowDownAZ, ArrowUpAZ, MoveRight, MoveLeft,Search,X  }),
-
+    SharedModule,
+    LucideAngularModule.pick({
+      ArrowDownAZ,
+      ArrowUpAZ,
+      MoveRight,
+      MoveLeft,
+      Search,
+      X,
+      PackagePlus,
+    }),
   ],
-  exports: [DataTableComponent]
+  exports: [DataTableComponent],
 })
-export class OrganismsModule { }
+export class OrganismsModule {}

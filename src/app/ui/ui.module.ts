@@ -3,10 +3,8 @@ import { AtomsModule } from './atoms/atoms.module';
 import { MoleculesModule } from './molecules/molecules.module';
 import { OrganismsModule } from './organisms/organisms.module';
 
-
 @NgModule({
-  declarations: [],
-   imports: [
+  imports: [
     AtomsModule,
     MoleculesModule,
     OrganismsModule,
@@ -14,7 +12,7 @@ import { OrganismsModule } from './organisms/organisms.module';
   exports: [
     AtomsModule,
     MoleculesModule,
-    OrganismsModule
+    OrganismsModule,
   ],
 })
-export class UiModule { }
+export class UiModule {}

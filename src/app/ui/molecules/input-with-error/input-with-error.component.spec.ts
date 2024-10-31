@@ -65,10 +65,12 @@ describe('InputWithErrorComponent', () => {
     component.control = new FormControl('', { validators: [] });
     component.control.markAsTouched();
     component.control.setErrors({ required: true });
+    component.errorMessage = 'This field is required';
     fixture.detectChanges();
 
     const errorMessageElement = fixture.debugElement.query(By.css('.error-message'));
     expect(errorMessageElement).toBeTruthy();
+    expect(errorMessageElement.nativeElement.textContent).toContain('This field is required');
   });
 
   it('should not display error message when control is valid', () => {

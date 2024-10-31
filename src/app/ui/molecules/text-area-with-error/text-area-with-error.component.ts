@@ -1,5 +1,5 @@
-import { Component, forwardRef, Input } from '@angular/core';
-import { AbstractControl, ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { Component, forwardRef, Input, OnInit } from '@angular/core';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR, AbstractControl } from '@angular/forms';
 
 @Component({
   selector: 'app-text-area-with-error',
@@ -13,15 +13,26 @@ import { AbstractControl, ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angul
     },
   ],
 })
-export class TextAreaWithErrorComponent implements ControlValueAccessor {
+export class TextAreaWithErrorComponent implements ControlValueAccessor, OnInit {
   @Input() value: string = '';
   @Input() disabled: boolean = false;
   @Input() errorMessage: string = '';
   @Input() control: AbstractControl | null = null;
   @Input() placeholder: string = '';
+  @Input() label: string = ''; 
+
+  inputId: string = '';
+
+  ngOnInit(): void {
+    this.inputId = this.generateUniqueId();
+  }
 
   onChange: any = () => {};
   onTouched: any = () => {};
+
+  get hasError(): boolean {
+    return this.control?.touched && this.control?.invalid || false;
+  }
 
   writeValue(value: string): void {
     this.value = value;
@@ -46,7 +57,7 @@ export class TextAreaWithErrorComponent implements ControlValueAccessor {
     this.onTouched();
   }
 
-  get hasError(): boolean {
-    return this.control?.touched && this.control?.invalid || false;
+  private generateUniqueId(): string {
+    return 'textarea-' + Math.random().toString(36).substring(2, 9);
   }
 }
