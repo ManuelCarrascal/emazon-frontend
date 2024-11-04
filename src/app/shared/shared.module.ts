@@ -7,8 +7,8 @@ import { SidebarComponent } from './organisms/sidebar/sidebar.component';
 import { NavComponent } from './organisms/nav/nav.component';
 import { FooterComponent } from './organisms/footer/footer.component';
 import { LucideAngularModule, LogOut } from 'lucide-angular';
-import { RoleDirective } from './role.directive';
 import { AtomsModule } from '../ui/atoms/atoms.module';
+import { RoleDirective } from './directives/role.directive';
 
 @NgModule({
   declarations: [

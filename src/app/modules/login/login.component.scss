@@ -1,0 +1,15 @@
+@use 'styles' as *;
+
+.dont-have-account-msg{
+    font-size: 1.4rem;
+    &--highlight{
+        color: $purple;
+        font-weight: 600;
+
+        &:hover{
+            color: darken($purple, 10);
+            text-decoration: underline;
+            cursor: pointer;
+        }
+    }
+}

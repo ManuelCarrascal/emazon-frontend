@@ -2,25 +2,25 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { of, throwError } from 'rxjs';
-import { WarehouseAssistantComponent } from './warehouse-assistant.component';
-import { WarehouseAssistantService } from '@/app/shared/services/warehouse-assistant/warehouse-assistant.service';
+import { RegisterComponent } from './register.component';
+import { CustomerService } from '@/app/shared/services/customer/customer.service';
 import { ToastService, ToastType } from '@/app/shared/services/toast/toast.service';
 import { User } from '@/app/shared/interfaces/user.interface';
 import { HttpResponse } from '@angular/common/http';
-import { InputWithErrorComponent } from '@/app/ui/molecules/input-with-error/input-with-error.component'; // Import the component
+import { InputWithErrorComponent } from '@/app/ui/molecules/input-with-error/input-with-error.component';
 
-describe('WarehouseAssistantComponent', () => {
-  let component: WarehouseAssistantComponent;
-  let fixture: ComponentFixture<WarehouseAssistantComponent>;
-  let warehouseAssistantService: WarehouseAssistantService;
+describe('RegisterComponent', () => {
+  let component: RegisterComponent;
+  let fixture: ComponentFixture<RegisterComponent>;
+  let customerService: CustomerService;
   let toastService: ToastService;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [WarehouseAssistantComponent, InputWithErrorComponent], // Declare the component
+      declarations: [RegisterComponent, InputWithErrorComponent], 
       imports: [ReactiveFormsModule, HttpClientTestingModule],
       providers: [
-        WarehouseAssistantService,
+        CustomerService,
         {
           provide: ToastService,
           useValue: {
@@ -30,9 +30,9 @@ describe('WarehouseAssistantComponent', () => {
       ],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(WarehouseAssistantComponent);
+    fixture = TestBed.createComponent(RegisterComponent);
     component = fixture.componentInstance;
-    warehouseAssistantService = TestBed.inject(WarehouseAssistantService);
+    customerService = TestBed.inject(CustomerService);
     toastService = TestBed.inject(ToastService);
     fixture.detectChanges();
   });
@@ -42,18 +42,18 @@ describe('WarehouseAssistantComponent', () => {
   });
 
   it('should initialize the form', () => {
-    expect(component.warehouseAssistantForm).toBeDefined();
-    expect(component.warehouseAssistantForm.controls['userName']).toBeDefined();
-    expect(component.warehouseAssistantForm.controls['userLastName']).toBeDefined();
-    expect(component.warehouseAssistantForm.controls['userIdentityDocument']).toBeDefined();
-    expect(component.warehouseAssistantForm.controls['userPhone']).toBeDefined();
-    expect(component.warehouseAssistantForm.controls['userEmail']).toBeDefined();
-    expect(component.warehouseAssistantForm.controls['userPassword']).toBeDefined();
-    expect(component.warehouseAssistantForm.controls['userBirthdate']).toBeDefined();
+    expect(component.customerForm).toBeDefined();
+    expect(component.customerForm.controls['userName']).toBeDefined();
+    expect(component.customerForm.controls['userLastName']).toBeDefined();
+    expect(component.customerForm.controls['userIdentityDocument']).toBeDefined();
+    expect(component.customerForm.controls['userPhone']).toBeDefined();
+    expect(component.customerForm.controls['userEmail']).toBeDefined();
+    expect(component.customerForm.controls['userPassword']).toBeDefined();
+    expect(component.customerForm.controls['userBirthdate']).toBeDefined();
   });
 
   it('should validate the form correctly', () => {
-    const form = component.warehouseAssistantForm;
+    const form = component.customerForm;
     form.controls['userName'].setValue('');
     form.controls['userLastName'].setValue('');
     form.controls['userIdentityDocument'].setValue('');
@@ -76,7 +76,7 @@ describe('WarehouseAssistantComponent', () => {
   });
 
   it('should show error messages for invalid fields', () => {
-    const form = component.warehouseAssistantForm;
+    const form = component.customerForm;
     form.controls['userName'].setValue('');
     form.controls['userLastName'].setValue('');
     form.controls['userIdentityDocument'].setValue('');
@@ -97,7 +97,7 @@ describe('WarehouseAssistantComponent', () => {
   });
 
   it('should show minlength error messages for fields', () => {
-    const form = component.warehouseAssistantForm;
+    const form = component.customerForm;
     form.controls['userName'].setValue('Jo');
     form.controls['userLastName'].setValue('Do');
     form.controls['userIdentityDocument'].setValue('1234567');
@@ -112,7 +112,7 @@ describe('WarehouseAssistantComponent', () => {
   });
 
   it('should show pattern error message for phone', () => {
-    const form = component.warehouseAssistantForm;
+    const form = component.customerForm;
     form.controls['userPhone'].setValue('123456');
 
     form.markAllAsTouched();
@@ -121,7 +121,7 @@ describe('WarehouseAssistantComponent', () => {
   });
 
   it('should show email format error message', () => {
-    const form = component.warehouseAssistantForm;
+    const form = component.customerForm;
     form.controls['userEmail'].setValue('invalid-email');
 
     form.markAllAsTouched();
@@ -130,7 +130,7 @@ describe('WarehouseAssistantComponent', () => {
   });
 
   it('should show notAdult error message for birthdate', () => {
-    const form = component.warehouseAssistantForm;
+    const form = component.customerForm;
     form.controls['userBirthdate'].setValue('2020-01-01');
 
     form.markAllAsTouched();
@@ -138,7 +138,7 @@ describe('WarehouseAssistantComponent', () => {
     expect(component.userBirthdateError).toBe('User must be an adult');
   });
 
-  it('should create a warehouse assistant when form is valid', () => {
+  it('should create a customer when form is valid', () => {
     const mockUser: User = {
       userName: 'John',
       userLastName: 'Doe',
@@ -161,13 +161,13 @@ describe('WarehouseAssistantComponent', () => {
       },
     };
   
-    jest.spyOn(warehouseAssistantService, 'registerAssistant').mockReturnValue(of(new HttpResponse({ body: mockResponse.body })));
+    jest.spyOn(customerService, 'registerCustomer').mockReturnValue(of(new HttpResponse({ body: mockResponse.body })));
   
-    component.warehouseAssistantForm.setValue(mockUser);
+    component.customerForm.setValue(mockUser);
     component.onSubmit();
   
-    expect(toastService.showToast).toHaveBeenCalledWith('Warehouse assistant registered successfully', ToastType.Success);
-    expect(warehouseAssistantService.registerAssistant).toHaveBeenCalledWith(formattedMockUser);
+    expect(toastService.showToast).toHaveBeenCalledWith('Customer registered successfully', ToastType.Success);
+    expect(customerService.registerCustomer).toHaveBeenCalledWith(formattedMockUser);
   });
 
   it('should show error message when registration fails', () => {
@@ -186,12 +186,12 @@ describe('WarehouseAssistantComponent', () => {
       error: { message: 'User must be an adult' },
     };
 
-    jest.spyOn(warehouseAssistantService, 'registerAssistant').mockReturnValue(throwError(() => mockError));
+    jest.spyOn(customerService, 'registerCustomer').mockReturnValue(throwError(() => mockError));
 
-    component.warehouseAssistantForm.setValue(mockUser);
+    component.customerForm.setValue(mockUser);
     component.onSubmit();
 
-    expect(toastService.showToast).toHaveBeenCalledWith('Failed to register warehouse assistant', ToastType.Error);
+    expect(toastService.showToast).toHaveBeenCalledWith('Failed to register customer', ToastType.Error);
   });
 
   it('should restrict phone input to only allow + and digits', () => {

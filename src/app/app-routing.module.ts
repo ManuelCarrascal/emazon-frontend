@@ -12,7 +12,14 @@ const routes: Routes = [
       import('./pages/login-page/login-page.module').then(
         (m) => m.LoginPageModule
       ),
-      canActivate: [LoginGuard],
+    canActivate: [LoginGuard],
+  },
+  {
+    path: 'register',
+    loadChildren: () =>
+      import('./pages/register-page/register-page.module').then(
+        (m) => m.RegisterPageModule
+      ),
   },
   {
     path: 'dashboard',
@@ -64,7 +71,6 @@ const routes: Routes = [
       },
     ],
   },
-  { path: '', redirectTo: '/login', pathMatch: 'full' },
   { path: '**', redirectTo: '/login' },
 ];
 

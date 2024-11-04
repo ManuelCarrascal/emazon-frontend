@@ -1,0 +1,87 @@
+<section class="w-full align-center flex-column">
+  <div class="flex-center mb-2 text-3xl mt-2">
+    <app-logo></app-logo>
+  </div>
+
+  <div class="card w-1/2 mb-3">
+    <form
+      [formGroup]="customerForm"
+      (ngSubmit)="onSubmit()"
+      class="form w-1/2"
+    >
+      <app-input-with-error
+        formControlName="userName"
+        [errorMessage]="userNameError"
+        [control]="userName"
+        placeholder="Enter name"
+        label="Name"
+        ngClass="mb-2-5"
+      ></app-input-with-error>
+
+      <app-input-with-error
+        formControlName="userLastName"
+        [errorMessage]="userLastNameError"
+        [control]="userLastName"
+        placeholder="Enter last name"
+        type="text"
+        label="Last Name"
+        ngClass="mb-2-5"
+      ></app-input-with-error>
+
+      <app-input-with-error
+        formControlName="userIdentityDocument"
+        [errorMessage]="userIdentityDocumentError"
+        [control]="userIdentityDocument"
+        placeholder="Enter ID"
+        type="number"
+        ngClass="mb-2-5"
+        label="Identity Document"
+      ></app-input-with-error>
+
+      <app-input-with-error
+        formControlName="userPhone"
+        [errorMessage]="userPhoneError"
+        [control]="userPhone"
+        placeholder="Enter phone"
+        (input)="restrictPhoneInput($event)"
+        type="tel"
+        ngClass="mb-2-5"
+        label="Phone"
+      ></app-input-with-error>
+
+      <app-input-with-error
+        formControlName="userEmail"
+        [errorMessage]="userEmailError"
+        [control]="userEmail"
+        placeholder="Enter email"
+        type="email"
+        ngClass="mb-2-5"
+        label="Email"
+      ></app-input-with-error>
+
+      <app-input-with-error
+        formControlName="userPassword"
+        [errorMessage]="userPasswordError"
+        [control]="userPassword"
+        placeholder="Enter password"
+        type="password"
+        ngClass="mb-2-5"
+        label="Password"
+      ></app-input-with-error>
+
+      <app-input-with-error
+        formControlName="userBirthdate"
+        [errorMessage]="userBirthdateError"
+        [control]="userBirthdate"
+        placeholder="Enter birthdate"
+        type="date"
+        ngClass="mb-2-5"
+        label="Birthdate"
+      ></app-input-with-error>
+
+      <div class="flex-center">
+        <app-button [disabled]="customerForm.invalid">Register</app-button>
+      </div>
+    </form>
+  </div>
+</section>

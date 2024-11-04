@@ -1,24 +1,20 @@
-import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
-import { ToastService, ToastType } from '@/app/shared/services/toast/toast.service';
+import { CustomerService } from './../../shared/services/customer/customer.service';
 import { User } from '@/app/shared/interfaces/user.interface';
-import { WarehouseAssistantService } from '@/app/shared/services/warehouse-assistant/warehouse-assistant.service';
+import { ToastService, ToastType } from '@/app/shared/services/toast/toast.service';
 import { adultValidator } from '@/app/shared/validators/adult-validator';
+import { Component } from '@angular/core';
+import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
-  selector: 'app-warehouse-assistant',
-  templateUrl: './warehouse-assistant.component.html',
-  styleUrls: ['./warehouse-assistant.component.scss']
+  selector: 'app-register',
+  templateUrl: './register.component.html',
+  styleUrls: ['./register.component.scss'],
 })
-export class WarehouseAssistantComponent {
-  public warehouseAssistantForm: FormGroup;
+export class RegisterComponent {
+  public customerForm: FormGroup;
 
-  constructor(
-    private readonly formBuilder: FormBuilder,
-    private readonly warehouseAssistantService: WarehouseAssistantService,
-    private readonly toastService: ToastService
-  ) {
-    this.warehouseAssistantForm = this.formBuilder.group({
+  constructor(private readonly formBuilder: FormBuilder, private readonly toastService: ToastService, private readonly customerService: CustomerService) {
+    this.customerForm = this.formBuilder.group({
       userName: ['', [Validators.required, Validators.minLength(3)]],
       userLastName: ['', [Validators.required, Validators.minLength(3)]],
       userIdentityDocument: ['', [Validators.required, Validators.minLength(8)]],
@@ -29,33 +25,33 @@ export class WarehouseAssistantComponent {
     });
   }
 
-
+  
   get userName(): AbstractControl | null {
-    return this.warehouseAssistantForm.get('userName');
+    return this.customerForm.get('userName');
   }
 
   get userLastName(): AbstractControl | null {
-    return this.warehouseAssistantForm.get('userLastName');
+    return this.customerForm.get('userLastName');
   }
 
   get userIdentityDocument(): AbstractControl | null {
-    return this.warehouseAssistantForm.get('userIdentityDocument');
+    return this.customerForm.get('userIdentityDocument');
   }
 
   get userPhone(): AbstractControl | null {
-    return this.warehouseAssistantForm.get('userPhone');
+    return this.customerForm.get('userPhone');
   }
 
   get userEmail(): AbstractControl | null {
-    return this.warehouseAssistantForm.get('userEmail');
+    return this.customerForm.get('userEmail');
   }
 
   get userPassword(): AbstractControl | null {
-    return this.warehouseAssistantForm.get('userPassword');
+    return this.customerForm.get('userPassword');
   }
 
   get userBirthdate(): AbstractControl | null { 
-    return this.warehouseAssistantForm.get('userBirthdate');
+    return this.customerForm.get('userBirthdate');
   }
 
   get userNameError(): string {
@@ -149,30 +145,31 @@ export class WarehouseAssistantComponent {
     return '';
   }
 
-  onSubmit(): void {
-    if (this.warehouseAssistantForm.invalid) {
-      this.warehouseAssistantForm.markAllAsTouched();
-      return;
-    }
-
-    const assistant: User = this.warehouseAssistantForm.value;
-    assistant.userBirthdate = formatDate(assistant.userBirthdate);
-
-    this.warehouseAssistantService.registerAssistant(assistant).subscribe({
-      next: () => {
-        this.toastService.showToast('Warehouse assistant registered successfully', ToastType.Success);
-        this.warehouseAssistantForm.reset();
-      },
-      error: () => {
-        this.toastService.showToast('Failed to register warehouse assistant', ToastType.Error);
-      }
-    });
-  }
-  
   restrictPhoneInput(event: Event): void {
     const input = event.target as HTMLInputElement;
     input.value = input.value.replace(/[^+\d]/g, '');
   }
+
+  onSubmit(): void {
+    if (this.customerForm.invalid) {
+      this.customerForm.markAllAsTouched();
+      return;
+    }
+
+    const customer: User = this.customerForm.value;
+    customer.userBirthdate = formatDate(customer.userBirthdate);
+
+    this.customerService.registerCustomer(customer).subscribe({
+      next: () => {
+        this.toastService.showToast('Customer registered successfully', ToastType.Success);
+        this.customerForm.reset();
+      },
+      error: () => {
+        this.toastService.showToast('Failed to register customer', ToastType.Error);
+      }
+    });
+  }
+
 }
 
 function formatDate(date: string): string {
