@@ -96,6 +96,48 @@ describe('WarehouseAssistantComponent', () => {
     expect(component.userBirthdateError).toBe('Birthdate is required');
   });
 
+  it('should show minlength error messages for fields', () => {
+    const form = component.warehouseAssistantForm;
+    form.controls['userName'].setValue('Jo');
+    form.controls['userLastName'].setValue('Do');
+    form.controls['userIdentityDocument'].setValue('1234567');
+    form.controls['userPassword'].setValue('Pass123');
+
+    form.markAllAsTouched();
+
+    expect(component.userNameError).toBe('Name must be at least 3 characters long');
+    expect(component.userLastNameError).toBe('Last name must be at least 3 characters long');
+    expect(component.userIdentityDocumentError).toBe('Identity document must be at least 8 characters long');
+    expect(component.userPasswordError).toBe('Password must be at least 8 characters long');
+  });
+
+  it('should show pattern error message for phone', () => {
+    const form = component.warehouseAssistantForm;
+    form.controls['userPhone'].setValue('123456');
+
+    form.markAllAsTouched();
+
+    expect(component.userPhoneError).toBe('Phone number must be in the format +573142734677');
+  });
+
+  it('should show email format error message', () => {
+    const form = component.warehouseAssistantForm;
+    form.controls['userEmail'].setValue('invalid-email');
+
+    form.markAllAsTouched();
+
+    expect(component.userEmailError).toBe('Invalid email format');
+  });
+
+  it('should show notAdult error message for birthdate', () => {
+    const form = component.warehouseAssistantForm;
+    form.controls['userBirthdate'].setValue('2020-01-01');
+
+    form.markAllAsTouched();
+
+    expect(component.userBirthdateError).toBe('User must be an adult');
+  });
+
   it('should create a warehouse assistant when form is valid', () => {
     const mockUser: User = {
       userName: 'John',
