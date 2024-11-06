@@ -26,6 +26,7 @@ import {
 } from '@/app/shared/interfaces/product.interface';
 import { SupplyService } from '@/app/shared/services/supply/supply.service';
 import { SupplyRequest } from '@/app/shared/interfaces/supply.interface';
+import { CartService } from '@/app/shared/services/cart/cart.service';
 
 const MIN_LENGTH = 3;
 const MAX_CATEGORIES = 3;
@@ -41,8 +42,10 @@ const DEFAULT_SORT_BY = 'productName';
 export class ProductComponent implements OnInit {
   public isModalVisible: boolean = false;
   public isIncrementModalVisible: boolean = false;
+  public isAddToCartModalVisible: boolean = false;
   public createProductForm: FormGroup;
   public incrementForm: FormGroup;
+  public addToCartForm: FormGroup; 
   public categories: CategoryResponse[] = [];
   public filteredCategories: CategoryResponse[] = [];
   public selectedCategories: CategoryResponse[] = [];
@@ -81,7 +84,8 @@ export class ProductComponent implements OnInit {
     private readonly brandService: BrandService,
     private readonly productService: ProductService,
     private readonly toastService: ToastService,
-    private readonly supplyService: SupplyService
+    private readonly supplyService: SupplyService,
+    private readonly cartService: CartService
   ) {
     this.createProductForm = this.formBuilder.group({
       productName: [
@@ -113,6 +117,10 @@ export class ProductComponent implements OnInit {
     this.incrementForm = this.formBuilder.group({
       incrementAmount: ['', [Validators.required, Validators.min(1)]],
       nextSupplyDate: ['', [Validators.required]],
+    });
+
+    this.addToCartForm = this.formBuilder.group({ 
+      quantity: ['', [Validators.required, Validators.min(1)]],
     });
 
     this.dropdownState = {
@@ -165,6 +173,20 @@ export class ProductComponent implements OnInit {
     this.incrementForm.markAsUntouched();
   }
 
+  openAddToCartModal(product: ProductView) { 
+    this.selectedProduct = product;
+    this.isAddToCartModalVisible = true;
+  }
+
+  closeAddToCartModal() { 
+    this.isAddToCartModalVisible = false;
+    this.addToCartForm.reset({
+      quantity: '',
+    });
+    this.addToCartForm.markAsPristine();
+    this.addToCartForm.markAsUntouched();
+  }
+
   onKeyDownButton(event: KeyboardEvent): void {
     if (event.key === 'Enter' || event.key === ' ') {
       event.preventDefault();
@@ -196,6 +218,10 @@ export class ProductComponent implements OnInit {
     return this.incrementForm.get('incrementAmount');
   }
 
+  get quantity() { // Add this getter
+    return this.addToCartForm.get('quantity');
+  }
+
   get productNameError(): string {
     return this.getErrorMessage(this.productName, FIELD_NAMES.PRODUCT_NAME);
   }
@@ -224,6 +250,10 @@ export class ProductComponent implements OnInit {
 
   get incrementAmountError(): string {
     return this.getErrorMessage(this.incrementAmount, 'Increment Amount');
+  }
+
+  get quantityError(): string { // Add this getter
+    return this.getErrorMessage(this.quantity, 'Quantity');
   }
 
   get nextSupplyDate() {
@@ -478,5 +508,22 @@ incrementQuantity(): void {
     for (const key in this.dropdownState) {
       this.dropdownState[key].active = key === dropdown;
     }
+  }
+
+  addToCart(): void {
+    if (this.addToCartForm.invalid || !this.selectedProduct) {
+      this.addToCartForm.markAllAsTouched();
+      return;
+    }
+    const quantity = this.addToCartForm.value.quantity;
+    this.cartService.addProductToCart(this.selectedProduct.productId, quantity).subscribe({
+      next: () => {
+        this.toastService.showToast('Product added to cart successfully', ToastType.Success);
+        this.closeAddToCartModal();
+      },
+      error: (error) => {
+        this.toastService.showToast('Error adding product to cart', ToastType.Error);
+      },
+    });
   }
 }

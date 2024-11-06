@@ -14,6 +14,10 @@
       visibility: hidden;
     }
   }
+
+  &__right-content{
+    gap: 1.5rem;
+  }
 }
 
 .logout-container{
@@ -27,5 +31,15 @@
   &:hover{
     color: $purple;
     background-color: $bg-light-grey;
+  }
+}
+
+.shopping-cart-icon{
+  padding: 0.25rem;
+  &:hover{
+    color: $purple;
+    cursor: pointer;
+    background-color: $bg-light-grey;
+    border-radius: 100%;
   }
 }

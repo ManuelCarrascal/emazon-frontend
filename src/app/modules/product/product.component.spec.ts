@@ -5,14 +5,19 @@ import { ProductComponent } from './product.component';
 import { CategoryService } from '@/app/shared/services/category/category.service';
 import { BrandService } from '@/app/shared/services/brand/brand.service';
 import { ProductService } from '@/app/shared/services/product/product.service';
-import { ToastService, ToastType } from '@/app/shared/services/toast/toast.service';
+import {
+  ToastService,
+  ToastType,
+} from '@/app/shared/services/toast/toast.service';
 import { SupplyService } from '@/app/shared/services/supply/supply.service';
 import { InputWithErrorComponent } from '@/app/ui/molecules/input-with-error/input-with-error.component';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { TextAreaWithErrorComponent } from '@/app/ui/molecules/text-area-with-error/text-area-with-error.component';
 import { DropdownSearchInputComponent } from '@/app/ui/molecules/dropdown-search-input/dropdown-search-input.component';
 import { BrandResponse } from '@/app/shared/interfaces/brand.interface';
 import { CategoryResponse } from '@/app/shared/interfaces/category.interface';
 import { ProductView } from '@/app/shared/interfaces/product.interface';
+import { CartService } from '@/app/shared/services/cart/cart.service';
 
 const mockCategoryService = {
   getAllCategories: jest.fn().mockReturnValue(of([])),
@@ -22,13 +27,21 @@ const mockBrandService = {
 };
 const mockProductService = {
   createProduct: jest.fn(),
-  getProducts: jest.fn().mockReturnValue(of({ content: [], totalElements: 0, totalPages: 0, currentPage: 0 })),
+  getProducts: jest
+    .fn()
+    .mockReturnValue(
+      of({ content: [], totalElements: 0, totalPages: 0, currentPage: 0 })
+    ),
 };
 const mockToastService = {
   showToast: jest.fn(),
 };
 const mockSupplyService = {
   addSupply: jest.fn(),
+};
+
+const mockCartService = {
+  addProductToCart: jest.fn(),
 };
 
 describe('ProductComponent', () => {
@@ -43,7 +56,7 @@ describe('ProductComponent', () => {
         TextAreaWithErrorComponent,
         DropdownSearchInputComponent,
       ],
-      imports: [ReactiveFormsModule],
+      imports: [ReactiveFormsModule, HttpClientTestingModule],
       providers: [
         FormBuilder,
         { provide: CategoryService, useValue: mockCategoryService },
@@ -51,18 +64,37 @@ describe('ProductComponent', () => {
         { provide: ProductService, useValue: mockProductService },
         { provide: ToastService, useValue: mockToastService },
         { provide: SupplyService, useValue: mockSupplyService },
+        { provide: CartService, useValue: mockCartService },
       ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ProductComponent);
     component = fixture.componentInstance;
     component.createProductForm = new FormBuilder().group({
-      productName: ['', [Validators.required, Validators.minLength(3), Validators.pattern(/^[a-zA-Z0-9 ]+$/)]],
-      productDescription: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(90), Validators.pattern(/^[a-zA-Z0-9 ]+$/)]],
+      productName: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(3),
+          Validators.pattern(/^[a-zA-Z0-9 ]+$/),
+        ],
+      ],
+      productDescription: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(3),
+          Validators.maxLength(90),
+          Validators.pattern(/^[a-zA-Z0-9 ]+$/),
+        ],
+      ],
       productQuantity: [0, [Validators.required, Validators.min(1)]],
       productPrice: [0, [Validators.required, Validators.min(0)]],
       brandId: [null, Validators.required],
-      categoryIds: [[], [Validators.required, Validators.minLength(1), Validators.maxLength(3)]],
+      categoryIds: [
+        [],
+        [Validators.required, Validators.minLength(1), Validators.maxLength(3)],
+      ],
     });
     component.incrementForm = new FormBuilder().group({
       incrementAmount: [0, [Validators.required, Validators.min(1)]],
@@ -88,15 +120,25 @@ describe('ProductComponent', () => {
   });
 
   it('should show an error toast if loading categories fails', () => {
-    mockCategoryService.getAllCategories.mockReturnValueOnce(throwError(() => new Error('Error')));
+    mockCategoryService.getAllCategories.mockReturnValueOnce(
+      throwError(() => new Error('Error'))
+    );
     component.loadCategories();
-    expect(mockToastService.showToast).toHaveBeenCalledWith('Error loading categories', ToastType.Error);
+    expect(mockToastService.showToast).toHaveBeenCalledWith(
+      'Error loading categories',
+      ToastType.Error
+    );
   });
 
   it('should show an error toast if loading brands fails', () => {
-    mockBrandService.getAllBrands.mockReturnValueOnce(throwError(() => new Error('Error')));
+    mockBrandService.getAllBrands.mockReturnValueOnce(
+      throwError(() => new Error('Error'))
+    );
     component.loadBrands();
-    expect(mockToastService.showToast).toHaveBeenCalledWith('Error loading brands', ToastType.Error);
+    expect(mockToastService.showToast).toHaveBeenCalledWith(
+      'Error loading brands',
+      ToastType.Error
+    );
   });
 
   it('should validate the createProductForm and not call service if invalid', () => {
@@ -123,14 +165,16 @@ describe('ProductComponent', () => {
       categoryIds: [1, 2],
     });
     component.createProductForm.markAllAsTouched();
-    component.createProductForm.updateValueAndValidity(); 
-    fixture.detectChanges(); 
+    component.createProductForm.updateValueAndValidity();
+    fixture.detectChanges();
     mockProductService.createProduct.mockReturnValue(of({}));
 
     component.createProduct();
 
-  
-    expect(mockToastService.showToast).toHaveBeenCalledWith('Product created successfully', ToastType.Success);
+    expect(mockToastService.showToast).toHaveBeenCalledWith(
+      'Product created successfully',
+      ToastType.Success
+    );
   });
 
   it('should show an error toast if creating product fails', () => {
@@ -142,11 +186,16 @@ describe('ProductComponent', () => {
       brandId: 1,
       categoryIds: [1, 2],
     });
-    mockProductService.createProduct.mockReturnValue(throwError(() => new Error('Error')));
+    mockProductService.createProduct.mockReturnValue(
+      throwError(() => new Error('Error'))
+    );
 
     component.createProduct();
 
-    expect(mockToastService.showToast).toHaveBeenCalledWith('Error creating product', ToastType.Error);
+    expect(mockToastService.showToast).toHaveBeenCalledWith(
+      'Error creating product',
+      ToastType.Error
+    );
   });
 
   it('should reset the form and close the modal when closing the modal', () => {
@@ -184,11 +233,17 @@ describe('ProductComponent', () => {
 
     component.incrementQuantity();
 
-    expect(mockSupplyService.addSupply).toHaveBeenCalledWith(product.productId, {
-      productQuantity: 10,
-      nextSupplyDate: '2023-01-01',
-    });
-    expect(mockToastService.showToast).toHaveBeenCalledWith('Product quantity updated successfully', ToastType.Success);
+    expect(mockSupplyService.addSupply).toHaveBeenCalledWith(
+      product.productId,
+      {
+        productQuantity: 10,
+        nextSupplyDate: '2023-01-01',
+      }
+    );
+    expect(mockToastService.showToast).toHaveBeenCalledWith(
+      'Product quantity updated successfully',
+      ToastType.Success
+    );
   });
 
   it('should show an error toast if incrementing product quantity fails', () => {
@@ -198,11 +253,16 @@ describe('ProductComponent', () => {
       incrementAmount: 10,
       nextSupplyDate: '2023-01-01',
     });
-    mockSupplyService.addSupply.mockReturnValue(throwError(() => new Error('Error')));
+    mockSupplyService.addSupply.mockReturnValue(
+      throwError(() => new Error('Error'))
+    );
 
     component.incrementQuantity();
 
-    expect(mockToastService.showToast).toHaveBeenCalledWith('Error updating product quantity', ToastType.Error);
+    expect(mockToastService.showToast).toHaveBeenCalledWith(
+      'Error updating product quantity',
+      ToastType.Error
+    );
   });
 
   it('should filter categories based on search term', () => {
@@ -214,7 +274,9 @@ describe('ProductComponent', () => {
 
     component.filterCategories();
 
-    expect(component.filteredCategories).toEqual([{ categoryId: 1, categoryName: 'Category 1' }]);
+    expect(component.filteredCategories).toEqual([
+      { categoryId: 1, categoryName: 'Category 1' },
+    ]);
   });
 
   it('should filter brands based on search term', () => {
@@ -226,7 +288,9 @@ describe('ProductComponent', () => {
 
     component.filterBrands();
 
-    expect(component.filteredBrands).toEqual([{ brandId: 1, brandName: 'Brand 1' }]);
+    expect(component.filteredBrands).toEqual([
+      { brandId: 1, brandName: 'Brand 1' },
+    ]);
   });
 
   it('should handle search term change for categories', () => {
@@ -244,25 +308,37 @@ describe('ProductComponent', () => {
   });
 
   it('should select a category', () => {
-    const category = { categoryId: 1, categoryName: 'Category 1' } as CategoryResponse;
+    const category = {
+      categoryId: 1,
+      categoryName: 'Category 1',
+    } as CategoryResponse;
     component.selectCategory(category);
     expect(component.selectedCategories).toContain(category);
-    expect(component.createProductForm.get('categoryIds')?.value).toContain(category.categoryId);
+    expect(component.createProductForm.get('categoryIds')?.value).toContain(
+      category.categoryId
+    );
   });
 
   it('should remove a category', () => {
-    const category = { categoryId: 1, categoryName: 'Category 1' } as CategoryResponse;
+    const category = {
+      categoryId: 1,
+      categoryName: 'Category 1',
+    } as CategoryResponse;
     component.selectedCategories = [category];
     component.removeCategory(category);
     expect(component.selectedCategories).not.toContain(category);
-    expect(component.createProductForm.get('categoryIds')?.value).not.toContain(category.categoryId);
+    expect(component.createProductForm.get('categoryIds')?.value).not.toContain(
+      category.categoryId
+    );
   });
 
   it('should select a brand', () => {
     const brand = { brandId: 1, brandName: 'Brand 1' } as BrandResponse;
     component.selectBrand(brand);
     expect(component.selectedBrand).toBe(brand);
-    expect(component.createProductForm.get('brandId')?.value).toBe(brand.brandId);
+    expect(component.createProductForm.get('brandId')?.value).toBe(
+      brand.brandId
+    );
   });
 
   it('should set active dropdown', () => {
@@ -275,7 +351,12 @@ describe('ProductComponent', () => {
     jest.spyOn(component, 'loadProducts');
     component.onRowsPerPageChange(10);
     expect(component.pageSize).toBe(10);
-    expect(component.loadProducts).toHaveBeenCalledWith(component.currentPage, 10, component.sortBy, component.isAscending);
+    expect(component.loadProducts).toHaveBeenCalledWith(
+      component.currentPage,
+      10,
+      component.sortBy,
+      component.isAscending
+    );
   });
 
   it('should change sort order and load products', () => {
@@ -283,7 +364,12 @@ describe('ProductComponent', () => {
     component.changeSortOrder('productName');
     expect(component.sortBy).toBe('productName');
     expect(component.isAscending).toBe(false);
-    expect(component.loadProducts).toHaveBeenCalledWith(component.currentPage, component.pageSize, 'productName', false);
+    expect(component.loadProducts).toHaveBeenCalledWith(
+      component.currentPage,
+      component.pageSize,
+      'productName',
+      false
+    );
   });
 
   it('should open modal on key down button event', () => {
@@ -291,5 +377,67 @@ describe('ProductComponent', () => {
     const event = new KeyboardEvent('keydown', { key: 'Enter' });
     component.onKeyDownButton(event);
     expect(component.openModal).toHaveBeenCalled();
+  });
+
+  it('should open add to cart modal', () => {
+    const product = { productId: 1 } as ProductView;
+    component.openAddToCartModal(product);
+    expect(component.selectedProduct).toBe(product);
+    expect(component.isAddToCartModalVisible).toBe(true);
+  });
+
+  it('should close add to cart modal', () => {
+    component.closeAddToCartModal();
+    expect(component.isAddToCartModalVisible).toBe(false);
+    expect(component.addToCartForm.pristine).toBe(true);
+    expect(component.addToCartForm.untouched).toBe(true);
+    expect(component.addToCartForm.value).toEqual({ quantity: '' });
+  });
+
+  it('should add product to cart', () => {
+    const productId = 3;
+    const quantity = 5;
+    const selectedProduct = { productId } as ProductView;
+    component.selectedProduct = selectedProduct;
+    component.addToCartForm.setValue({ quantity });
+
+    jest.spyOn(mockCartService, 'addProductToCart').mockReturnValue(of({}));
+    jest.spyOn(mockToastService, 'showToast');
+
+    fixture.detectChanges();
+    component.addToCart();
+
+    expect(mockCartService.addProductToCart).toHaveBeenCalledWith(
+      productId,
+      quantity
+    );
+    expect(mockToastService.showToast).toHaveBeenCalledWith(
+      'Product added to cart successfully',
+      ToastType.Success
+    );
+  });
+
+  it('should show error when adding product to cart fails', () => {
+    const productId = 3;
+    const quantity = 5;
+    const selectedProduct = { productId } as ProductView;
+    component.selectedProduct = selectedProduct;
+    component.addToCartForm.setValue({ quantity });
+
+    jest
+      .spyOn(mockCartService, 'addProductToCart')
+      .mockReturnValue(throwError(() => new Error('Error')));
+    jest.spyOn(mockToastService, 'showToast');
+
+    component.addToCart();
+
+    expect(mockCartService.addProductToCart).toHaveBeenCalledWith(
+      productId,
+      quantity
+    );
+    expect(mockToastService.showToast).toHaveBeenCalledWith(
+      'Error adding product to cart',
+      ToastType.Error
+    );
   });
 });

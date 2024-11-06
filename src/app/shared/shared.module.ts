@@ -6,7 +6,7 @@ import { HeaderComponent } from './organisms/header/header.component';
 import { SidebarComponent } from './organisms/sidebar/sidebar.component';
 import { NavComponent } from './organisms/nav/nav.component';
 import { FooterComponent } from './organisms/footer/footer.component';
-import { LucideAngularModule, LogOut } from 'lucide-angular';
+import { LucideAngularModule, LogOut,ShoppingCart,ShoppingBasket } from 'lucide-angular';
 import { AtomsModule } from '../ui/atoms/atoms.module';
 import { RoleDirective } from './directives/role.directive';
 
@@ -23,7 +23,7 @@ import { RoleDirective } from './directives/role.directive';
     CommonModule,
     RouterModule,
     AtomsModule,
-    LucideAngularModule.pick({ LogOut }),
+    LucideAngularModule.pick({ LogOut, ShoppingCart,ShoppingBasket}),
   ],
   exports: [
     NavLinkComponent,

@@ -244,3 +244,12 @@ input[type="number"]::-webkit-outer-spin-button,
  :has(> .tool-tip):hover .tool-tip{
    opacity: 1;
  }
+
+.tag{
+  background-color: $purple;
+  color: $white;
+  padding: 0.5rem 1rem;
+  border-radius: 0.8rem;
+  font-size: 1.2rem;
+  margin-right: 1rem;
+}

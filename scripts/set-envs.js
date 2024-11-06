@@ -9,6 +9,7 @@ export const environment = {
     stock_service_url: "${process.env['STOCK_SERVICE_URL']}",
     user_service_url: "${process.env['USER_SERVICE_URL']}",
     supply_service_url: "${process.env['SUPPLY_SERVICE_URL']}",
+    cart_service_url: "${process.env['CART_SERVICE_URL']}",
 };
 `;
 
