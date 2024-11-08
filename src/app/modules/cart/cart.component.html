@@ -1,1 +1,31 @@
-<p>cart works!</p>
+<div class="flex-row">
+  <section class="container-cards">
+    <div *ngIf="cartProducts.length === 0" class="empty-cart-message">
+      <p>Your cart is currently empty.</p>
+    </div>
+    <div *ngFor="let product of cartProducts" class="card">
+      <div class="card__left">
+        <div class="card__image-wrapper">
+          <div class="card__image skeleton-image"></div>
+        </div>
+      </div>
+      <div class="card__right">
+        <div class="card__product-content">
+          <h2 class="card__product-title">{{ product.productName }}</h2>
+          <p class="card__product-description">{{ product.productDescription }}</p>
+          <p class="card__brand">Brand: {{ product.brand.brandName }}</p>
+          <p class="card__cart-quantity">Quantity in Cart: {{ product.cartQuantity }}</p>
+          <p class="card__subtotal">Subtotal: {{ product.subtotal | currency }}</p>
+        </div>
+        <div class="card__price-wrapper">
+          <p class="card__price">{{ product.productPrice | currency }}</p>
+        </div>
+        <button class="card__remove-button" (click)="removeFromCart(product.productId)">Remove</button>
+      </div>
+    </div>
+  
+    <div *ngIf="cartProducts.length > 0" class="cart-total">
+      <p>Total: {{ total | currency }}</p>
+    </div>
+  </section>
+</div>

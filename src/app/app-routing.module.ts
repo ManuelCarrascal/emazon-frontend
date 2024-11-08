@@ -68,7 +68,13 @@ const routes: Routes = [
           import(
             './pages/warehouse-assistant-page/warehouse-assistant-page.module'
           ).then((m) => m.WarehouseAssistantPageModule),
-      },
+      },{
+        path: 'cart',
+        loadChildren: () =>
+          import('./pages/cart-page/cart-page.module').then(
+            (m) => m.CartPageModule
+          ),
+      }
     ],
   },
   { path: '**', redirectTo: '/login' },

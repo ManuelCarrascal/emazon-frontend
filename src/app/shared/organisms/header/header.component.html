@@ -5,7 +5,7 @@
 
  <div class="align-center header__right-content">
   <button class="shopping-cart-icon" *appRole="'ROLE_CLIENTE'">
-    <lucide-icon name="shopping-cart"></lucide-icon>
+    <a routerLink="/dashboard/cart"><lucide-icon name="shopping-cart"></lucide-icon></a>
   </button>
 
   <button class="logout-container" aria-label="Logout" (click)="logout()">
