@@ -1,8 +1,11 @@
+<div *ngIf="cartProducts.length === 0" class="empty-cart">
+  <h2 class="empty-cart__message">Your cart is currently empty, go to the products section to choose the one you want to buy</h2>
+  <div class="align-center">
+    <lucide-icon name="shopping-bag" size="120" class="empty-cart__icon" ></lucide-icon>
+  </div>
+</div>
 <div class="flex-row">
-  <section class="container-cards">
-    <div *ngIf="cartProducts.length === 0" class="empty-cart-message">
-      <p>Your cart is currently empty.</p>
-    </div>
+  <section class="container-cards" *ngIf="cartProducts.length !== 0">
     <div *ngFor="let product of cartProducts" class="card">
       <div class="card__left">
         <div class="card__image-wrapper">

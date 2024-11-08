@@ -73,3 +73,33 @@
     background-position: -200% 0;
   }
 }
+
+.empty-cart{
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  padding: 2rem;
+  gap: 2rem;
+  height: 100%;
+  &__message{
+    font-size: 2.5rem;
+  }
+
+  &__icon{
+    position: relative;
+    color: $hint-text;
+
+    &::after{
+      content: "";
+      display: block;
+      position: absolute;
+      right: -1rem;
+      bottom: -1rem;
+      width: 5.7rem;
+      height: 5.7rem;
+      background: url('../../../assets/badge-percent.svg') no-repeat;  
+      background-size: contain;
+      filter: drop-shadow(0 0 0.5rem rgba(0, 0, 0, 0.25));
+    }
+  }
+}
