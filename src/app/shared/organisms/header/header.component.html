@@ -3,6 +3,11 @@
     <app-logo></app-logo>
   </div>
 
+ <div class="align-center header__right-content">
+  <button class="shopping-cart-icon" *appRole="'ROLE_CLIENTE'">
+    <a routerLink="/dashboard/cart"><lucide-icon name="shopping-cart"></lucide-icon></a>
+  </button>
+
   <button class="logout-container" aria-label="Logout" (click)="logout()">
     Logout
     <lucide-icon name="log-out" size="14"></lucide-icon>
@@ -11,4 +16,5 @@
   <div class="header__nav">
     <app-hamburger-button></app-hamburger-button>
   </div>
+ </div>
 </header>

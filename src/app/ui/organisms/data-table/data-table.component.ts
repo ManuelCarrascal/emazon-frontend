@@ -22,6 +22,7 @@ export class DataTableComponent implements OnInit {
   }>();
   @Output() rowsPerPageChange = new EventEmitter<number>();
   @Output() incrementClick = new EventEmitter<any>();
+  @Output() addToCartClick = new EventEmitter<any>();
 
   rowsPerPage = 5;
 
@@ -92,7 +93,15 @@ export class DataTableComponent implements OnInit {
     this.incrementClick.emit(row);
   }
 
+  onAddToCartClick(row: any): void {
+    this.addToCartClick.emit(row);
+  }
+
   canShowActions(): boolean {
     return this.showActions && this.authService.getUserRole() === 'ROLE_AUX_BODEGA';
+  }
+
+  canShowAddToCart(): boolean {
+    return this.showActions && this.authService.getUserRole() === 'ROLE_CLIENTE';
   }
 }
