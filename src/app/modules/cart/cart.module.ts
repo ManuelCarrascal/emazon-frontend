@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { CartComponent } from './cart.component';
 import { SharedModule } from '@/app/shared/shared.module';
 import { LucideAngularModule} from 'lucide-angular';
+import { FormsModule } from '@angular/forms';
+import { AtomsModule } from "../../ui/atoms/atoms.module";
 
 
 
@@ -11,7 +13,9 @@ import { LucideAngularModule} from 'lucide-angular';
   imports: [
     CommonModule,
     SharedModule,
-    LucideAngularModule
-  ]
+    LucideAngularModule,
+    FormsModule,
+    AtomsModule
+]
 })
 export class CartModule { }

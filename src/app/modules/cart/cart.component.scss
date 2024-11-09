@@ -63,6 +63,15 @@
     font-weight: bold;
     color: $purple;
   }
+
+  &__actions {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  &remove-button{
+  }
 }
 
 @keyframes skeleton-loading {

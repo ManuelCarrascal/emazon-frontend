@@ -1,12 +1,34 @@
 <div *ngIf="cartProducts.length === 0" class="empty-cart">
-  <h2 class="empty-cart__message">Your cart is currently empty, go to the products section to choose the one you want to buy</h2>
+  <h2 class="empty-cart__message">
+    Your cart is currently empty, go to the products section to choose the one
+    you want to buy
+  </h2>
   <div class="align-center">
-    <lucide-icon name="shopping-bag" size="120" class="empty-cart__icon" ></lucide-icon>
+    <lucide-icon
+      name="shopping-bag"
+      size="120"
+      class="empty-cart__icon"
+    ></lucide-icon>
   </div>
 </div>
 <div class="flex-row">
   <section class="container-cards" *ngIf="cartProducts.length !== 0">
-    <div *ngFor="let product of cartProducts" class="card">
+    <div class="filter-inputs">
+      <input
+        type="text"
+        [(ngModel)]="categoryName"
+        placeholder="Category Name"
+        (input)="updateCart()"
+      />
+      <input
+        type="text"
+        [(ngModel)]="brandName"
+        placeholder="Brand Name"
+        (input)="updateCart()"
+      />
+      <button (click)="updateCart()">Update Cart</button>
+    </div>
+    <div *ngFor="let product of filteredProducts" class="card">
       <div class="card__left">
         <div class="card__image-wrapper">
           <div class="card__image skeleton-image"></div>
@@ -15,20 +37,31 @@
       <div class="card__right">
         <div class="card__product-content">
           <h2 class="card__product-title">{{ product.productName }}</h2>
-          <p class="card__product-description">{{ product.productDescription }}</p>
+          <p class="card__product-description">
+            {{ product.productDescription }}
+          </p>
           <p class="card__brand">Brand: {{ product.brand.brandName }}</p>
-          <p class="card__cart-quantity">Quantity in Cart: {{ product.cartQuantity }}</p>
-          <p class="card__subtotal">Subtotal: {{ product.subtotal | currency }}</p>
+          <p class="card__cart-quantity">
+            Quantity in Cart: {{ product.cartQuantity }}
+          </p>
+          <p class="card__subtotal">
+            Subtotal: {{ product.subtotal | currency }}
+          </p>
         </div>
-        <div class="card__price-wrapper">
-          <p class="card__price">{{ product.productPrice | currency }}</p>
+        <div class="card__actions">
+          <div class="card__price-wrapper">
+            <p class="card__price">{{ product.productPrice | currency }}</p>
+          </div>
+          <app-button
+            ngClass="button button--secondary"
+            (click)="removeFromCart(product.productId)"
+            >Remove</app-button
+          >
         </div>
-        <button class="card__remove-button" (click)="removeFromCart(product.productId)">Remove</button>
       </div>
     </div>
-  
-    <div *ngIf="cartProducts.length > 0" class="cart-total">
-      <p>Total: {{ total | currency }}</p>
-    </div>
   </section>
+  <div *ngIf="filteredProducts.length > 0" class="cart-total">
+    <p>Total: {{ total | currency }}</p>
+  </div>
 </div>
