@@ -11,8 +11,8 @@ export class CartComponent implements OnInit {
   cartProducts: CartProduct[] = [];
   filteredProducts: CartProduct[] = [];
   total: number = 0;
-  categoryName: string = '';
-  brandName: string = '';
+  searchTerm: string = '';
+  size: number = 5;
 
   constructor(private readonly cartService: CartService) { }
 
@@ -21,14 +21,13 @@ export class CartComponent implements OnInit {
   }
 
   loadCart(): void {
-    const size = 5;
     const isAscending = true;
 
-    this.cartService.getCart(size, isAscending).subscribe({
+    this.cartService.getCart(this.size, isAscending).subscribe({
       next: (data: CartResponse) => {
         this.cartProducts = data.content;
         this.filteredProducts = [...this.cartProducts];
-        this.total = this.cartProducts.reduce((acc, product) => acc + product.subtotal, 0); 
+        this.total = data.total; 
         console.log('Cart data:', data);
       },
       error: (error) => {
@@ -38,10 +37,12 @@ export class CartComponent implements OnInit {
   }
 
   updateCart(): void {
+    const term = this.searchTerm.toLowerCase();
     this.filteredProducts = this.cartProducts.filter(product => {
-      const matchesCategory = !this.categoryName || (product.categories && product.categories.some(category => category.categoryName && category.categoryName.toLowerCase().includes(this.categoryName.toLowerCase())));
-      const matchesBrand = !this.brandName || (product.brand && product.brand.brandName && product.brand.brandName.toLowerCase().includes(this.brandName.toLowerCase()));
-      return matchesCategory && matchesBrand;
+      const matchesCategory = product.categories?.some(category => category.categoryName.toLowerCase().includes(term));
+      const matchesBrand = product.brand?.brandName.toLowerCase().includes(term);
+      const matchesProductName = product.productName.toLowerCase().includes(term);
+      return matchesCategory || matchesBrand || matchesProductName;
     });
     this.total = this.filteredProducts.reduce((acc, product) => acc + product.subtotal, 0);
   }

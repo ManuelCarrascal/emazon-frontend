@@ -16,47 +16,48 @@
     <div class="filter-inputs">
       <input
         type="text"
-        [(ngModel)]="categoryName"
-        placeholder="Category Name"
-        (input)="updateCart()"
-      />
-      <input
-        type="text"
-        [(ngModel)]="brandName"
-        placeholder="Brand Name"
+        [(ngModel)]="searchTerm"
+        placeholder="Search by Category, Brand or Product Name"
         (input)="updateCart()"
       />
       <button (click)="updateCart()">Update Cart</button>
+      <label for="sizeSelect">Show by:</label>
+      <select id="sizeSelect" [(ngModel)]="size" (change)="loadCart()">
+        <option value="5">5</option>
+        <option value="10">10</option>
+      </select>
     </div>
-    <div *ngFor="let product of filteredProducts" class="card">
-      <div class="card__left">
-        <div class="card__image-wrapper">
-          <div class="card__image skeleton-image"></div>
-        </div>
-      </div>
-      <div class="card__right">
-        <div class="card__product-content">
-          <h2 class="card__product-title">{{ product.productName }}</h2>
-          <p class="card__product-description">
-            {{ product.productDescription }}
-          </p>
-          <p class="card__brand">Brand: {{ product.brand.brandName }}</p>
-          <p class="card__cart-quantity">
-            Quantity in Cart: {{ product.cartQuantity }}
-          </p>
-          <p class="card__subtotal">
-            Subtotal: {{ product.subtotal | currency }}
-          </p>
-        </div>
-        <div class="card__actions">
-          <div class="card__price-wrapper">
-            <p class="card__price">{{ product.productPrice | currency }}</p>
+    <div class="container-card">
+      <div *ngFor="let product of filteredProducts" class="card">
+        <div class="card__left">
+          <div class="card__image-wrapper">
+            <div class="card__image skeleton-image"></div>
           </div>
-          <app-button
-            ngClass="button button--secondary"
-            (click)="removeFromCart(product.productId)"
-            >Remove</app-button
-          >
+        </div>
+        <div class="card__right">
+          <div class="card__product-content">
+            <h2 class="card__product-title">{{ product.productName }}</h2>
+            <p class="card__product-description">
+              {{ product.productDescription }}
+            </p>
+            <p class="card__brand">Brand: {{ product.brand.brandName }}</p>
+            <p class="card__cart-quantity">
+              Quantity in Cart: {{ product.cartQuantity }}
+            </p>
+            <p class="card__subtotal">
+              Subtotal: {{ product.subtotal | currency }}
+            </p>
+          </div>
+          <div class="card__actions">
+            <div class="card__price-wrapper">
+              <p class="card__price">{{ product.productPrice | currency }}</p>
+            </div>
+            <app-button
+              ngClass="button button--secondary"
+              (click)="removeFromCart(product.productId)"
+              >Remove</app-button
+            >
+          </div>
         </div>
       </div>
     </div>
