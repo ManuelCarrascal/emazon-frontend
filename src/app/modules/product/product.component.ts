@@ -218,7 +218,7 @@ export class ProductComponent implements OnInit {
     return this.incrementForm.get('incrementAmount');
   }
 
-  get quantity() { // Add this getter
+  get quantity() { 
     return this.addToCartForm.get('quantity');
   }
 
@@ -252,7 +252,7 @@ export class ProductComponent implements OnInit {
     return this.getErrorMessage(this.incrementAmount, 'Increment Amount');
   }
 
-  get quantityError(): string { // Add this getter
+  get quantityError(): string { 
     return this.getErrorMessage(this.quantity, 'Quantity');
   }
 

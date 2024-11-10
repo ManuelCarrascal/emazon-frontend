@@ -24,4 +24,10 @@
         cursor: not-allowed;
     }
 
+    &--secondary{
+        background-color: $white;
+        color: $purple;
+        border: 1px solid $purple;
+    }
+
 }
