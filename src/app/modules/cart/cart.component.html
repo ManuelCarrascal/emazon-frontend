@@ -20,16 +20,19 @@
         placeholder="Search by Category, Brand or Product Name"
         (input)="updateCart()"
       />
-      <label for="sizeSelect">Show by:</label>
-      <select
-        id="sizeSelect"
-        [(ngModel)]="size"
-        (change)="onRowsPerPageChange($event)"
-      >
-        <option value="5">5</option>
-        <option value="10">10</option>
-      </select>
+      <div>
+        <label for="sizeSelect">Show by:</label>
+        <select
+          id="sizeSelect"
+          [(ngModel)]="size"
+          (change)="onRowsPerPageChange($event)"
+        >
+          <option value="5">5</option>
+          <option value="10">10</option>
+        </select>
+      </div>
       <button (click)="toggleSortOrder()">
+        Sort by Name
         <lucide-icon
           [name]="isAscending ? 'arrow-down-a-z' : 'arrow-up-a-z'"
           class="sort-icon"
@@ -47,12 +50,27 @@
         <div class="card__right">
           <div class="card__product-content">
             <h2 class="card__product-title">{{ product.productName }}</h2>
-            <p class="card__product-description">
-              {{ product.productDescription }}
-            </p>
+            <p class="">Categories:</p>
+            <div class="card__categories">
+              <div
+                class="tag"
+                *ngFor="let category of product.categories; let isLast = last"
+              >
+                {{ category.categoryName }}
+              </div>
+            </div>
+
             <p class="card__brand">Brand: {{ product.brand.brandName }}</p>
-            <p class="card__cart-quantity">
-              Quantity in Cart: {{ product.cartQuantity }}
+            <div class="card__quantities">
+              <p class="card__cart-quantity">
+                Quantity in Cart: {{ product.cartQuantity }}
+              </p>
+              <p class="card__stock-quantity">
+                In Stock: {{ product.productQuantity }}
+              </p>
+            </div>
+            <p *ngIf="product.productQuantity === 0 && product.nextSupplyDate">
+              Next supply date: {{ product.nextSupplyDate }}
             </p>
             <p class="card__subtotal">
               Subtotal: {{ product.subtotal | currency }}
@@ -72,13 +90,18 @@
       </div>
     </div>
     <app-pagination
+      *ngIf="totalPages > 1"
       [totalPages]="totalPages"
       [currentPage]="currentPage"
       (pageChange)="changePage($event)"
     ></app-pagination>
   </section>
   <div *ngIf="filteredProducts.length > 0" class="cart-total">
-    <p>Total: {{ total | currency }}</p>
-    <p *ngIf="latestUpdate">Last updated: {{ latestUpdate }}</p>
+    <p class="cart-total__last-update" *ngIf="latestUpdate">
+      Last updated: {{ latestUpdate }}
+    </p>
+    <p class="cart-total__amount">
+      Total: <span class=""> {{ total | currency }}</span>
+    </p>
   </div>
 </div>

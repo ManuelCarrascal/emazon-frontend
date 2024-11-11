@@ -2,7 +2,9 @@ import {
   CartResponse,
   CartProduct,
 } from '@/app/shared/interfaces/cart.interface';
+import { NextSupplyResponse } from '@/app/shared/interfaces/supply.interface';
 import { CartService } from '@/app/shared/services/cart/cart.service';
+import { SupplyService } from '@/app/shared/services/supply/supply.service';
 import { Component, OnInit } from '@angular/core';
 
 @Component({
@@ -21,7 +23,10 @@ export class CartComponent implements OnInit {
   latestUpdate: string | null = null;
   isAscending: boolean = true;
 
-  constructor(private readonly cartService: CartService) {}
+  constructor(
+    private readonly cartService: CartService,
+    private readonly supplyService: SupplyService
+  ) {}
 
   ngOnInit(): void {
     this.loadCart();
@@ -40,6 +45,11 @@ export class CartComponent implements OnInit {
 
           if (this.cartProducts.length > 0) {
             this.loadLatestUpdate();
+            this.cartProducts.forEach((product) => {
+              if (product.productQuantity === 0) {
+                this.loadNextSupplyDate(product.productId);
+              }
+            });
           }
         },
         error: (error) => {
@@ -124,5 +134,21 @@ export class CartComponent implements OnInit {
   toggleSortOrder(): void {
     this.isAscending = !this.isAscending;
     this.loadCart();
+  }
+
+  loadNextSupplyDate(productId: number): void {
+    this.supplyService.getNextSupplyDate(productId).subscribe({
+      next: (response: NextSupplyResponse) => {
+        const product = this.cartProducts.find(
+          (p) => p.productId === productId
+        );
+        if (product) {
+          product.nextSupplyDate = response.nextSupplyDate;
+        }
+      },
+      error: (error) => {
+        console.error('Error fetching next supply date:', error);
+      },
+    });
   }
 }
