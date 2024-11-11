@@ -16,6 +16,10 @@ export class CartComponent implements OnInit {
   total: number = 0;
   searchTerm: string = '';
   size: number = 5;
+  currentPage: number = 0;
+  totalPages: number = 0;
+  latestUpdate: string | null = null;
+  isAscending: boolean = true;
 
   constructor(private readonly cartService: CartService) {}
 
@@ -24,20 +28,38 @@ export class CartComponent implements OnInit {
   }
 
   loadCart(): void {
-    const isAscending = true;
+    this.cartService
+      .getCart(this.size, this.currentPage, this.isAscending)
+      .subscribe({
+        next: (data: CartResponse) => {
+          this.cartProducts = data.content;
+          this.filteredProducts = [...this.cartProducts];
+          this.total = data.total;
+          this.totalPages = data.totalPages;
+          console.log('Cart data:', data);
 
-    this.cartService.getCart(this.size, isAscending).subscribe({
-      next: (data: CartResponse) => {
-        this.cartProducts = data.content;
-        this.filteredProducts = [...this.cartProducts];
-        this.total = data.total;
-        console.log('Cart data:', data);
+          if (this.cartProducts.length > 0) {
+            this.loadLatestUpdate();
+          }
+        },
+        error: (error) => {
+          console.error('Error fetching cart data:', error);
+          this.cartProducts = [];
+          this.filteredProducts = [];
+          this.total = 0;
+          this.totalPages = 0;
+        },
+      });
+  }
+
+  loadLatestUpdate(): void {
+    this.cartService.getLatestUpdate().subscribe({
+      next: (data: string) => {
+        this.latestUpdate = data;
       },
       error: (error) => {
-        console.error('Error fetching cart data:', error);
-        this.cartProducts = [];
-        this.filteredProducts = [];
-        this.total = 0;
+        console.error('Error fetching latest update:', error);
+        this.latestUpdate = null;
       },
     });
   }
@@ -56,10 +78,6 @@ export class CartComponent implements OnInit {
         .includes(term);
       return matchesCategory || matchesBrand || matchesProductName;
     });
-    this.total = this.filteredProducts.reduce(
-      (acc, product) => acc + product.subtotal,
-      0
-    );
   }
 
   removeFromCart(productId: number): void {
@@ -67,20 +85,44 @@ export class CartComponent implements OnInit {
     this.cartService.removeProductFromCart(productId).subscribe({
       next: () => {
         console.log('Product removed from cart');
+        const removedProduct = this.cartProducts.find(
+          (product) => product.productId === productId
+        );
+        if (removedProduct) {
+          this.total -= removedProduct.subtotal;
+        }
         this.cartProducts = this.cartProducts.filter(
           (product) => product.productId !== productId
         );
-        this.filteredProducts = this.filteredProducts.filter(
-          (product) => product.productId !== productId
-        );
-        this.total = this.filteredProducts.reduce(
-          (acc, product) => acc + product.subtotal,
-          0
-        );
+        this.updateCart();
+
+        if (this.cartProducts.length > 0) {
+          this.loadLatestUpdate();
+        } else {
+          this.latestUpdate = null;
+        }
       },
       error: (error) => {
         console.error('Error removing product from cart:', error);
       },
     });
+  }
+
+  changePage(page: number): void {
+    this.currentPage = page;
+    this.loadCart();
+  }
+
+  onRowsPerPageChange(event: Event): void {
+    const target = event.target as HTMLSelectElement;
+    const rowsPerPage = Number(target.value);
+    this.size = rowsPerPage;
+    this.currentPage = 0;
+    this.loadCart();
+  }
+
+  toggleSortOrder(): void {
+    this.isAscending = !this.isAscending;
+    this.loadCart();
   }
 }

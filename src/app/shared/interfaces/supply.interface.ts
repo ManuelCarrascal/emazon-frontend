@@ -9,3 +9,7 @@ export interface SupplyResponse{
     productQuantity: number;
     nextSupplyDate: string;
 }
+
+export interface NextSupplyResponse{
+  nextSupplyDate: string;
+}

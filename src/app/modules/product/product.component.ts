@@ -25,7 +25,7 @@ import {
   ProductView,
 } from '@/app/shared/interfaces/product.interface';
 import { SupplyService } from '@/app/shared/services/supply/supply.service';
-import { SupplyRequest } from '@/app/shared/interfaces/supply.interface';
+import { SupplyRequest, NextSupplyResponse } from '@/app/shared/interfaces/supply.interface';
 import { CartService } from '@/app/shared/services/cart/cart.service';
 
 const MIN_LENGTH = 3;
@@ -77,6 +77,7 @@ export class ProductComponent implements OnInit {
   ];
 
   public selectedProduct: ProductView | null = null;
+  public nextSupplyDateString: string | null = null;
 
   constructor(
     private readonly formBuilder: FormBuilder,
@@ -176,6 +177,9 @@ export class ProductComponent implements OnInit {
   openAddToCartModal(product: ProductView) { 
     this.selectedProduct = product;
     this.isAddToCartModalVisible = true;
+    if (this.selectedProduct.productQuantity === 0) {
+      this.loadNextSupplyDate(this.selectedProduct.productId);
+    }
   }
 
   closeAddToCartModal() { 
@@ -185,6 +189,7 @@ export class ProductComponent implements OnInit {
     });
     this.addToCartForm.markAsPristine();
     this.addToCartForm.markAsUntouched();
+    this.nextSupplyDateString = null;
   }
 
   onKeyDownButton(event: KeyboardEvent): void {
@@ -299,29 +304,29 @@ export class ProductComponent implements OnInit {
     });
   }
 
-incrementQuantity(): void {
-  if (this.incrementForm.invalid || !this.selectedProduct) {
-    this.incrementForm.markAllAsTouched();
-    return;
-  }
-  const incrementAmount = this.incrementForm.value.incrementAmount;
-  const nextSupplyDate = this.incrementForm.value.nextSupplyDate;
-  const supplyRequest: SupplyRequest = {
-    productQuantity: incrementAmount,
-    nextSupplyDate: nextSupplyDate
-  };
+  incrementQuantity(): void {
+    if (this.incrementForm.invalid || !this.selectedProduct) {
+      this.incrementForm.markAllAsTouched();
+      return;
+    }
+    const incrementAmount = this.incrementForm.value.incrementAmount;
+    const nextSupplyDate = this.incrementForm.value.nextSupplyDate;
+    const supplyRequest: SupplyRequest = {
+      productQuantity: incrementAmount,
+      nextSupplyDate: nextSupplyDate
+    };
 
-  this.supplyService.addSupply(this.selectedProduct.productId, supplyRequest).subscribe({
-    next: () => {
-      this.toastService.showToast('Product quantity updated successfully', ToastType.Success);
-      this.loadProducts();
-      this.closeIncrementModal();
-    },
-    error: (error) => {
-      this.toastService.showToast('Error updating product quantity', ToastType.Error);
-    },
-  });
-}
+    this.supplyService.addSupply(this.selectedProduct.productId, supplyRequest).subscribe({
+      next: () => {
+        this.toastService.showToast('Product quantity updated successfully', ToastType.Success);
+        this.loadProducts();
+        this.closeIncrementModal();
+      },
+      error: (error) => {
+        this.toastService.showToast('Error updating product quantity', ToastType.Error);
+      },
+    });
+  }
 
   loadCategories(): void {
     this.categoryService.getAllCategories().subscribe({
@@ -523,6 +528,17 @@ incrementQuantity(): void {
       },
       error: (error) => {
         this.toastService.showToast('Error adding product to cart', ToastType.Error);
+      },
+    });
+  }
+
+  loadNextSupplyDate(productId: number): void {
+    this.supplyService.getNextSupplyDate(productId).subscribe({
+      next: (response: NextSupplyResponse) => {
+        this.nextSupplyDateString = response.nextSupplyDate;
+      },
+      error: (error) => {
+        this.toastService.showToast('Error fetching next supply date', ToastType.Error);
       },
     });
   }

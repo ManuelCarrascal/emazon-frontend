@@ -5,6 +5,7 @@ import { SharedModule } from '@/app/shared/shared.module';
 import { LucideAngularModule} from 'lucide-angular';
 import { FormsModule } from '@angular/forms';
 import { AtomsModule } from "../../ui/atoms/atoms.module";
+import { UiModule } from '@/app/ui/ui.module';
 
 
 
@@ -15,7 +16,8 @@ import { AtomsModule } from "../../ui/atoms/atoms.module";
     SharedModule,
     LucideAngularModule,
     FormsModule,
-    AtomsModule
+    AtomsModule,
+    UiModule
 ]
 })
 export class CartModule { }

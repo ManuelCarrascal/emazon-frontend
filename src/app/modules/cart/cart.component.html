@@ -20,12 +20,22 @@
         placeholder="Search by Category, Brand or Product Name"
         (input)="updateCart()"
       />
-      <button (click)="updateCart()">Update Cart</button>
       <label for="sizeSelect">Show by:</label>
-      <select id="sizeSelect" [(ngModel)]="size" (change)="loadCart()">
+      <select
+        id="sizeSelect"
+        [(ngModel)]="size"
+        (change)="onRowsPerPageChange($event)"
+      >
         <option value="5">5</option>
         <option value="10">10</option>
       </select>
+      <button (click)="toggleSortOrder()">
+        <lucide-icon
+          [name]="isAscending ? 'arrow-down-a-z' : 'arrow-up-a-z'"
+          class="sort-icon"
+          size="16"
+        ></lucide-icon>
+      </button>
     </div>
     <div class="container-card">
       <div *ngFor="let product of filteredProducts" class="card">
@@ -61,8 +71,14 @@
         </div>
       </div>
     </div>
+    <app-pagination
+      [totalPages]="totalPages"
+      [currentPage]="currentPage"
+      (pageChange)="changePage($event)"
+    ></app-pagination>
   </section>
   <div *ngIf="filteredProducts.length > 0" class="cart-total">
     <p>Total: {{ total | currency }}</p>
+    <p *ngIf="latestUpdate">Last updated: {{ latestUpdate }}</p>
   </div>
 </div>
