@@ -83,6 +83,7 @@
             <app-button
               ngClass="button button--secondary"
               (click)="removeFromCart(product.productId)"
+              (keydown)="onKeyDownButton($event)"
               >Remove</app-button
             >
           </div>

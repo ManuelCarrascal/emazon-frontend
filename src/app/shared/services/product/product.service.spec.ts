@@ -89,7 +89,7 @@ describe('ProductService', () => {
         next: () => fail('should have failed with 500 status'),
         error: (error) => {
           expect(error.status).toBe(500);
-        }
+        },
       });
 
       const req = httpMock.expectOne(
@@ -185,7 +185,7 @@ describe('ProductService', () => {
         next: () => fail('expected an error, not products'),
         error: (error) => {
           expect(error.status).toBe(400);
-        }
+        },
       });
 
       const req = httpMock.expectOne((request) => {

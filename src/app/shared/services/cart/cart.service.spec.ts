@@ -1,5 +1,8 @@
 import { TestBed } from '@angular/core/testing';
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import {
+  HttpClientTestingModule,
+  HttpTestingController,
+} from '@angular/common/http/testing';
 import { CartService } from './cart.service';
 import { environment } from '@/environments/environment';
 import { CartResponse } from '@/app/shared/interfaces/cart.interface';
@@ -11,7 +14,7 @@ describe('CartService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule],
-      providers: [CartService]
+      providers: [CartService],
     });
     service = TestBed.inject(CartService);
     httpMock = TestBed.inject(HttpTestingController);
@@ -37,7 +40,7 @@ describe('CartService', () => {
     const token = 'test-token';
     localStorage.setItem('token', token);
 
-    service.addProductToCart(productId, quantity).subscribe(response => {
+    service.addProductToCart(productId, quantity).subscribe((response) => {
       expect(response).toBeTruthy();
     });
 
@@ -58,16 +61,18 @@ describe('CartService', () => {
       totalElements: 0,
       currentPage: 0,
       ascending: false,
-      empty: false
+      empty: false,
     };
     const token = 'test-token';
     localStorage.setItem('token', token);
 
-    service.getCart(size, page, isAscending).subscribe(response => {
+    service.getCart(size, page, isAscending).subscribe((response) => {
       expect(response).toEqual(cartResponse);
     });
 
-    const req = httpMock.expectOne(`${environment.cart_service_url}?size=${size}&page=${page}&isAscending=${isAscending}`);
+    const req = httpMock.expectOne(
+      `${environment.cart_service_url}?size=${size}&page=${page}&isAscending=${isAscending}`
+    );
     expect(req.request.method).toBe('GET');
     req.flush(cartResponse);
   });
@@ -77,11 +82,13 @@ describe('CartService', () => {
     const token = 'test-token';
     localStorage.setItem('token', token);
 
-    service.removeProductFromCart(productId).subscribe(response => {
+    service.removeProductFromCart(productId).subscribe((response) => {
       expect(response).toBe('Product removed');
     });
 
-    const req = httpMock.expectOne(`${environment.cart_service_url}/delete/${productId}`);
+    const req = httpMock.expectOne(
+      `${environment.cart_service_url}/delete/${productId}`
+    );
     expect(req.request.method).toBe('DELETE');
     req.flush('Product removed');
   });
@@ -91,11 +98,13 @@ describe('CartService', () => {
     const token = 'test-token';
     localStorage.setItem('token', token);
 
-    service.getLatestUpdate().subscribe(response => {
+    service.getLatestUpdate().subscribe((response) => {
       expect(response).toBe(latestUpdate);
     });
 
-    const req = httpMock.expectOne(`${environment.cart_service_url}/latest-update`);
+    const req = httpMock.expectOne(
+      `${environment.cart_service_url}/latest-update`
+    );
     expect(req.request.method).toBe('GET');
     req.flush(latestUpdate);
   });
@@ -110,7 +119,7 @@ describe('CartService', () => {
       next: () => fail('expected an error, not a successful response'),
       error: (error) => {
         expect(error.status).toBe(400);
-      }
+      },
     });
 
     const req = httpMock.expectOne(`${environment.cart_service_url}/add`);
@@ -129,10 +138,12 @@ describe('CartService', () => {
       next: () => fail('expected an error, not a successful response'),
       error: (error) => {
         expect(error.status).toBe(404);
-      }
+      },
     });
 
-    const req = httpMock.expectOne(`${environment.cart_service_url}?size=${size}&page=${page}&isAscending=${isAscending}`);
+    const req = httpMock.expectOne(
+      `${environment.cart_service_url}?size=${size}&page=${page}&isAscending=${isAscending}`
+    );
     expect(req.request.method).toBe('GET');
     req.flush(null, { status: 404, statusText: 'Not Found' });
   });
@@ -146,10 +157,12 @@ describe('CartService', () => {
       next: () => fail('expected an error, not a successful response'),
       error: (error) => {
         expect(error.status).toBe(500);
-      }
+      },
     });
 
-    const req = httpMock.expectOne(`${environment.cart_service_url}/delete/${productId}`);
+    const req = httpMock.expectOne(
+      `${environment.cart_service_url}/delete/${productId}`
+    );
     expect(req.request.method).toBe('DELETE');
     req.flush(null, { status: 500, statusText: 'Internal Server Error' });
   });
@@ -162,10 +175,12 @@ describe('CartService', () => {
       next: () => fail('expected an error, not a successful response'),
       error: (error) => {
         expect(error.status).toBe(500);
-      }
+      },
     });
 
-    const req = httpMock.expectOne(`${environment.cart_service_url}/latest-update`);
+    const req = httpMock.expectOne(
+      `${environment.cart_service_url}/latest-update`
+    );
     expect(req.request.method).toBe('GET');
     req.flush(null, { status: 500, statusText: 'Internal Server Error' });
   });

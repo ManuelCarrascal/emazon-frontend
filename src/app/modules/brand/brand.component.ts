@@ -15,7 +15,10 @@ import {
 } from '@/app/shared/constants/brandsComponent';
 import { Brand } from '@/app/shared/interfaces/brand.interface';
 import { BrandService } from '@/app/shared/services/brand/brand.service';
-import { ToastService, ToastType } from '@/app/shared/services/toast/toast.service';
+import {
+  ToastService,
+  ToastType,
+} from '@/app/shared/services/toast/toast.service';
 import { ROLES } from '@/app/shared/constants/roles.constants';
 
 const MIN_LENGTH = 3;
@@ -152,7 +155,8 @@ export class BrandComponent implements OnInit {
       },
       error: (error) => {
         const message =
-          ERROR_MESSAGES_BY_CODE.BRAND_LOAD_ERROR || 'An unexpected error occurred';
+          ERROR_MESSAGES_BY_CODE.BRAND_LOAD_ERROR ||
+          'An unexpected error occurred';
         this.toastService.showToast(message, ToastType.Error);
       },
     });
@@ -182,7 +186,7 @@ export class BrandComponent implements OnInit {
   }
 
   onSortChange(event: { sortBy: string; isAscending: boolean }): void {
-    const sortableColumns = ['brandName']; 
+    const sortableColumns = ['brandName'];
     if (!sortableColumns.includes(event.sortBy)) {
       return;
     }
@@ -195,7 +199,6 @@ export class BrandComponent implements OnInit {
       this.isAscending
     );
   }
-
 
   openModal() {
     this.isModalVisible = true;
@@ -231,5 +234,4 @@ export class BrandComponent implements OnInit {
       this.isAscending
     );
   }
-  
 }

@@ -102,7 +102,6 @@ describe('DataTableComponent', () => {
     expect(cells[0].nativeElement.textContent.trim()).toBe('Test');
   });
 
-
   it('should call onSortChange on header click', () => {
     jest.spyOn(component, 'onSortChange');
     fixture.detectChanges();

@@ -8,9 +8,8 @@ describe('PaginationComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ PaginationComponent ]
-    })
-    .compileComponents();
+      declarations: [PaginationComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(PaginationComponent);
     component = fixture.componentInstance;
@@ -61,7 +60,9 @@ describe('PaginationComponent', () => {
     component.currentPage = 1;
     fixture.detectChanges();
 
-    const pageButtons = fixture.debugElement.queryAll(By.css('.pagination-table__page'));
+    const pageButtons = fixture.debugElement.queryAll(
+      By.css('.pagination-table__page')
+    );
     expect(pageButtons.length).toBe(3);
     expect(pageButtons[0].nativeElement.textContent).toBe(' 1 ');
     expect(pageButtons[1].nativeElement.textContent).toBe(' 2 ');
@@ -74,7 +75,9 @@ describe('PaginationComponent', () => {
     component.currentPage = 1;
     fixture.detectChanges();
 
-    const pageButtons = fixture.debugElement.queryAll(By.css('.pagination-table__page'));
+    const pageButtons = fixture.debugElement.queryAll(
+      By.css('.pagination-table__page')
+    );
     pageButtons[1].nativeElement.click();
     expect(changePageSpy).toHaveBeenCalledWith(1);
   });
@@ -84,7 +87,9 @@ describe('PaginationComponent', () => {
     component.currentPage = 0;
     fixture.detectChanges();
 
-    const prevButton = fixture.debugElement.query(By.css('.pagination-table__button'));
+    const prevButton = fixture.debugElement.query(
+      By.css('.pagination-table__button')
+    );
     expect(prevButton.nativeElement.disabled).toBeTruthy();
   });
 
@@ -93,7 +98,9 @@ describe('PaginationComponent', () => {
     component.currentPage = 2;
     fixture.detectChanges();
 
-    const nextButton = fixture.debugElement.queryAll(By.css('.pagination-table__button'))[1];
+    const nextButton = fixture.debugElement.queryAll(
+      By.css('.pagination-table__button')
+    )[1];
     expect(nextButton.nativeElement.disabled).toBeTruthy();
   });
 
@@ -102,8 +109,12 @@ describe('PaginationComponent', () => {
     component.currentPage = 1;
     fixture.detectChanges();
 
-    const prevButton = fixture.debugElement.query(By.css('.pagination-table__button'));
-    const nextButton = fixture.debugElement.queryAll(By.css('.pagination-table__button'))[1];
+    const prevButton = fixture.debugElement.query(
+      By.css('.pagination-table__button')
+    );
+    const nextButton = fixture.debugElement.queryAll(
+      By.css('.pagination-table__button')
+    )[1];
     expect(prevButton.nativeElement.disabled).toBeFalsy();
     expect(nextButton.nativeElement.disabled).toBeFalsy();
   });

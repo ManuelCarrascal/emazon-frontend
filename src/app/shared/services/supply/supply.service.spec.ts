@@ -1,8 +1,15 @@
 import { TestBed } from '@angular/core/testing';
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import {
+  HttpClientTestingModule,
+  HttpTestingController,
+} from '@angular/common/http/testing';
 import { SupplyService } from './supply.service';
 import { environment } from '@/environments/environment';
-import { SupplyRequest, SupplyResponse, NextSupplyResponse } from '../../interfaces/supply.interface';
+import {
+  SupplyRequest,
+  SupplyResponse,
+  NextSupplyResponse,
+} from '../../interfaces/supply.interface';
 
 describe('SupplyService', () => {
   let service: SupplyService;
@@ -43,7 +50,9 @@ describe('SupplyService', () => {
         expect(response).toEqual(supplyResponse);
       });
 
-      const req = httpMock.expectOne(`${environment.supply_service_url}/supply/add/${productId}`);
+      const req = httpMock.expectOne(
+        `${environment.supply_service_url}/supply/add/${productId}`
+      );
       expect(req.request.method).toBe('POST');
       expect(req.request.body).toEqual(supplyRequest);
       req.flush(supplyResponse);
@@ -60,10 +69,12 @@ describe('SupplyService', () => {
         next: () => fail('expected an error, not a successful response'),
         error: (error) => {
           expect(error.status).toBe(400);
-        }
+        },
       });
 
-      const req = httpMock.expectOne(`${environment.supply_service_url}/supply/add/${productId}`);
+      const req = httpMock.expectOne(
+        `${environment.supply_service_url}/supply/add/${productId}`
+      );
       expect(req.request.method).toBe('POST');
       req.flush(null, { status: 400, statusText: 'Bad Request' });
     });
@@ -80,7 +91,9 @@ describe('SupplyService', () => {
         expect(response).toEqual(nextSupplyResponse);
       });
 
-      const req = httpMock.expectOne(`${environment.supply_service_url}/supply/get/next-supply-date/${productId}`);
+      const req = httpMock.expectOne(
+        `${environment.supply_service_url}/supply/get/next-supply-date/${productId}`
+      );
       expect(req.request.method).toBe('GET');
       req.flush(nextSupplyResponse);
     });
@@ -92,10 +105,12 @@ describe('SupplyService', () => {
         next: () => fail('expected an error, not a successful response'),
         error: (error) => {
           expect(error.status).toBe(404);
-        }
+        },
       });
 
-      const req = httpMock.expectOne(`${environment.supply_service_url}/supply/get/next-supply-date/${productId}`);
+      const req = httpMock.expectOne(
+        `${environment.supply_service_url}/supply/get/next-supply-date/${productId}`
+      );
       expect(req.request.method).toBe('GET');
       req.flush(null, { status: 404, statusText: 'Not Found' });
     });

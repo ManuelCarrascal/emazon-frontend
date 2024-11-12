@@ -1,5 +1,8 @@
 import { TestBed } from '@angular/core/testing';
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import {
+  HttpClientTestingModule,
+  HttpTestingController,
+} from '@angular/common/http/testing';
 import { WarehouseAssistantService } from './warehouse-assistant.service';
 import { User, UserResponse } from '../../interfaces/user.interface';
 import { environment } from '@/environments/environment';
@@ -50,9 +53,13 @@ describe('WarehouseAssistantService', () => {
         expect(response.body).toEqual(mockResponse);
       });
 
-      const req = httpMock.expectOne(`${environment.user_service_url}/v1/users/warehouse-asst`);
+      const req = httpMock.expectOne(
+        `${environment.user_service_url}/v1/users/warehouse-asst`
+      );
       expect(req.request.method).toBe('POST');
-      expect(req.request.headers.get('Authorization')).toBe(`Bearer ${localStorage.getItem('token')}`);
+      expect(req.request.headers.get('Authorization')).toBe(
+        `Bearer ${localStorage.getItem('token')}`
+      );
       expect(req.request.headers.get('Content-Type')).toBe('application/json');
       req.flush(mockResponse, { status: 201, statusText: 'Created' });
     });
@@ -72,10 +79,12 @@ describe('WarehouseAssistantService', () => {
         next: () => fail('expected an error, not a successful response'),
         error: (error) => {
           expect(error.status).toBe(400);
-        }
+        },
       });
 
-      const req = httpMock.expectOne(`${environment.user_service_url}/v1/users/warehouse-asst`);
+      const req = httpMock.expectOne(
+        `${environment.user_service_url}/v1/users/warehouse-asst`
+      );
       expect(req.request.method).toBe('POST');
       req.flush(null, { status: 400, statusText: 'Bad Request' });
     });

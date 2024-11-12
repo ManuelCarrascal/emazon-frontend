@@ -1,6 +1,15 @@
-import { HttpClient, HttpHeaders, HttpParams, HttpResponse } from '@angular/common/http';
+import {
+  HttpClient,
+  HttpHeaders,
+  HttpParams,
+  HttpResponse,
+} from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Category, CategoryResponse, Pagination } from '../../interfaces/category.interface';
+import {
+  Category,
+  CategoryResponse,
+  Pagination,
+} from '../../interfaces/category.interface';
 import { map, Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
@@ -14,7 +23,11 @@ export class CategoryService {
     return localStorage.getItem('token');
   }
 
-  createCategory(category: Category): Observable<HttpResponse<{ categoryName: string; categoryDescription: string }>> {
+  createCategory(
+    category: Category
+  ): Observable<
+    HttpResponse<{ categoryName: string; categoryDescription: string }>
+  > {
     const token = this.getToken();
     const headers = new HttpHeaders({
       Authorization: `Bearer ${token}`,
@@ -27,7 +40,12 @@ export class CategoryService {
     });
   }
 
-  getCategories(page: number, size: number, sortBy: string, isAscending: boolean): Observable<Pagination<Category>> {
+  getCategories(
+    page: number,
+    size: number,
+    sortBy: string,
+    isAscending: boolean
+  ): Observable<Pagination<Category>> {
     const token = this.getToken();
     const headers = new HttpHeaders({
       Authorization: `Bearer ${token}`,
@@ -39,15 +57,17 @@ export class CategoryService {
       .set('sortBy', sortBy)
       .set('isAscending', isAscending.toString());
 
-    return this.http.get<Pagination<CategoryResponse>>(this.apiUrl, { headers, params }).pipe(
-      map((response: Pagination<CategoryResponse>) => ({
-        ...response,
-        content: response.content.map(category => ({
-          categoryName: category.categoryName,
-          categoryDescription: category.categoryDescription
+    return this.http
+      .get<Pagination<CategoryResponse>>(this.apiUrl, { headers, params })
+      .pipe(
+        map((response: Pagination<CategoryResponse>) => ({
+          ...response,
+          content: response.content.map((category) => ({
+            categoryName: category.categoryName,
+            categoryDescription: category.categoryDescription,
+          })),
         }))
-      }))
-    );
+      );
   }
 
   getAllCategories(): Observable<CategoryResponse[]> {

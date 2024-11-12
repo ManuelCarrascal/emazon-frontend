@@ -14,7 +14,7 @@ export class DataTableComponent implements OnInit {
   @Input() currentPage!: number;
   @Input() currentSort!: string;
   @Input() isAscending: boolean = true;
-  @Input() showActions: boolean = false; 
+  @Input() showActions: boolean = false;
 
   @Output() pageChange = new EventEmitter<number>();
   @Output() sortChange = new EventEmitter<{
@@ -61,7 +61,7 @@ export class DataTableComponent implements OnInit {
       isAscending: this.isAscending,
     });
   }
-  
+
   onIncrementClick(row: any): void {
     this.incrementClick.emit(row);
   }
@@ -71,7 +71,10 @@ export class DataTableComponent implements OnInit {
   }
 
   canShowActions(): boolean {
-    return this.showActions && this.authService.getUserRole() === ROLES.WAREHOUSE_ASSISTANT;
+    return (
+      this.showActions &&
+      this.authService.getUserRole() === ROLES.WAREHOUSE_ASSISTANT
+    );
   }
 
   canShowAddToCart(): boolean {

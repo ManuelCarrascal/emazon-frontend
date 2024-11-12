@@ -1,5 +1,12 @@
 import { Injectable } from '@angular/core';
-import { HttpEvent, HttpInterceptor, HttpHandler, HttpRequest, HttpErrorResponse } from '@angular/common/http';
+import {
+  HttpEvent,
+  HttpInterceptor,
+  HttpHandler,
+  HttpRequest,
+  HttpErrorResponse,
+  HttpStatusCode,
+} from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { Router } from '@angular/router';
@@ -7,9 +14,15 @@ import { AuthService } from '@/app/shared/services/auth/auth.service';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
-  constructor(private readonly authService: AuthService, private readonly router: Router) {}
+  constructor(
+    private readonly authService: AuthService,
+    private readonly router: Router
+  ) {}
 
-  intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+  intercept(
+    req: HttpRequest<any>,
+    next: HttpHandler
+  ): Observable<HttpEvent<any>> {
     const token = localStorage.getItem('token');
 
     if (token) {
@@ -21,12 +34,12 @@ export class AuthInterceptor implements HttpInterceptor {
       }
 
       const cloned = req.clone({
-        headers: req.headers.set('Authorization', `Bearer ${token}`)
+        headers: req.headers.set('Authorization', `Bearer ${token}`),
       });
 
       return next.handle(cloned).pipe(
         catchError((error: HttpErrorResponse) => {
-          if (error.status === 401) {
+          if (error.status === HttpStatusCode.Unauthorized) {
             this.authService.logout();
             this.router.navigate(['/login']);
           }

@@ -15,7 +15,9 @@
             ></lucide-icon>
           </button>
         </th>
-        <th *ngIf="canShowActions() || canShowAddToCart()" class="table__cell">Actions</th>
+        <th *ngIf="canShowActions() || canShowAddToCart()" class="table__cell">
+          Actions
+        </th>
       </tr>
     </thead>
     <tbody>
@@ -29,21 +31,19 @@
           </ng-template>
         </td>
         <td *ngIf="canShowActions()" class="table__cell">
-          <button class="button">
+          <button class="button" (click)="onIncrementClick(row)">
             <lucide-icon
               name="package-plus"
               class="action-button"
-              (click)="onIncrementClick(row)"
             ></lucide-icon>
             <div class="tool-tip" role="tooltip">Add Supply</div>
           </button>
         </td>
         <td *ngIf="canShowAddToCart()" class="table__cell">
-          <button class="button">
+          <button class="button" (click)="onAddToCartClick(row)">
             <lucide-icon
               name="shopping-basket"
               class="action-button"
-              (click)="onAddToCartClick(row)"
             ></lucide-icon>
             <div class="tool-tip" role="tooltip">Add to Cart</div>
           </button>

@@ -3,7 +3,10 @@ import { of, throwError } from 'rxjs';
 import { CartComponent } from './cart.component';
 import { CartService } from '@/app/shared/services/cart/cart.service';
 import { SupplyService } from '@/app/shared/services/supply/supply.service';
-import { CartResponse, CartProduct } from '@/app/shared/interfaces/cart.interface';
+import {
+  CartResponse,
+  CartProduct,
+} from '@/app/shared/interfaces/cart.interface';
 import { NextSupplyResponse } from '@/app/shared/interfaces/supply.interface';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 
@@ -79,13 +82,17 @@ describe('CartComponent', () => {
           useValue: {
             getCart: jest.fn().mockReturnValue(of(mockCartResponse)),
             removeProductFromCart: jest.fn().mockReturnValue(of({})),
-            getLatestUpdate: jest.fn().mockReturnValue(of('2023-10-10 10:10:10')),
+            getLatestUpdate: jest
+              .fn()
+              .mockReturnValue(of('2023-10-10 10:10:10')),
           },
         },
         {
           provide: SupplyService,
           useValue: {
-            getNextSupplyDate: jest.fn().mockReturnValue(of(mockNextSupplyResponse)),
+            getNextSupplyDate: jest
+              .fn()
+              .mockReturnValue(of(mockNextSupplyResponse)),
           },
         },
       ],
@@ -105,7 +112,11 @@ describe('CartComponent', () => {
   it('should load cart on init', () => {
     jest.spyOn(cartService, 'getCart').mockReturnValue(of(mockCartResponse));
     component.ngOnInit();
-    expect(cartService.getCart).toHaveBeenCalledWith(component.size, component.currentPage, component.isAscending);
+    expect(cartService.getCart).toHaveBeenCalledWith(
+      component.size,
+      component.currentPage,
+      component.isAscending
+    );
     expect(component.cartProducts).toEqual(mockCartResponse.content);
     expect(component.filteredProducts).toEqual(mockCartResponse.content);
     expect(component.total).toBe(mockCartResponse.total);
@@ -131,7 +142,9 @@ describe('CartComponent', () => {
   });
 
   it('should handle error when loading cart', () => {
-    jest.spyOn(cartService, 'getCart').mockReturnValue(throwError(() => new Error('Error')));
+    jest
+      .spyOn(cartService, 'getCart')
+      .mockReturnValue(throwError(() => new Error('Error')));
     component.loadCart();
     expect(component.cartProducts).toEqual([]);
     expect(component.filteredProducts).toEqual([]);
@@ -139,7 +152,9 @@ describe('CartComponent', () => {
   });
 
   it('should handle error when removing product from cart', () => {
-    jest.spyOn(cartService, 'removeProductFromCart').mockReturnValue(throwError(() => new Error('Error')));
+    jest
+      .spyOn(cartService, 'removeProductFromCart')
+      .mockReturnValue(throwError(() => new Error('Error')));
     component.cartProducts = mockCartProducts;
     component.filteredProducts = [...mockCartProducts];
     component.removeFromCart(1);
@@ -172,7 +187,9 @@ describe('CartComponent', () => {
   });
 
   it('should load next supply date for products with zero quantity', () => {
-    jest.spyOn(supplyService, 'getNextSupplyDate').mockReturnValue(of(mockNextSupplyResponse));
+    jest
+      .spyOn(supplyService, 'getNextSupplyDate')
+      .mockReturnValue(of(mockNextSupplyResponse));
     component.cartProducts = mockCartProducts;
     component.loadCart();
     expect(supplyService.getNextSupplyDate).toHaveBeenCalledWith(1);
@@ -180,7 +197,9 @@ describe('CartComponent', () => {
   });
 
   it('should handle error when loading next supply date', () => {
-    jest.spyOn(supplyService, 'getNextSupplyDate').mockReturnValue(throwError(() => new Error('Error')));
+    jest
+      .spyOn(supplyService, 'getNextSupplyDate')
+      .mockReturnValue(throwError(() => new Error('Error')));
     component.cartProducts = mockCartProducts;
     component.loadNextSupplyDate(1);
     expect(supplyService.getNextSupplyDate).toHaveBeenCalledWith(1);

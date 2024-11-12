@@ -7,12 +7,7 @@ import { SharedModule } from '@/app/shared/shared.module';
 
 @NgModule({
   declarations: [BrandComponent],
-  imports: [
-    CommonModule,
-    UiModule,
-    ReactiveFormsModule,
-    SharedModule
-  ],
-  exports: [BrandComponent]
+  imports: [CommonModule, UiModule, ReactiveFormsModule, SharedModule],
+  exports: [BrandComponent],
 })
-export class BrandModule { }
+export class BrandModule {}

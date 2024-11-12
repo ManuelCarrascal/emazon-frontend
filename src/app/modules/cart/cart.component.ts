@@ -1,4 +1,10 @@
-import { ERROR_CART_DATA_FETCH, ERROR_FETCH_LAST_CART_UPDATE, ERROR_FETCH_NEXT_SUPPLY_DATE, ERROR_REMOVE_PRODUCT, SUCCESS_REMOVE_PRODUCT } from '@/app/shared/constants/cartComponent';
+import {
+  ERROR_CART_DATA_FETCH,
+  ERROR_FETCH_LAST_CART_UPDATE,
+  ERROR_FETCH_NEXT_SUPPLY_DATE,
+  ERROR_REMOVE_PRODUCT,
+  SUCCESS_REMOVE_PRODUCT,
+} from '@/app/shared/constants/cartComponent';
 import {
   CartResponse,
   CartProduct,
@@ -6,7 +12,10 @@ import {
 import { NextSupplyResponse } from '@/app/shared/interfaces/supply.interface';
 import { CartService } from '@/app/shared/services/cart/cart.service';
 import { SupplyService } from '@/app/shared/services/supply/supply.service';
-import { ToastService, ToastType } from '@/app/shared/services/toast/toast.service';
+import {
+  ToastService,
+  ToastType,
+} from '@/app/shared/services/toast/toast.service';
 import { Component, OnInit } from '@angular/core';
 
 const DEFAULT_SIZE = 5;
@@ -14,7 +23,6 @@ const DEFAULT_PAGE = 0;
 const DEFAULT_TOTAL = 0;
 const DEFAULT_TOTAL_PAGES = 0;
 const INITIAL_PAGE = 0;
-
 
 @Component({
   selector: 'app-cart',
@@ -61,7 +69,7 @@ export class CartComponent implements OnInit {
             });
           }
         },
-        error: (error) => {
+        error: () => {
           this.toastService.showToast(ERROR_CART_DATA_FETCH, ToastType.Error);
           this.cartProducts = [];
           this.filteredProducts = [];
@@ -120,7 +128,7 @@ export class CartComponent implements OnInit {
         }
         this.toastService.showToast(SUCCESS_REMOVE_PRODUCT, ToastType.Success);
       },
-      error: (error) => {
+      error: () => {
         this.toastService.showToast(ERROR_REMOVE_PRODUCT, ToastType.Error);
       },
     });
@@ -154,9 +162,19 @@ export class CartComponent implements OnInit {
           product.nextSupplyDate = response.nextSupplyDate;
         }
       },
-      error: (error) => {
-        this.toastService.showToast(ERROR_FETCH_NEXT_SUPPLY_DATE, ToastType.Error);
+      error: () => {
+        this.toastService.showToast(
+          ERROR_FETCH_NEXT_SUPPLY_DATE,
+          ToastType.Error
+        );
       },
     });
+  }
+
+  onKeyDownButton(event: KeyboardEvent): void {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      this.removeFromCart(Number((event.target as HTMLButtonElement).value));
+    }
   }
 }

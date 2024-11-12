@@ -86,11 +86,10 @@
     display: inline-flex;
   }
 
-  &__quantities{
+  &__quantities {
     display: flex;
     gap: 0.5rem;
   }
- 
 }
 
 @keyframes skeleton-loading {

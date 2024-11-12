@@ -16,7 +16,10 @@ import {
 } from 'src/app/shared/constants/categoriesComponent';
 import { Category } from '@/app/shared/interfaces/category.interface';
 import { CategoryService } from '@/app/shared/services/category/category.service';
-import { ToastService, ToastType } from '@/app/shared/services/toast/toast.service';
+import {
+  ToastService,
+  ToastType,
+} from '@/app/shared/services/toast/toast.service';
 
 const MIN_LENGTH = 3;
 const DEFAULT_PAGE = 0;
@@ -133,7 +136,8 @@ export class CategoriesComponent implements OnInit {
           }
         },
         error: (error) => {
-          const message = ERROR_MESSAGES_BY_CODE[400] || 'An unexpected error occurred';
+          const message =
+            ERROR_MESSAGES_BY_CODE[400] || 'An unexpected error occurred';
           this.toastService.showToast(message, ToastType.Error);
         },
       });
@@ -167,7 +171,10 @@ export class CategoriesComponent implements OnInit {
           this.currentPage = data.currentPage;
         },
         error: (error) => {
-          this.toastService.showToast(ERROR_MESSAGES_BY_CODE.CATEGORY_LOAD_ERROR, ToastType.Error);
+          this.toastService.showToast(
+            ERROR_MESSAGES_BY_CODE.CATEGORY_LOAD_ERROR,
+            ToastType.Error
+          );
         },
       });
   }

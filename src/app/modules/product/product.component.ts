@@ -42,10 +42,12 @@ import {
   ProductView,
 } from '@/app/shared/interfaces/product.interface';
 import { SupplyService } from '@/app/shared/services/supply/supply.service';
-import { SupplyRequest, NextSupplyResponse } from '@/app/shared/interfaces/supply.interface';
+import {
+  SupplyRequest,
+  NextSupplyResponse,
+} from '@/app/shared/interfaces/supply.interface';
 import { CartService } from '@/app/shared/services/cart/cart.service';
 import { ROLES } from '@/app/shared/constants/roles.constants';
-
 
 @Component({
   selector: 'app-product',
@@ -59,7 +61,7 @@ export class ProductComponent implements OnInit {
   public isAddToCartModalVisible: boolean = false;
   public createProductForm: FormGroup;
   public incrementForm: FormGroup;
-  public addToCartForm: FormGroup; 
+  public addToCartForm: FormGroup;
   public categories: CategoryResponse[] = [];
   public filteredCategories: CategoryResponse[] = [];
   public selectedCategories: CategoryResponse[] = [];
@@ -134,7 +136,7 @@ export class ProductComponent implements OnInit {
       nextSupplyDate: ['', [Validators.required]],
     });
 
-    this.addToCartForm = this.formBuilder.group({ 
+    this.addToCartForm = this.formBuilder.group({
       quantity: ['', [Validators.required, Validators.min(1)]],
     });
 
@@ -188,7 +190,7 @@ export class ProductComponent implements OnInit {
     this.incrementForm.markAsUntouched();
   }
 
-  openAddToCartModal(product: ProductView) { 
+  openAddToCartModal(product: ProductView) {
     this.selectedProduct = product;
     this.isAddToCartModalVisible = true;
     if (this.selectedProduct.productQuantity === 0) {
@@ -196,7 +198,7 @@ export class ProductComponent implements OnInit {
     }
   }
 
-  closeAddToCartModal() { 
+  closeAddToCartModal() {
     this.isAddToCartModalVisible = false;
     this.addToCartForm.reset({
       quantity: '',
@@ -237,7 +239,7 @@ export class ProductComponent implements OnInit {
     return this.incrementForm.get('incrementAmount');
   }
 
-  get quantity() { 
+  get quantity() {
     return this.addToCartForm.get('quantity');
   }
 
@@ -271,14 +273,14 @@ export class ProductComponent implements OnInit {
     return this.getErrorMessage(this.incrementAmount, 'Increment Amount');
   }
 
-  get quantityError(): string { 
+  get quantityError(): string {
     return this.getErrorMessage(this.quantity, 'Quantity');
   }
 
   get nextSupplyDate() {
     return this.incrementForm.get('nextSupplyDate');
   }
-  
+
   get nextSupplyDateError(): string {
     return this.getErrorMessage(this.nextSupplyDate, 'Next Supply Date');
   }
@@ -305,10 +307,7 @@ export class ProductComponent implements OnInit {
     }
     this.productService.createProduct(productData).subscribe({
       next: () => {
-        this.toastService.showToast(
-          SUCCESS_PRODUCT_CREATED,
-          ToastType.Success
-        );
+        this.toastService.showToast(SUCCESS_PRODUCT_CREATED, ToastType.Success);
         this.loadProducts();
         this.closeModal();
       },
@@ -327,19 +326,27 @@ export class ProductComponent implements OnInit {
     const nextSupplyDate = this.incrementForm.value.nextSupplyDate;
     const supplyRequest: SupplyRequest = {
       productQuantity: incrementAmount,
-      nextSupplyDate: nextSupplyDate
+      nextSupplyDate: nextSupplyDate,
     };
 
-    this.supplyService.addSupply(this.selectedProduct.productId, supplyRequest).subscribe({
-      next: () => {
-        this.toastService.showToast(SUCCESS_UPDATING_PRODUCT_QUANTITY, ToastType.Success);
-        this.loadProducts();
-        this.closeIncrementModal();
-      },
-      error: () => {
-        this.toastService.showToast(ERROR_UPDATING_PRODUCT_QUANTITY, ToastType.Error);
-      },
-    });
+    this.supplyService
+      .addSupply(this.selectedProduct.productId, supplyRequest)
+      .subscribe({
+        next: () => {
+          this.toastService.showToast(
+            SUCCESS_UPDATING_PRODUCT_QUANTITY,
+            ToastType.Success
+          );
+          this.loadProducts();
+          this.closeIncrementModal();
+        },
+        error: () => {
+          this.toastService.showToast(
+            ERROR_UPDATING_PRODUCT_QUANTITY,
+            ToastType.Error
+          );
+        },
+      });
   }
 
   loadCategories(): void {
@@ -348,10 +355,7 @@ export class ProductComponent implements OnInit {
         this.categories = categories;
       },
       error: () => {
-        this.toastService.showToast(
-          ERROR_LOADING_CATEGORIES,
-          ToastType.Error
-        );
+        this.toastService.showToast(ERROR_LOADING_CATEGORIES, ToastType.Error);
       },
     });
   }
@@ -535,15 +539,23 @@ export class ProductComponent implements OnInit {
       return;
     }
     const quantity = this.addToCartForm.value.quantity;
-    this.cartService.addProductToCart(this.selectedProduct.productId, quantity).subscribe({
-      next: () => {
-        this.toastService.showToast(SUCCESS_ADDING_PRODUCT_TO_CART, ToastType.Success);
-        this.closeAddToCartModal();
-      },
-      error: () => {
-        this.toastService.showToast(ERROR_ADDING_PRODUCT_TO_CART, ToastType.Error);
-      },
-    });
+    this.cartService
+      .addProductToCart(this.selectedProduct.productId, quantity)
+      .subscribe({
+        next: () => {
+          this.toastService.showToast(
+            SUCCESS_ADDING_PRODUCT_TO_CART,
+            ToastType.Success
+          );
+          this.closeAddToCartModal();
+        },
+        error: () => {
+          this.toastService.showToast(
+            ERROR_ADDING_PRODUCT_TO_CART,
+            ToastType.Error
+          );
+        },
+      });
   }
 
   loadNextSupplyDate(productId: number): void {
@@ -552,7 +564,10 @@ export class ProductComponent implements OnInit {
         this.nextSupplyDateString = response.nextSupplyDate;
       },
       error: () => {
-        this.toastService.showToast(ERROR_FETCHING_NEXT_SUPPLY_DATE, ToastType.Error);
+        this.toastService.showToast(
+          ERROR_FETCHING_NEXT_SUPPLY_DATE,
+          ToastType.Error
+        );
       },
     });
   }
