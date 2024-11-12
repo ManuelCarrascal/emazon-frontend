@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { AuthService } from '@/app/shared/services/auth/auth.service';
+import { ROLES } from '@/app/shared/constants/roles.constants';
 
 @Component({
   selector: 'app-data-table',
@@ -70,10 +71,10 @@ export class DataTableComponent implements OnInit {
   }
 
   canShowActions(): boolean {
-    return this.showActions && this.authService.getUserRole() === 'ROLE_AUX_BODEGA';
+    return this.showActions && this.authService.getUserRole() === ROLES.WAREHOUSE_ASSISTANT;
   }
 
   canShowAddToCart(): boolean {
-    return this.showActions && this.authService.getUserRole() === 'ROLE_CLIENTE';
+    return this.showActions && this.authService.getUserRole() === ROLES.USER;
   }
 }

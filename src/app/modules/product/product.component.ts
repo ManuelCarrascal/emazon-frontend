@@ -44,6 +44,7 @@ import {
 import { SupplyService } from '@/app/shared/services/supply/supply.service';
 import { SupplyRequest, NextSupplyResponse } from '@/app/shared/interfaces/supply.interface';
 import { CartService } from '@/app/shared/services/cart/cart.service';
+import { ROLES } from '@/app/shared/constants/roles.constants';
 
 
 @Component({
@@ -52,6 +53,7 @@ import { CartService } from '@/app/shared/services/cart/cart.service';
   styleUrls: ['./product.component.scss'],
 })
 export class ProductComponent implements OnInit {
+  public readonly ROLES = ROLES;
   public isModalVisible: boolean = false;
   public isIncrementModalVisible: boolean = false;
   public isAddToCartModalVisible: boolean = false;

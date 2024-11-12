@@ -16,6 +16,7 @@ import {
 import { Brand } from '@/app/shared/interfaces/brand.interface';
 import { BrandService } from '@/app/shared/services/brand/brand.service';
 import { ToastService, ToastType } from '@/app/shared/services/toast/toast.service';
+import { ROLES } from '@/app/shared/constants/roles.constants';
 
 const MIN_LENGTH = 3;
 const DEFAULT_PAGE = 0;
@@ -28,6 +29,7 @@ const DEFAULT_SORT_BY = 'brandName';
   styleUrls: ['./brand.component.scss'],
 })
 export class BrandComponent implements OnInit {
+  public readonly ROLES = ROLES;
   public createBrandForm: FormGroup;
   public brands: Brand[] = [];
   public totalElements: number = 0;

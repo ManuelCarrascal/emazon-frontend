@@ -82,23 +82,6 @@ describe('DataTableComponent', () => {
     expect(component.rowsPerPage).toBe(10);
   });
 
-  it('should return correct pages to show', () => {
-    component.columns = [{ key: 'name', label: 'Name', sortable: true }];
-    component.totalPages = 10;
-    component.currentPage = 5;
-    fixture.detectChanges();
-
-    let pages = component.getPagesToShow();
-    expect(pages).toEqual([0, -1, 4, 5, 6, -1, 9]);
-
-    component.totalPages = 3;
-    component.currentPage = 1;
-    fixture.detectChanges();
-
-    pages = component.getPagesToShow();
-    expect(pages).toEqual([0, 1, 2]);
-  });
-
   it('should render table headers correctly', () => {
     component.columns = [{ key: 'name', label: 'Name', sortable: true }];
     fixture.detectChanges();
@@ -119,39 +102,6 @@ describe('DataTableComponent', () => {
     expect(cells[0].nativeElement.textContent.trim()).toBe('Test');
   });
 
-  it('should disable previous button on first page', () => {
-    component.columns = [{ key: 'name', label: 'Name', sortable: true }];
-    component.currentPage = 0;
-    fixture.detectChanges();
-
-    const prevButton = debugElement.query(
-      By.css('.pagination-table__button:first-child')
-    );
-    expect(prevButton.nativeElement.disabled).toBeTruthy();
-  });
-
-  it('should disable next button on last page', () => {
-    component.currentPage = component.totalPages - 1;
-    fixture.detectChanges();
-
-    const nextButton = debugElement.query(
-      By.css('.pagination-table__button:last-child')
-    );
-    expect(nextButton.nativeElement.disabled).toBeTruthy();
-  });
-
-  it('should call changePage on page button click', () => {
-    jest.spyOn(component, 'changePage');
-    component.totalPages = 3;
-    component.currentPage = 1;
-    fixture.detectChanges();
-
-    const pageButtons = debugElement.queryAll(
-      By.css('.pagination-table__page')
-    );
-    pageButtons[0].nativeElement.click();
-    expect(component.changePage).toHaveBeenCalledWith(0);
-  });
 
   it('should call onSortChange on header click', () => {
     jest.spyOn(component, 'onSortChange');

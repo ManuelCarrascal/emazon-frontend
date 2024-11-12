@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ROLES } from '@/app/shared/constants/roles.constants';
 import {
   AbstractControl,
   FormBuilder,
@@ -28,6 +29,7 @@ const DEFAULT_SORT_BY = 'categoryName';
   styleUrls: ['./categories.component.scss'],
 })
 export class CategoriesComponent implements OnInit {
+  public readonly ROLES = ROLES;
   public createCategoryForm: FormGroup;
   public categories: Category[] = [];
   public totalElements: number = 0;
