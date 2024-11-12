@@ -40,5 +40,10 @@
     (sortChange)="onSortChange($event)"
     (rowsPerPageChange)="onRowsPerPageChange($event)"
   ></app-data-table>
+  <app-pagination
+  [totalPages]="totalPages"
+  [currentPage]="currentPage"
+  (pageChange)="changePage($event)"
+></app-pagination>
 </div>
 

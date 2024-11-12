@@ -6,9 +6,26 @@ import {
   Validators,
 } from '@angular/forms';
 import {
+  CATEGORY_NAMES,
+  DEFAULT_PAGE,
+  DEFAULT_PAGE_SIZE,
+  DEFAULT_SORT_BY,
+  ERROR_ADDING_PRODUCT_TO_CART,
+  ERROR_CREATING_PRODUCT,
+  ERROR_FETCHING_NEXT_SUPPLY_DATE,
+  ERROR_LOADING_BRANDS,
+  ERROR_LOADING_CATEGORIES,
+  ERROR_LOADING_PRODUCTS,
   ERROR_MESSAGES,
+  ERROR_UPDATING_PRODUCT_QUANTITY,
   FIELD_NAMES,
+  MAX_CATEGORIES,
+  MIN_LENGTH,
+  NUMBER_OF_CATEGORIES,
   REGEX_PATTERNS,
+  SUCCESS_ADDING_PRODUCT_TO_CART,
+  SUCCESS_PRODUCT_CREATED,
+  SUCCESS_UPDATING_PRODUCT_QUANTITY,
 } from '@/app/shared/constants/productsComponent';
 import { categoriesCountValidator } from '@/app/shared/validators/categories-count-validator';
 import { CategoryService } from '@/app/shared/services/category/category.service';
@@ -28,11 +45,6 @@ import { SupplyService } from '@/app/shared/services/supply/supply.service';
 import { SupplyRequest, NextSupplyResponse } from '@/app/shared/interfaces/supply.interface';
 import { CartService } from '@/app/shared/services/cart/cart.service';
 
-const MIN_LENGTH = 3;
-const MAX_CATEGORIES = 3;
-const DEFAULT_PAGE = 0;
-const DEFAULT_PAGE_SIZE = 5;
-const DEFAULT_SORT_BY = 'productName';
 
 @Component({
   selector: 'app-product',
@@ -290,16 +302,16 @@ export class ProductComponent implements OnInit {
       return;
     }
     this.productService.createProduct(productData).subscribe({
-      next: (product) => {
+      next: () => {
         this.toastService.showToast(
-          'Product created successfully',
+          SUCCESS_PRODUCT_CREATED,
           ToastType.Success
         );
         this.loadProducts();
         this.closeModal();
       },
-      error: (error) => {
-        this.toastService.showToast('Error creating product', ToastType.Error);
+      error: () => {
+        this.toastService.showToast(ERROR_CREATING_PRODUCT, ToastType.Error);
       },
     });
   }
@@ -318,12 +330,12 @@ export class ProductComponent implements OnInit {
 
     this.supplyService.addSupply(this.selectedProduct.productId, supplyRequest).subscribe({
       next: () => {
-        this.toastService.showToast('Product quantity updated successfully', ToastType.Success);
+        this.toastService.showToast(SUCCESS_UPDATING_PRODUCT_QUANTITY, ToastType.Success);
         this.loadProducts();
         this.closeIncrementModal();
       },
-      error: (error) => {
-        this.toastService.showToast('Error updating product quantity', ToastType.Error);
+      error: () => {
+        this.toastService.showToast(ERROR_UPDATING_PRODUCT_QUANTITY, ToastType.Error);
       },
     });
   }
@@ -333,9 +345,9 @@ export class ProductComponent implements OnInit {
       next: (categories) => {
         this.categories = categories;
       },
-      error: (error) => {
+      error: () => {
         this.toastService.showToast(
-          'Error loading categories',
+          ERROR_LOADING_CATEGORIES,
           ToastType.Error
         );
       },
@@ -347,8 +359,8 @@ export class ProductComponent implements OnInit {
       next: (brands) => {
         this.brands = brands;
       },
-      error: (error) => {
-        this.toastService.showToast('Error loading brands', ToastType.Error);
+      error: () => {
+        this.toastService.showToast(ERROR_LOADING_BRANDS, ToastType.Error);
       },
     });
   }
@@ -368,8 +380,8 @@ export class ProductComponent implements OnInit {
         this.totalPages = data.totalPages;
         this.currentPage = data.currentPage;
       },
-      error: (error) => {
-        this.toastService.showToast('Error loading products', ToastType.Error);
+      error: () => {
+        this.toastService.showToast(ERROR_LOADING_PRODUCTS, ToastType.Error);
       },
     });
   }
@@ -407,7 +419,7 @@ export class ProductComponent implements OnInit {
   }
 
   changeSortOrder(sortBy: string): void {
-    this.sortBy = sortBy === 'categoryNames' ? 'numberOfCategories' : sortBy;
+    this.sortBy = sortBy === CATEGORY_NAMES ? NUMBER_OF_CATEGORIES : sortBy;
     this.isAscending = !this.isAscending;
     this.loadProducts(
       this.currentPage,
@@ -419,7 +431,7 @@ export class ProductComponent implements OnInit {
 
   onSortChange(event: { sortBy: string; isAscending: boolean }): void {
     this.sortBy =
-      event.sortBy === 'categoryNames' ? 'numberOfCategories' : event.sortBy;
+      event.sortBy === CATEGORY_NAMES ? NUMBER_OF_CATEGORIES : event.sortBy;
     this.isAscending = event.isAscending;
     this.loadProducts(
       this.currentPage,
@@ -523,11 +535,11 @@ export class ProductComponent implements OnInit {
     const quantity = this.addToCartForm.value.quantity;
     this.cartService.addProductToCart(this.selectedProduct.productId, quantity).subscribe({
       next: () => {
-        this.toastService.showToast('Product added to cart successfully', ToastType.Success);
+        this.toastService.showToast(SUCCESS_ADDING_PRODUCT_TO_CART, ToastType.Success);
         this.closeAddToCartModal();
       },
-      error: (error) => {
-        this.toastService.showToast('Error adding product to cart', ToastType.Error);
+      error: () => {
+        this.toastService.showToast(ERROR_ADDING_PRODUCT_TO_CART, ToastType.Error);
       },
     });
   }
@@ -537,8 +549,8 @@ export class ProductComponent implements OnInit {
       next: (response: NextSupplyResponse) => {
         this.nextSupplyDateString = response.nextSupplyDate;
       },
-      error: (error) => {
-        this.toastService.showToast('Error fetching next supply date', ToastType.Error);
+      error: () => {
+        this.toastService.showToast(ERROR_FETCHING_NEXT_SUPPLY_DATE, ToastType.Error);
       },
     });
   }

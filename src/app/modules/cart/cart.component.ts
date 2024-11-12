@@ -1,3 +1,4 @@
+import { ERROR_CART_DATA_FETCH, ERROR_FETCH_LAST_CART_UPDATE, ERROR_FETCH_NEXT_SUPPLY_DATE, ERROR_REMOVE_PRODUCT, SUCCESS_REMOVE_PRODUCT } from '@/app/shared/constants/cartComponent';
 import {
   CartResponse,
   CartProduct,
@@ -5,7 +6,15 @@ import {
 import { NextSupplyResponse } from '@/app/shared/interfaces/supply.interface';
 import { CartService } from '@/app/shared/services/cart/cart.service';
 import { SupplyService } from '@/app/shared/services/supply/supply.service';
+import { ToastService, ToastType } from '@/app/shared/services/toast/toast.service';
 import { Component, OnInit } from '@angular/core';
+
+const DEFAULT_SIZE = 5;
+const DEFAULT_PAGE = 0;
+const DEFAULT_TOTAL = 0;
+const DEFAULT_TOTAL_PAGES = 0;
+const INITIAL_PAGE = 0;
+
 
 @Component({
   selector: 'app-cart',
@@ -15,17 +24,18 @@ import { Component, OnInit } from '@angular/core';
 export class CartComponent implements OnInit {
   cartProducts: CartProduct[] = [];
   filteredProducts: CartProduct[] = [];
-  total: number = 0;
+  total: number = DEFAULT_TOTAL;
   searchTerm: string = '';
-  size: number = 5;
-  currentPage: number = 0;
-  totalPages: number = 0;
+  size: number = DEFAULT_SIZE;
+  currentPage: number = DEFAULT_PAGE;
+  totalPages: number = DEFAULT_TOTAL_PAGES;
   latestUpdate: string | null = null;
   isAscending: boolean = true;
 
   constructor(
     private readonly cartService: CartService,
-    private readonly supplyService: SupplyService
+    private readonly supplyService: SupplyService,
+    private readonly toastService: ToastService
   ) {}
 
   ngOnInit(): void {
@@ -41,7 +51,6 @@ export class CartComponent implements OnInit {
           this.filteredProducts = [...this.cartProducts];
           this.total = data.total;
           this.totalPages = data.totalPages;
-          console.log('Cart data:', data);
 
           if (this.cartProducts.length > 0) {
             this.loadLatestUpdate();
@@ -53,11 +62,11 @@ export class CartComponent implements OnInit {
           }
         },
         error: (error) => {
-          console.error('Error fetching cart data:', error);
+          this.toastService.showToast(ERROR_CART_DATA_FETCH, ToastType.Error);
           this.cartProducts = [];
           this.filteredProducts = [];
-          this.total = 0;
-          this.totalPages = 0;
+          this.total = DEFAULT_TOTAL;
+          this.totalPages = DEFAULT_TOTAL_PAGES;
         },
       });
   }
@@ -68,7 +77,7 @@ export class CartComponent implements OnInit {
         this.latestUpdate = data;
       },
       error: (error) => {
-        console.error('Error fetching latest update:', error);
+        console.error(ERROR_FETCH_LAST_CART_UPDATE, error);
         this.latestUpdate = null;
       },
     });
@@ -91,10 +100,8 @@ export class CartComponent implements OnInit {
   }
 
   removeFromCart(productId: number): void {
-    console.log(`Removing product with ID: ${productId}`);
     this.cartService.removeProductFromCart(productId).subscribe({
       next: () => {
-        console.log('Product removed from cart');
         const removedProduct = this.cartProducts.find(
           (product) => product.productId === productId
         );
@@ -111,9 +118,10 @@ export class CartComponent implements OnInit {
         } else {
           this.latestUpdate = null;
         }
+        this.toastService.showToast(SUCCESS_REMOVE_PRODUCT, ToastType.Success);
       },
       error: (error) => {
-        console.error('Error removing product from cart:', error);
+        this.toastService.showToast(ERROR_REMOVE_PRODUCT, ToastType.Error);
       },
     });
   }
@@ -127,7 +135,7 @@ export class CartComponent implements OnInit {
     const target = event.target as HTMLSelectElement;
     const rowsPerPage = Number(target.value);
     this.size = rowsPerPage;
-    this.currentPage = 0;
+    this.currentPage = INITIAL_PAGE;
     this.loadCart();
   }
 
@@ -140,14 +148,14 @@ export class CartComponent implements OnInit {
     this.supplyService.getNextSupplyDate(productId).subscribe({
       next: (response: NextSupplyResponse) => {
         const product = this.cartProducts.find(
-          (p) => p.productId === productId
+          (product) => product.productId === productId
         );
         if (product) {
           product.nextSupplyDate = response.nextSupplyDate;
         }
       },
       error: (error) => {
-        console.error('Error fetching next supply date:', error);
+        this.toastService.showToast(ERROR_FETCH_NEXT_SUPPLY_DATE, ToastType.Error);
       },
     });
   }

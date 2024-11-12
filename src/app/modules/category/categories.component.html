@@ -1,6 +1,9 @@
 <div class="container">
   <div class="flex-end-container">
-    <app-button (click)="openModal()" (keydown)="onKeyDownButton($event)" *appRole="'ROLE_ADMIN'"
+    <app-button
+      (click)="openModal()"
+      (keydown)="onKeyDownButton($event)"
+      *appRole="'ROLE_ADMIN'"
       >Add Category</app-button
     >
   </div>
@@ -46,4 +49,9 @@
     [isAscending]="isAscending"
     [totalPages]="totalPages"
   ></app-data-table>
+  <app-pagination
+    [totalPages]="totalPages"
+    [currentPage]="currentPage"
+    (pageChange)="changePage($event)"
+  ></app-pagination>
 </div>
