@@ -59,6 +59,11 @@
   flex-direction: column-reverse;
 }
 
+.flex-end{
+  display: flex;
+  justify-content: flex-end;
+}
+
 // Espaciado
 .m-0 {
   margin: 0;

@@ -38,6 +38,7 @@ const mockToastService = {
 };
 const mockSupplyService = {
   addSupply: jest.fn(),
+  getNextSupplyDate: jest.fn(),
 };
 
 const mockCartService = {
@@ -439,5 +440,25 @@ describe('ProductComponent', () => {
       'Error adding product to cart',
       ToastType.Error
     );
+  });
+  it('should load next supply date and set nextSupplyDateString', () => {
+    const productId = 1;
+    const nextSupplyDate = '2023-01-01';
+    jest.spyOn(mockSupplyService, 'getNextSupplyDate').mockReturnValue(of({ nextSupplyDate }));
+
+    component.loadNextSupplyDate(productId);
+
+    expect(mockSupplyService.getNextSupplyDate).toHaveBeenCalledWith(productId);
+    expect(component.nextSupplyDateString).toBe(nextSupplyDate);
+  });
+
+  it('should show an error toast if loading next supply date fails', () => {
+    const productId = 1;
+    jest.spyOn(mockSupplyService, 'getNextSupplyDate').mockReturnValue(throwError(() => new Error('Error')));
+
+    component.loadNextSupplyDate(productId);
+
+    expect(mockSupplyService.getNextSupplyDate).toHaveBeenCalledWith(productId);
+    expect(mockToastService.showToast).toHaveBeenCalledWith('Error fetching next supply date', ToastType.Error);
   });
 });
