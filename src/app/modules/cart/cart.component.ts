@@ -126,6 +126,12 @@ export class CartComponent implements OnInit {
         } else {
           this.latestUpdate = null;
         }
+
+        if (this.currentPage > 0 && this.cartProducts.length === 0) {
+          this.currentPage--;
+          this.loadCart();
+        }
+
         this.toastService.showToast(SUCCESS_REMOVE_PRODUCT, ToastType.Success);
       },
       error: () => {
@@ -139,10 +145,8 @@ export class CartComponent implements OnInit {
     this.loadCart();
   }
 
-  onRowsPerPageChange(event: Event): void {
-    const target = event.target as HTMLSelectElement;
-    const rowsPerPage = Number(target.value);
-    this.size = rowsPerPage;
+  onRowsPerPageChange(newRowsPerPage: number): void {
+    this.size = newRowsPerPage;
     this.currentPage = INITIAL_PAGE;
     this.loadCart();
   }

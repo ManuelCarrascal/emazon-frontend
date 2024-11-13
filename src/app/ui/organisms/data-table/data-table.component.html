@@ -53,9 +53,8 @@
   </table>
 </div>
 
-<div class="pagination-table__info">
-  <label for="rowsPerPage">Show by</label>
-  <select id="rowsPerPage" (change)="onRowsPerPageChange($event)">
-    <option *ngFor="let size of [5, 10]" [value]="size">{{ size }}</option>
-  </select>
-</div>
+<app-pagination-controls
+  [rowsPerPageOptions]="[5, 10]"
+  [selectedRowsPerPage]="rowsPerPage"
+  (rowsPerPageChange)="onRowsPerPageChange($event)"
+></app-pagination-controls>

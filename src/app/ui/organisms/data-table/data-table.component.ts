@@ -40,10 +40,8 @@ export class DataTableComponent implements OnInit {
     this.pageChange.emit(page);
   }
 
-  onRowsPerPageChange(event: Event): void {
-    const target = event.target as HTMLSelectElement;
-    const newRowsPerPage = target.value;
-    this.rowsPerPage = Number(newRowsPerPage);
+  onRowsPerPageChange(newRowsPerPage: number): void {
+    this.rowsPerPage = newRowsPerPage;
     this.rowsPerPageChange.emit(this.rowsPerPage);
     this.changePage(0);
   }

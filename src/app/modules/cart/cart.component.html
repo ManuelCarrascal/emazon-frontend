@@ -15,32 +15,30 @@
   <section class="container-cards" *ngIf="cartProducts.length !== 0">
     <div class="filter-inputs">
       <input
-        type="text"
-        [(ngModel)]="searchTerm"
-        placeholder="Search by Category, Brand or Product Name"
-        (input)="updateCart()"
-      />
-      <div>
-        <label for="sizeSelect">Show by:</label>
-        <select
-          id="sizeSelect"
-          [(ngModel)]="size"
-          (change)="onRowsPerPageChange($event)"
-        >
-          <option value="5">5</option>
-          <option value="10">10</option>
-        </select>
-      </div>
-      <button (click)="toggleSortOrder()">
+      type="text"
+      [(ngModel)]="searchTerm"
+      placeholder="Category, Brand or Product Name"
+      (input)="updateCart()"
+      class="filter-inputs__search"
+    />
+    <app-pagination-controls
+    [rowsPerPageOptions]="[5, 10]"
+    [selectedRowsPerPage]="size"
+    (rowsPerPageChange)="onRowsPerPageChange($event)"
+  ></app-pagination-controls>
+      <button (click)="toggleSortOrder()" class="filter-inputs__sort-button">
         Sort by Name
         <lucide-icon
           [name]="isAscending ? 'arrow-down-a-z' : 'arrow-up-a-z'"
-          class="sort-icon"
+          class="filter-inputs__sort-icon"
           size="16"
         ></lucide-icon>
       </button>
     </div>
     <div class="container-card">
+      <div *ngIf="filteredProducts.length === 0" class="no-results">
+        <p>No products match your search criteria.</p>
+      </div>
       <div *ngFor="let product of filteredProducts" class="card">
         <div class="card__left">
           <div class="card__image-wrapper">

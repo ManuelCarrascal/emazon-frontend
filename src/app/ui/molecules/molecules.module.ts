@@ -8,6 +8,7 @@ import { TextAreaWithErrorComponent } from './text-area-with-error/text-area-wit
 import { DropdownSearchInputComponent } from './dropdown-search-input/dropdown-search-input.component';
 import { LucideAngularModule, Search } from 'lucide-angular';
 import { PaginationComponent } from './pagination/pagination.component';
+import { PaginationControlsComponent } from './pagination-controls/pagination-controls.component';
 
 
 @NgModule({
@@ -18,6 +19,7 @@ import { PaginationComponent } from './pagination/pagination.component';
     TextAreaWithErrorComponent,
     DropdownSearchInputComponent,
     PaginationComponent,
+    PaginationControlsComponent,
   ],
   imports: [
     CommonModule,
@@ -31,6 +33,7 @@ import { PaginationComponent } from './pagination/pagination.component';
     TextAreaWithErrorComponent,
     DropdownSearchInputComponent,
     PaginationComponent,
+    PaginationControlsComponent
   ]
 })
 export class MoleculesModule { }
