@@ -14,13 +14,17 @@
 <div class="flex-row">
   <section class="container-cards" *ngIf="cartProducts.length !== 0">
     <div class="filter-inputs">
-      <input
-      type="text"
-      [(ngModel)]="searchTerm"
-      placeholder="Category, Brand or Product Name"
-      (input)="updateCart()"
-      class="filter-inputs__search"
-    />
+      <div class="filter-inputs__group">
+        <label for="searchTerm" class="filter-inputs__label">Search:</label>
+        <input
+          id="searchTerm"
+          type="text"
+          [(ngModel)]="searchTerm"
+          placeholder="Category, Brand or Product Name"
+          (input)="updateCart()"
+          class="filter-inputs__search"
+        />
+      </div>
     <app-pagination-controls
     [rowsPerPageOptions]="[5, 10]"
     [selectedRowsPerPage]="size"

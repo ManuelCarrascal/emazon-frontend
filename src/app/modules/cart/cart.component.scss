@@ -157,7 +157,7 @@
 
   &__search{
     @include input-base-styles;
-    width: 30%;
+    min-width: 100%;
   }
 
   &__show-by{
@@ -167,6 +167,12 @@
   }
 
   &__sort-button{
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  &__group{
     display: flex;
     align-items: center;
     gap: 0.5rem;
