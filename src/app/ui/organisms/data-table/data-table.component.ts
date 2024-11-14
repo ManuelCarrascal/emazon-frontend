@@ -36,15 +36,6 @@ export class DataTableComponent implements OnInit {
     }
   }
 
-  changePage(page: number): void {
-    this.pageChange.emit(page);
-  }
-
-  onRowsPerPageChange(newRowsPerPage: number): void {
-    this.rowsPerPage = newRowsPerPage;
-    this.rowsPerPageChange.emit(this.rowsPerPage);
-    this.changePage(0);
-  }
 
   onSortChange(sortBy: string): void {
     if (this.currentSort === sortBy) {

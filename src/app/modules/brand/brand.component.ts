@@ -42,6 +42,7 @@ export class BrandComponent implements OnInit {
   public sortBy: string = DEFAULT_SORT_BY;
   public pageSize: number = DEFAULT_PAGE_SIZE;
   public isModalVisible: boolean = false;
+  size: number = 5;
 
   public tableColumns = [
     { key: 'brandName', label: 'Brand Name', sortable: true },

@@ -4,201 +4,209 @@
       >Add Product</app-button
     >
   </div>
-</div>
 
-<app-modal
-  [isVisible]="isIncrementModalVisible"
-  (close)="closeIncrementModal()"
->
-  <h2 class="mb-2rem">Increment Product Quantity</h2>
-  <form
-    [formGroup]="incrementForm"
-    (ngSubmit)="incrementQuantity()"
-    class="form"
+  <app-modal
+    [isVisible]="isIncrementModalVisible"
+    (close)="closeIncrementModal()"
   >
-    <div class="container-inputs">
-      <app-input-with-error
-        formControlName="incrementAmount"
-        [errorMessage]="incrementAmountError"
-        [control]="incrementAmount"
-        placeholder="Increment Amount"
-        type="number"
-      ></app-input-with-error>
-      <app-input-with-error
-        formControlName="nextSupplyDate"
-        [errorMessage]="nextSupplyDateError"
-        [control]="nextSupplyDate"
-        placeholder="Next Supply Date"
-        type="date"
-      ></app-input-with-error>
-    </div>
-    <div class="flex-center">
-      <app-button [disabled]="incrementForm.invalid">Increment</app-button>
-    </div>
-  </form>
-</app-modal>
-
-<app-modal [isVisible]="isModalVisible" (close)="closeModal()">
-  <h2 class="mb-2rem">Create Product</h2>
-  <form
-    [formGroup]="createProductForm"
-    (ngSubmit)="createProduct()"
-    class="form"
-  >
-    <div class="container-inputs">
-      <app-input-with-error
-        formControlName="productName"
-        [errorMessage]="productNameError"
-        [control]="productName"
-        placeholder="Product Name"
-      ></app-input-with-error>
-
-      <app-text-area-with-error
-        formControlName="productDescription"
-        [errorMessage]="productDescriptionError"
-        [control]="productDescription"
-        placeholder="Product Description"
-      ></app-text-area-with-error>
-
-      <app-input-with-error
-        formControlName="productQuantity"
-        [errorMessage]="productQuantityError"
-        [control]="productQuantity"
-        placeholder="Product Quantity"
-        type="number"
-      ></app-input-with-error>
-
-      <app-input-with-error
-        formControlName="productPrice"
-        [errorMessage]="productPriceError"
-        [control]="productPrice"
-        placeholder="Product Price"
-        type="number"
-      ></app-input-with-error>
-
-      <app-dropdown-search-input
-        formControlName="brandId"
-        [items]="brands"
-        [filteredItems]="filteredBrands"
-        [selectedItems]="[selectedBrand]"
-        [displayProperty]="'brandName'"
-        [idProperty]="'brandId'"
-        [maxSelection]="1"
-        [placeholder]="'Search Brands'"
-        (searchTermChange)="onSearchTermChange('brand', $event)"
-        (filterItems)="filterBrands()"
-        (selectItem)="selectBrand($event)"
-      ></app-dropdown-search-input>
-
-      <app-dropdown-search-input
-        formControlName="categoryIds"
-        [items]="categories"
-        [filteredItems]="filteredCategories"
-        [selectedItems]="selectedCategories"
-        [displayProperty]="'categoryName'"
-        [idProperty]="'categoryId'"
-        [maxSelection]="3"
-        [placeholder]="'Search Categories'"
-        (searchTermChange)="onSearchTermChange('category', $event)"
-        (filterItems)="filterCategories()"
-        (selectItem)="selectCategory($event)"
-        (removeItem)="removeCategory($event)"
-      ></app-dropdown-search-input>
-    </div>
-
-    <div class="flex-center">
-      <app-button [disabled]="createProductForm.invalid"
-        >Create Product</app-button
-      >
-    </div>
-  </form>
-</app-modal>
-
-<app-modal
-  [isVisible]="isAddToCartModalVisible"
-  (close)="closeAddToCartModal()"
->
-  <h2 class="mb-2rem">Add to Cart</h2>
-  <div class="product-selected">
-    <div class="product-selected__image skeleton-image align-center">
-      Product Image
-    </div>
-    <div class="product-selected__header">
-      <h3 class="product-selected__name">{{ selectedProduct?.productName }}</h3>
-      <p class="product-selected__price">
-        {{ selectedProduct?.productPrice | currency }}
-      </p>
-    </div>
-    <p class="product-selected__description">
-      {{ selectedProduct?.productDescription }}
-    </p>
-    <p class="product-selected__quantity">
-      Available quantity:
-      <span class="product-selected__quantity--highlight">
-        {{
-          (selectedProduct?.productQuantity ?? 0) > 0
-            ? selectedProduct?.productQuantity
-            : "Out of stock"
-        }}
-      </span>
-    </p>
-    <div
-      *ngIf="selectedProduct?.productQuantity === 0 && nextSupplyDateString"
-      class="product-selected__next-supply"
+    <h2 class="mb-2rem">Increment Product Quantity</h2>
+    <form
+      [formGroup]="incrementForm"
+      (ngSubmit)="incrementQuantity()"
+      class="form"
     >
-      <p>Next supply date: {{ nextSupplyDateString }}</p>
-    </div>
-    <div class="product-selected__categories">
-      <h4 class="product-selected__categories-title">Categories:</h4>
-      <ul class="product-selected__categories-list flex-row">
-        <li
-          class="product-selected__category tag"
-          *ngFor="let category of selectedProduct?.categoryNames?.split(', ')"
+      <div class="container-inputs">
+        <app-input-with-error
+          formControlName="incrementAmount"
+          [errorMessage]="incrementAmountError"
+          [control]="incrementAmount"
+          placeholder="Increment Amount"
+          type="number"
+        ></app-input-with-error>
+        <app-input-with-error
+          formControlName="nextSupplyDate"
+          [errorMessage]="nextSupplyDateError"
+          [control]="nextSupplyDate"
+          placeholder="Next Supply Date"
+          type="date"
+        ></app-input-with-error>
+      </div>
+      <div class="flex-center">
+        <app-button [disabled]="incrementForm.invalid">Increment</app-button>
+      </div>
+    </form>
+  </app-modal>
+
+  <app-modal [isVisible]="isModalVisible" (close)="closeModal()">
+    <h2 class="mb-2rem">Create Product</h2>
+    <form
+      [formGroup]="createProductForm"
+      (ngSubmit)="createProduct()"
+      class="form"
+    >
+      <div class="container-inputs">
+        <app-input-with-error
+          formControlName="productName"
+          [errorMessage]="productNameError"
+          [control]="productName"
+          placeholder="Product Name"
+        ></app-input-with-error>
+
+        <app-text-area-with-error
+          formControlName="productDescription"
+          [errorMessage]="productDescriptionError"
+          [control]="productDescription"
+          placeholder="Product Description"
+        ></app-text-area-with-error>
+
+        <app-input-with-error
+          formControlName="productQuantity"
+          [errorMessage]="productQuantityError"
+          [control]="productQuantity"
+          placeholder="Product Quantity"
+          type="number"
+        ></app-input-with-error>
+
+        <app-input-with-error
+          formControlName="productPrice"
+          [errorMessage]="productPriceError"
+          [control]="productPrice"
+          placeholder="Product Price"
+          type="number"
+        ></app-input-with-error>
+
+        <app-dropdown-search-input
+          formControlName="brandId"
+          [items]="brands"
+          [filteredItems]="filteredBrands"
+          [selectedItems]="[selectedBrand]"
+          [displayProperty]="'brandName'"
+          [idProperty]="'brandId'"
+          [maxSelection]="1"
+          [placeholder]="'Search Brands'"
+          (searchTermChange)="onSearchTermChange('brand', $event)"
+          (filterItems)="filterBrands()"
+          (selectItem)="selectBrand($event)"
+        ></app-dropdown-search-input>
+
+        <app-dropdown-search-input
+          formControlName="categoryIds"
+          [items]="categories"
+          [filteredItems]="filteredCategories"
+          [selectedItems]="selectedCategories"
+          [displayProperty]="'categoryName'"
+          [idProperty]="'categoryId'"
+          [maxSelection]="3"
+          [placeholder]="'Search Categories'"
+          (searchTermChange)="onSearchTermChange('category', $event)"
+          (filterItems)="filterCategories()"
+          (selectItem)="selectCategory($event)"
+          (removeItem)="removeCategory($event)"
+        ></app-dropdown-search-input>
+      </div>
+
+      <div class="flex-center">
+        <app-button [disabled]="createProductForm.invalid"
+          >Create Product</app-button
         >
-          {{ category }}
-        </li>
-      </ul>
-    </div>
-    <div class="product-selected__brand">
-      <h4 class="product-selected__brand-title">Brand:</h4>
-      <p class="product-selected__brand-name">
-        {{ selectedProduct?.brandName }}
+      </div>
+    </form>
+  </app-modal>
+
+  <app-modal
+    [isVisible]="isAddToCartModalVisible"
+    (close)="closeAddToCartModal()"
+  >
+    <h2 class="mb-2rem">Add to Cart</h2>
+    <div class="product-selected">
+      <div class="product-selected__image skeleton-image align-center">
+        Product Image
+      </div>
+      <div class="product-selected__header">
+        <h3 class="product-selected__name">
+          {{ selectedProduct?.productName }}
+        </h3>
+        <p class="product-selected__price">
+          {{ selectedProduct?.productPrice | currency }}
+        </p>
+      </div>
+      <p class="product-selected__description">
+        {{ selectedProduct?.productDescription }}
       </p>
+      <p class="product-selected__quantity">
+        Available quantity:
+        <span class="product-selected__quantity--highlight">
+          {{
+            (selectedProduct?.productQuantity ?? 0) > 0
+              ? selectedProduct?.productQuantity
+              : "Out of stock"
+          }}
+        </span>
+      </p>
+      <div
+        *ngIf="selectedProduct?.productQuantity === 0 && nextSupplyDateString"
+        class="product-selected__next-supply"
+      >
+        <p>Next supply date: {{ nextSupplyDateString }}</p>
+      </div>
+      <div class="product-selected__categories">
+        <h4 class="product-selected__categories-title">Categories:</h4>
+        <ul class="product-selected__categories-list flex-row">
+          <li
+            class="product-selected__category tag"
+            *ngFor="let category of selectedProduct?.categoryNames?.split(', ')"
+          >
+            {{ category }}
+          </li>
+        </ul>
+      </div>
+      <div class="product-selected__brand">
+        <h4 class="product-selected__brand-title">Brand:</h4>
+        <p class="product-selected__brand-name">
+          {{ selectedProduct?.brandName }}
+        </p>
+      </div>
     </div>
+    <form [formGroup]="addToCartForm" (ngSubmit)="addToCart()" class="form">
+      <div class="container-inputs">
+        <app-input-with-error
+          formControlName="quantity"
+          [errorMessage]="quantityError"
+          [control]="quantity"
+          placeholder="Quantity"
+          type="number"
+          label="Quantity"
+        ></app-input-with-error>
+      </div>
+      <div class="flex-center mt-2">
+        <app-button [disabled]="addToCartForm.invalid">Add to Cart</app-button>
+      </div>
+    </form>
+  </app-modal>
+
+  <app-data-table
+    (pageChange)="changePage($event)"
+    (rowsPerPageChange)="onRowsPerPageChange($event)"
+    (sortChange)="onSortChange($event)"
+    (incrementClick)="openIncrementModal($event)"
+    (addToCartClick)="openAddToCartModal($event)"
+    [columns]="tableColumns"
+    [currentPage]="currentPage"
+    [data]="products"
+    [isAscending]="isAscending"
+    [totalPages]="totalPages"
+    [showActions]="true"
+  ></app-data-table>
+  <div class="container__pagination">
+    <app-pagination-controls
+      [rowsPerPageOptions]="[5, 10]"
+      [selectedRowsPerPage]="size"
+      (rowsPerPageChange)="onRowsPerPageChange($event)"
+    ></app-pagination-controls>
+    <app-pagination
+      [totalPages]="totalPages"
+      [currentPage]="currentPage"
+      (pageChange)="changePage($event)"
+    ></app-pagination>
   </div>
-  <form [formGroup]="addToCartForm" (ngSubmit)="addToCart()" class="form">
-    <div class="container-inputs">
-      <app-input-with-error
-        formControlName="quantity"
-        [errorMessage]="quantityError"
-        [control]="quantity"
-        placeholder="Quantity"
-        type="number"
-        label="Quantity"
-      ></app-input-with-error>
-    </div>
-    <div class="flex-center mt-2">
-      <app-button [disabled]="addToCartForm.invalid">Add to Cart</app-button>
-    </div>
-  </form>
-</app-modal>
-
-<app-data-table
-  (pageChange)="changePage($event)"
-  (rowsPerPageChange)="onRowsPerPageChange($event)"
-  (sortChange)="onSortChange($event)"
-  (incrementClick)="openIncrementModal($event)"
-  (addToCartClick)="openAddToCartModal($event)"
-  [columns]="tableColumns"
-  [currentPage]="currentPage"
-  [data]="products"
-  [isAscending]="isAscending"
-  [totalPages]="totalPages"
-  [showActions]="true"
-></app-data-table>
-
-<app-pagination
-  [totalPages]="totalPages"
-  [currentPage]="currentPage"
-  (pageChange)="changePage($event)"
-></app-pagination>
+</div>

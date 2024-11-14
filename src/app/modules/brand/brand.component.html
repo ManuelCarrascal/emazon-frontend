@@ -42,9 +42,17 @@
     (sortChange)="onSortChange($event)"
     (rowsPerPageChange)="onRowsPerPageChange($event)"
   ></app-data-table>
-  <app-pagination
-    [totalPages]="totalPages"
-    [currentPage]="currentPage"
-    (pageChange)="changePage($event)"
-  ></app-pagination>
+  
+  <div class="container__pagination">
+    <app-pagination-controls
+      [rowsPerPageOptions]="[5, 10]"
+      [selectedRowsPerPage]="size"
+      (rowsPerPageChange)="onRowsPerPageChange($event)"
+    ></app-pagination-controls>
+    <app-pagination
+      [totalPages]="totalPages"
+      [currentPage]="currentPage"
+      (pageChange)="changePage($event)"
+    ></app-pagination>
+  </div>
 </div>

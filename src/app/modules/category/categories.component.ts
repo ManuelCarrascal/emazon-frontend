@@ -42,6 +42,7 @@ export class CategoriesComponent implements OnInit {
   public sortBy: string = DEFAULT_SORT_BY;
   public pageSize: number = DEFAULT_PAGE_SIZE;
   public isModalVisible: boolean = false;
+  size: number = 5;
   public tableColumns = [
     { key: 'categoryName', label: 'Category Name', sortable: true },
     {

@@ -68,6 +68,7 @@ export class ProductComponent implements OnInit {
   public brands: BrandResponse[] = [];
   public filteredBrands: BrandResponse[] = [];
   public selectedBrand: BrandResponse | null = null;
+  size: number = 5;
   public dropdownState: {
     [key: string]: { searchTerm: string; active: boolean };
   };
