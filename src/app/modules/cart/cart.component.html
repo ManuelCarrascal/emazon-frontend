@@ -25,11 +25,11 @@
           class="filter-inputs__search"
         />
       </div>
-    <app-pagination-controls
-    [rowsPerPageOptions]="[5, 10]"
-    [selectedRowsPerPage]="size"
-    (rowsPerPageChange)="onRowsPerPageChange($event)"
-  ></app-pagination-controls>
+      <app-pagination-controls
+        [rowsPerPageOptions]="[5, 10]"
+        [selectedRowsPerPage]="size"
+        (rowsPerPageChange)="onRowsPerPageChange($event)"
+      ></app-pagination-controls>
       <button (click)="toggleSortOrder()" class="filter-inputs__sort-button">
         Sort by Name
         <lucide-icon
@@ -106,5 +106,8 @@
     <p class="cart-total__amount">
       Total: <span class=""> {{ total | currency }}</span>
     </p>
+    <app-button
+      >Buy <lucide-icon name="shopping-bag"></lucide-icon>
+    </app-button>
   </div>
 </div>
