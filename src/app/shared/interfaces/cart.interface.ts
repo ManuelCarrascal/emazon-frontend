@@ -23,3 +23,4 @@ export interface CartResponse {
   empty: boolean;
   total: number;
 }
+

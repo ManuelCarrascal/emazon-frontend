@@ -65,7 +65,22 @@
             <p class="card__brand">Brand: {{ product.brand.brandName }}</p>
             <div class="card__quantities">
               <p class="card__cart-quantity">
-                Quantity in Cart: {{ product.cartQuantity }}
+                Quantity in Cart:
+                <button
+                  (click)="decreaseQuantity(product)"
+                  class="quantity-button"
+                  [disabled]="product.cartQuantity <= 1"
+                >
+                  -
+                </button>
+                {{ product.cartQuantity }}
+                <button
+                  (click)="increaseQuantity(product)"
+                  class="quantity-button"
+                  [disabled]="product.cartQuantity >= product.productQuantity"
+                >
+                  +
+                </button>
               </p>
               <p class="card__stock-quantity">
                 In Stock: {{ product.productQuantity }}

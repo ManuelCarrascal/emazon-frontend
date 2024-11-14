@@ -85,4 +85,19 @@ export class CartService {
       responseType: 'text',
     });
   }
+
+  updateCartQuantity(productId: number, quantity: number): Observable<unknown> {
+    const token = this.getToken();
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    });
+
+    const body = {
+      productId,
+      quantity,
+    };
+
+    return this.http.patch(`${this.apiUrl}/update-quantity`, body, { headers });
+  }
 }

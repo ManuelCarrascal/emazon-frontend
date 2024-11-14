@@ -127,7 +127,7 @@ export class CartComponent implements OnInit {
           this.latestUpdate = null;
         }
 
-        if (this.currentPage > 0 && this.cartProducts.length === 0) {
+        if (this.currentPage > INITIAL_PAGE && this.cartProducts.length === 0) {
           this.currentPage--;
           this.loadCart();
         }
@@ -154,6 +154,40 @@ export class CartComponent implements OnInit {
   toggleSortOrder(): void {
     this.isAscending = !this.isAscending;
     this.loadCart();
+  }
+
+  increaseQuantity(product: CartProduct): void {
+    if (product.cartQuantity < product.productQuantity) {
+      product.cartQuantity++;
+      this.updateCartQuantity(product.productId, product.cartQuantity);
+    }
+  }
+
+  decreaseQuantity(product: CartProduct): void {
+    product.cartQuantity--;
+    this.updateCartQuantity(product.productId, product.cartQuantity);
+  }
+
+  updateCartQuantity(productId: number, quantity: number): void {
+    if (quantity <= 0) {
+      this.removeFromCart(productId);
+      return;
+    }
+  
+    this.cartService.updateCartQuantity(productId, quantity).subscribe({
+      next: () => {
+        const product = this.cartProducts.find(p => p.productId === productId);
+        if (product) {
+          product.cartQuantity = quantity;
+          product.subtotal = product.cartQuantity * product.productPrice;
+          this.total = this.cartProducts.reduce((acc, p) => acc + p.subtotal, 0);
+          this.loadLatestUpdate();
+        }
+      },
+      error: (error) => {
+        console.error('An error occurred:', error);
+      },
+    });
   }
 
   loadNextSupplyDate(productId: number): void {
