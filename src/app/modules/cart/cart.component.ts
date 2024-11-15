@@ -215,4 +215,6 @@ export class CartComponent implements OnInit {
       this.removeFromCart(Number((event.target as HTMLButtonElement).value));
     }
   }
+
+  
 }

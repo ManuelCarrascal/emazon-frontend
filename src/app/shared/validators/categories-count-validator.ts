@@ -1,11 +1,19 @@
-import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
+import {  FormControl, } from '@angular/forms';
 
-export function categoriesCountValidator(min: number, max: number): ValidatorFn {
-  return (control: AbstractControl): ValidationErrors | null => {
+export function categoriesCountValidator(min: number, max: number) {
+  return (control: FormControl) => {
     const value = control.value;
-    if (Array.isArray(value) && value.length >= min && value.length <= max) {
+
+    if (!Array.isArray(value)) {
       return null;
     }
-    return { categoriesCount: { min, max, actual: value.length } };
+
+    const length = value.length;
+
+    if (length < min || length > max) {
+      return { categoriesCount: { min, max, actual: length } };
+    }
+
+    return null;
   };
 }

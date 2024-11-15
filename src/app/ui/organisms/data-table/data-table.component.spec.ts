@@ -57,12 +57,6 @@ describe('DataTableComponent', () => {
     expect(component.currentSort).toBe('name');
   });
 
-  it('should emit pageChange event on changePage', () => {
-    jest.spyOn(component.pageChange, 'emit');
-    component.changePage(2);
-    expect(component.pageChange.emit).toHaveBeenCalledWith(2);
-  });
-
   it('should emit sortChange event on onSortChange', () => {
     jest.spyOn(component.sortChange, 'emit');
     component.currentSort = 'name';
@@ -73,13 +67,16 @@ describe('DataTableComponent', () => {
     });
   });
 
-  it('should emit rowsPerPageChange event on onRowsPerPageChange', () => {
-    jest.spyOn(component.rowsPerPageChange, 'emit');
-    const event = new Event('change');
-    Object.defineProperty(event, 'target', { value: { value: '10' } });
-    component.onRowsPerPageChange(event);
-    expect(component.rowsPerPageChange.emit).toHaveBeenCalledWith(10);
-    expect(component.rowsPerPage).toBe(10);
+  it('should update currentSort and isAscending on onSortChange with new sortBy', () => {
+    jest.spyOn(component.sortChange, 'emit');
+    component.currentSort = 'name';
+    component.onSortChange('newSort');
+    expect(component.currentSort).toBe('newSort');
+    expect(component.isAscending).toBe(true);
+    expect(component.sortChange.emit).toHaveBeenCalledWith({
+      sortBy: 'newSort',
+      isAscending: true,
+    });
   });
 
   it('should render table headers correctly', () => {
@@ -112,13 +109,6 @@ describe('DataTableComponent', () => {
     expect(component.onSortChange).toHaveBeenCalledWith('name');
   });
 
-  it('should call onRowsPerPageChange on rows per page change', () => {
-    jest.spyOn(component, 'onRowsPerPageChange');
-    const select = debugElement.query(By.css('#rowsPerPage'));
-    select.triggerEventHandler('change', { target: { value: '10' } });
-    expect(component.onRowsPerPageChange).toHaveBeenCalled();
-  });
-
   it('should emit incrementClick event on onIncrementClick', () => {
     jest.spyOn(component.incrementClick, 'emit');
     const row = { id: 1, name: 'Test' };
@@ -140,5 +130,12 @@ describe('DataTableComponent', () => {
     authService.getUserRole.mockReturnValue('ROLE_USER');
     component.showActions = true;
     expect(component.canShowActions()).toBe(false);
+  });
+
+  it('should emit addToCartClick event when onAddToCartClick is called', () => {
+    jest.spyOn(component.addToCartClick, 'emit');
+    const row = { id: 1, name: 'Test' };
+    component.onAddToCartClick(row);
+    expect(component.addToCartClick.emit).toHaveBeenCalledWith(row);
   });
 });

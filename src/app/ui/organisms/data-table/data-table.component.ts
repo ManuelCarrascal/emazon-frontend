@@ -36,7 +36,6 @@ export class DataTableComponent implements OnInit {
     }
   }
 
-
   onSortChange(sortBy: string): void {
     if (this.currentSort === sortBy) {
       this.isAscending = !this.isAscending;
