@@ -1,0 +1,6 @@
+<div class="pagination-controls">
+    <label for="rowsPerPage">Show by:</label>
+    <select id="rowsPerPage" (change)="onRowsPerPageChange($event)">
+      <option *ngFor="let size of rowsPerPageOptions" [value]="size">{{ size }}</option>
+    </select>
+  </div>

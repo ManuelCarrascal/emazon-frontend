@@ -33,6 +33,7 @@ export class CartService {
 
   getCart(
     size: number,
+    page: number,
     isAscending: boolean,
     categoryName?: string,
     brandName?: string
@@ -45,6 +46,7 @@ export class CartService {
 
     let params = new HttpParams()
       .set('size', size.toString())
+      .set('page', page.toString())
       .set('isAscending', isAscending.toString());
 
     if (categoryName) {
@@ -71,4 +73,31 @@ export class CartService {
     });
   }
 
+  getLatestUpdate(): Observable<string> {
+    const token = this.getToken();
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    });
+
+    return this.http.get(`${this.apiUrl}/latest-update`, {
+      headers,
+      responseType: 'text',
+    });
+  }
+
+  updateCartQuantity(productId: number, quantity: number): Observable<unknown> {
+    const token = this.getToken();
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    });
+
+    const body = {
+      productId,
+      quantity,
+    };
+
+    return this.http.patch(`${this.apiUrl}/update-quantity`, body, { headers });
+  }
 }

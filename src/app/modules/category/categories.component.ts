@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ROLES } from '@/app/shared/constants/roles.constants';
 import {
   AbstractControl,
   FormBuilder,
@@ -15,7 +16,10 @@ import {
 } from 'src/app/shared/constants/categoriesComponent';
 import { Category } from '@/app/shared/interfaces/category.interface';
 import { CategoryService } from '@/app/shared/services/category/category.service';
-import { ToastService, ToastType } from '@/app/shared/services/toast/toast.service';
+import {
+  ToastService,
+  ToastType,
+} from '@/app/shared/services/toast/toast.service';
 
 const MIN_LENGTH = 3;
 const DEFAULT_PAGE = 0;
@@ -28,6 +32,7 @@ const DEFAULT_SORT_BY = 'categoryName';
   styleUrls: ['./categories.component.scss'],
 })
 export class CategoriesComponent implements OnInit {
+  public readonly ROLES = ROLES;
   public createCategoryForm: FormGroup;
   public categories: Category[] = [];
   public totalElements: number = 0;
@@ -37,6 +42,7 @@ export class CategoriesComponent implements OnInit {
   public sortBy: string = DEFAULT_SORT_BY;
   public pageSize: number = DEFAULT_PAGE_SIZE;
   public isModalVisible: boolean = false;
+  size: number = 5;
   public tableColumns = [
     { key: 'categoryName', label: 'Category Name', sortable: true },
     {
@@ -131,7 +137,8 @@ export class CategoriesComponent implements OnInit {
           }
         },
         error: (error) => {
-          const message = ERROR_MESSAGES_BY_CODE[400] || 'An unexpected error occurred';
+          const message =
+            ERROR_MESSAGES_BY_CODE[400] || 'An unexpected error occurred';
           this.toastService.showToast(message, ToastType.Error);
         },
       });
@@ -165,7 +172,10 @@ export class CategoriesComponent implements OnInit {
           this.currentPage = data.currentPage;
         },
         error: (error) => {
-          this.toastService.showToast(ERROR_MESSAGES_BY_CODE.CATEGORY_LOAD_ERROR, ToastType.Error);
+          this.toastService.showToast(
+            ERROR_MESSAGES_BY_CODE.CATEGORY_LOAD_ERROR,
+            ToastType.Error
+          );
         },
       });
   }

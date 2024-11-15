@@ -5,13 +5,12 @@ import { Observable } from 'rxjs';
 import { User, UserResponse } from '../../interfaces/user.interface';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class CustomerService {
-
   private readonly apiUrl = `${environment.user_service_url}/v1/users/register`;
 
-  constructor(private readonly http: HttpClient) { }
+  constructor(private readonly http: HttpClient) {}
 
   registerCustomer(user: User): Observable<HttpResponse<UserResponse>> {
     const headers = new HttpHeaders({
@@ -23,5 +22,4 @@ export class CustomerService {
       observe: 'response',
     });
   }
-
 }

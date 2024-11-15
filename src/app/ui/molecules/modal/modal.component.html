@@ -1,6 +1,8 @@
 <div class="modal" [class.show]="isVisible">
     <div class="modal-content">
-     <i class="fa-solid fa-x close"  (click)="closeModal()"></i>
+     <button (click)="closeModal()" class="flex-end">
+      <i class="fa-solid fa-x close"></i>
+     </button>
       <ng-content></ng-content>
     </div>
   </div>

@@ -6,9 +6,26 @@ import {
   Validators,
 } from '@angular/forms';
 import {
+  CATEGORY_NAMES,
+  DEFAULT_PAGE,
+  DEFAULT_PAGE_SIZE,
+  DEFAULT_SORT_BY,
+  ERROR_ADDING_PRODUCT_TO_CART,
+  ERROR_CREATING_PRODUCT,
+  ERROR_FETCHING_NEXT_SUPPLY_DATE,
+  ERROR_LOADING_BRANDS,
+  ERROR_LOADING_CATEGORIES,
+  ERROR_LOADING_PRODUCTS,
   ERROR_MESSAGES,
+  ERROR_UPDATING_PRODUCT_QUANTITY,
   FIELD_NAMES,
+  MAX_CATEGORIES,
+  MIN_LENGTH,
+  NUMBER_OF_CATEGORIES,
   REGEX_PATTERNS,
+  SUCCESS_ADDING_PRODUCT_TO_CART,
+  SUCCESS_PRODUCT_CREATED,
+  SUCCESS_UPDATING_PRODUCT_QUANTITY,
 } from '@/app/shared/constants/productsComponent';
 import { categoriesCountValidator } from '@/app/shared/validators/categories-count-validator';
 import { CategoryService } from '@/app/shared/services/category/category.service';
@@ -25,14 +42,12 @@ import {
   ProductView,
 } from '@/app/shared/interfaces/product.interface';
 import { SupplyService } from '@/app/shared/services/supply/supply.service';
-import { SupplyRequest } from '@/app/shared/interfaces/supply.interface';
+import {
+  SupplyRequest,
+  NextSupplyResponse,
+} from '@/app/shared/interfaces/supply.interface';
 import { CartService } from '@/app/shared/services/cart/cart.service';
-
-const MIN_LENGTH = 3;
-const MAX_CATEGORIES = 3;
-const DEFAULT_PAGE = 0;
-const DEFAULT_PAGE_SIZE = 5;
-const DEFAULT_SORT_BY = 'productName';
+import { ROLES } from '@/app/shared/constants/roles.constants';
 
 @Component({
   selector: 'app-product',
@@ -40,18 +55,20 @@ const DEFAULT_SORT_BY = 'productName';
   styleUrls: ['./product.component.scss'],
 })
 export class ProductComponent implements OnInit {
+  public readonly ROLES = ROLES;
   public isModalVisible: boolean = false;
   public isIncrementModalVisible: boolean = false;
   public isAddToCartModalVisible: boolean = false;
   public createProductForm: FormGroup;
   public incrementForm: FormGroup;
-  public addToCartForm: FormGroup; 
+  public addToCartForm: FormGroup;
   public categories: CategoryResponse[] = [];
   public filteredCategories: CategoryResponse[] = [];
   public selectedCategories: CategoryResponse[] = [];
   public brands: BrandResponse[] = [];
   public filteredBrands: BrandResponse[] = [];
   public selectedBrand: BrandResponse | null = null;
+  size: number = 5;
   public dropdownState: {
     [key: string]: { searchTerm: string; active: boolean };
   };
@@ -77,6 +94,7 @@ export class ProductComponent implements OnInit {
   ];
 
   public selectedProduct: ProductView | null = null;
+  public nextSupplyDateString: string | null = null;
 
   constructor(
     private readonly formBuilder: FormBuilder,
@@ -119,7 +137,7 @@ export class ProductComponent implements OnInit {
       nextSupplyDate: ['', [Validators.required]],
     });
 
-    this.addToCartForm = this.formBuilder.group({ 
+    this.addToCartForm = this.formBuilder.group({
       quantity: ['', [Validators.required, Validators.min(1)]],
     });
 
@@ -173,18 +191,22 @@ export class ProductComponent implements OnInit {
     this.incrementForm.markAsUntouched();
   }
 
-  openAddToCartModal(product: ProductView) { 
+  openAddToCartModal(product: ProductView) {
     this.selectedProduct = product;
     this.isAddToCartModalVisible = true;
+    if (this.selectedProduct.productQuantity === 0) {
+      this.loadNextSupplyDate(this.selectedProduct.productId);
+    }
   }
 
-  closeAddToCartModal() { 
+  closeAddToCartModal() {
     this.isAddToCartModalVisible = false;
     this.addToCartForm.reset({
       quantity: '',
     });
     this.addToCartForm.markAsPristine();
     this.addToCartForm.markAsUntouched();
+    this.nextSupplyDateString = null;
   }
 
   onKeyDownButton(event: KeyboardEvent): void {
@@ -218,7 +240,7 @@ export class ProductComponent implements OnInit {
     return this.incrementForm.get('incrementAmount');
   }
 
-  get quantity() { 
+  get quantity() {
     return this.addToCartForm.get('quantity');
   }
 
@@ -252,14 +274,14 @@ export class ProductComponent implements OnInit {
     return this.getErrorMessage(this.incrementAmount, 'Increment Amount');
   }
 
-  get quantityError(): string { 
+  get quantityError(): string {
     return this.getErrorMessage(this.quantity, 'Quantity');
   }
 
   get nextSupplyDate() {
     return this.incrementForm.get('nextSupplyDate');
   }
-  
+
   get nextSupplyDateError(): string {
     return this.getErrorMessage(this.nextSupplyDate, 'Next Supply Date');
   }
@@ -285,54 +307,56 @@ export class ProductComponent implements OnInit {
       return;
     }
     this.productService.createProduct(productData).subscribe({
-      next: (product) => {
-        this.toastService.showToast(
-          'Product created successfully',
-          ToastType.Success
-        );
+      next: () => {
+        this.toastService.showToast(SUCCESS_PRODUCT_CREATED, ToastType.Success);
         this.loadProducts();
         this.closeModal();
       },
-      error: (error) => {
-        this.toastService.showToast('Error creating product', ToastType.Error);
+      error: () => {
+        this.toastService.showToast(ERROR_CREATING_PRODUCT, ToastType.Error);
       },
     });
   }
 
-incrementQuantity(): void {
-  if (this.incrementForm.invalid || !this.selectedProduct) {
-    this.incrementForm.markAllAsTouched();
-    return;
-  }
-  const incrementAmount = this.incrementForm.value.incrementAmount;
-  const nextSupplyDate = this.incrementForm.value.nextSupplyDate;
-  const supplyRequest: SupplyRequest = {
-    productQuantity: incrementAmount,
-    nextSupplyDate: nextSupplyDate
-  };
+  incrementQuantity(): void {
+    if (this.incrementForm.invalid || !this.selectedProduct) {
+      this.incrementForm.markAllAsTouched();
+      return;
+    }
+    const incrementAmount = this.incrementForm.value.incrementAmount;
+    const nextSupplyDate = this.incrementForm.value.nextSupplyDate;
+    const supplyRequest: SupplyRequest = {
+      productQuantity: incrementAmount,
+      nextSupplyDate: nextSupplyDate,
+    };
 
-  this.supplyService.addSupply(this.selectedProduct.productId, supplyRequest).subscribe({
-    next: () => {
-      this.toastService.showToast('Product quantity updated successfully', ToastType.Success);
-      this.loadProducts();
-      this.closeIncrementModal();
-    },
-    error: (error) => {
-      this.toastService.showToast('Error updating product quantity', ToastType.Error);
-    },
-  });
-}
+    this.supplyService
+      .addSupply(this.selectedProduct.productId, supplyRequest)
+      .subscribe({
+        next: () => {
+          this.toastService.showToast(
+            SUCCESS_UPDATING_PRODUCT_QUANTITY,
+            ToastType.Success
+          );
+          this.loadProducts();
+          this.closeIncrementModal();
+        },
+        error: () => {
+          this.toastService.showToast(
+            ERROR_UPDATING_PRODUCT_QUANTITY,
+            ToastType.Error
+          );
+        },
+      });
+  }
 
   loadCategories(): void {
     this.categoryService.getAllCategories().subscribe({
       next: (categories) => {
         this.categories = categories;
       },
-      error: (error) => {
-        this.toastService.showToast(
-          'Error loading categories',
-          ToastType.Error
-        );
+      error: () => {
+        this.toastService.showToast(ERROR_LOADING_CATEGORIES, ToastType.Error);
       },
     });
   }
@@ -342,8 +366,8 @@ incrementQuantity(): void {
       next: (brands) => {
         this.brands = brands;
       },
-      error: (error) => {
-        this.toastService.showToast('Error loading brands', ToastType.Error);
+      error: () => {
+        this.toastService.showToast(ERROR_LOADING_BRANDS, ToastType.Error);
       },
     });
   }
@@ -363,8 +387,8 @@ incrementQuantity(): void {
         this.totalPages = data.totalPages;
         this.currentPage = data.currentPage;
       },
-      error: (error) => {
-        this.toastService.showToast('Error loading products', ToastType.Error);
+      error: () => {
+        this.toastService.showToast(ERROR_LOADING_PRODUCTS, ToastType.Error);
       },
     });
   }
@@ -402,7 +426,7 @@ incrementQuantity(): void {
   }
 
   changeSortOrder(sortBy: string): void {
-    this.sortBy = sortBy === 'categoryNames' ? 'numberOfCategories' : sortBy;
+    this.sortBy = sortBy === CATEGORY_NAMES ? NUMBER_OF_CATEGORIES : sortBy;
     this.isAscending = !this.isAscending;
     this.loadProducts(
       this.currentPage,
@@ -414,7 +438,7 @@ incrementQuantity(): void {
 
   onSortChange(event: { sortBy: string; isAscending: boolean }): void {
     this.sortBy =
-      event.sortBy === 'categoryNames' ? 'numberOfCategories' : event.sortBy;
+      event.sortBy === CATEGORY_NAMES ? NUMBER_OF_CATEGORIES : event.sortBy;
     this.isAscending = event.isAscending;
     this.loadProducts(
       this.currentPage,
@@ -516,13 +540,35 @@ incrementQuantity(): void {
       return;
     }
     const quantity = this.addToCartForm.value.quantity;
-    this.cartService.addProductToCart(this.selectedProduct.productId, quantity).subscribe({
-      next: () => {
-        this.toastService.showToast('Product added to cart successfully', ToastType.Success);
-        this.closeAddToCartModal();
+    this.cartService
+      .addProductToCart(this.selectedProduct.productId, quantity)
+      .subscribe({
+        next: () => {
+          this.toastService.showToast(
+            SUCCESS_ADDING_PRODUCT_TO_CART,
+            ToastType.Success
+          );
+          this.closeAddToCartModal();
+        },
+        error: () => {
+          this.toastService.showToast(
+            ERROR_ADDING_PRODUCT_TO_CART,
+            ToastType.Error
+          );
+        },
+      });
+  }
+
+  loadNextSupplyDate(productId: number): void {
+    this.supplyService.getNextSupplyDate(productId).subscribe({
+      next: (response: NextSupplyResponse) => {
+        this.nextSupplyDateString = response.nextSupplyDate;
       },
-      error: (error) => {
-        this.toastService.showToast('Error adding product to cart', ToastType.Error);
+      error: () => {
+        this.toastService.showToast(
+          ERROR_FETCHING_NEXT_SUPPLY_DATE,
+          ToastType.Error
+        );
       },
     });
   }

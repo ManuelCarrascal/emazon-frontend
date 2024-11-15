@@ -9,7 +9,10 @@ import { TextAreaWithErrorComponent } from '@/app/ui/molecules/text-area-with-er
 import { ButtonComponent } from '@/app/ui/atoms/button/button.component';
 import { DataTableComponent } from '@/app/ui/organisms/data-table/data-table.component';
 import { BrandComponent } from './brand.component';
-import { ToastService, ToastType } from '@/app/shared/services/toast/toast.service';
+import {
+  ToastService,
+  ToastType,
+} from '@/app/shared/services/toast/toast.service';
 import { BrandService } from '@/app/shared/services/brand/brand.service';
 import { BrandResponse } from '@/app/shared/interfaces/brand.interface';
 import { ERROR_MESSAGES_BY_CODE } from '@/app/shared/constants/brandsComponent';
@@ -87,21 +90,21 @@ describe('BrandComponent', () => {
     });
 
     it('should call createBrand and show success toast on successful creation', () => {
-      jest.spyOn(brandService, 'createBrand').mockReturnValue(
-        of(new HttpResponse<BrandResponse>({ status: 201 }))
-      );
+      jest
+        .spyOn(brandService, 'createBrand')
+        .mockReturnValue(of(new HttpResponse<BrandResponse>({ status: 201 })));
       jest.spyOn(toastService, 'showToast');
-      
+
       component.createBrandForm.setValue({
         brandName: 'Valid Brand',
-        brandDescription: 'Valid Description'
+        brandDescription: 'Valid Description',
       });
-      
+
       component.createBrand();
-    
+
       expect(brandService.createBrand).toHaveBeenCalledWith({
         brandName: 'Valid Brand',
-        brandDescription: 'Valid Description'
+        brandDescription: 'Valid Description',
       });
       expect(toastService.showToast).toHaveBeenCalledWith(
         'Brand created successfully!',
@@ -111,7 +114,8 @@ describe('BrandComponent', () => {
 
     it('should show error toast when brand creation fails', () => {
       const mockError = { status: 400 };
-      jest.spyOn(brandService, 'createBrand')
+      jest
+        .spyOn(brandService, 'createBrand')
         .mockReturnValue(throwError(() => mockError));
 
       component.createBrandForm.patchValue({
@@ -123,7 +127,7 @@ describe('BrandComponent', () => {
 
       expect(toastService.showToast).toHaveBeenCalledWith(
         'An error occurred while creating the brand.',
-        ToastType.Error 
+        ToastType.Error
       );
     });
   });
@@ -154,15 +158,18 @@ describe('BrandComponent', () => {
 
     it('should show error toast if loading brands fails', () => {
       const mockError = { status: 500 };
-      jest.spyOn(brandService, 'getBrands')
+      jest
+        .spyOn(brandService, 'getBrands')
         .mockReturnValue(throwError(() => mockError));
-    
+
       component.loadBrands();
-    
-      const expectedErrorMessage = ERROR_MESSAGES_BY_CODE.BRAND_LOAD_ERROR || 'An unexpected error occurred';
+
+      const expectedErrorMessage =
+        ERROR_MESSAGES_BY_CODE.BRAND_LOAD_ERROR ||
+        'An unexpected error occurred';
       expect(toastService.showToast).toHaveBeenCalledWith(
         expectedErrorMessage,
-        ToastType.Error 
+        ToastType.Error
       );
     });
   });
@@ -170,9 +177,9 @@ describe('BrandComponent', () => {
   describe('pagination and sorting', () => {
     it('should change page and reload brands', () => {
       jest.spyOn(component, 'loadBrands');
-      
+
       component.changePage(1);
-    
+
       expect(component.loadBrands).toHaveBeenCalledWith(
         1,
         component.pageSize,
@@ -183,12 +190,12 @@ describe('BrandComponent', () => {
 
     it('should change sort order and reload brands', () => {
       jest.spyOn(component, 'loadBrands');
-      
+
       component.isAscending = true;
       component.changeSortOrder('brandName');
-    
+
       expect(component.sortBy).toBe('brandName');
-      expect(component.isAscending).toBe(false); 
+      expect(component.isAscending).toBe(false);
       expect(component.loadBrands).toHaveBeenCalledWith(
         component.currentPage,
         component.pageSize,

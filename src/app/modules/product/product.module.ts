@@ -15,6 +15,6 @@ import { SharedModule } from '@/app/shared/shared.module';
     SharedModule,
     LucideAngularModule.pick({ X }),
   ],
-  exports: [ProductComponent]
+  exports: [ProductComponent],
 })
-export class ProductModule { }
+export class ProductModule {}

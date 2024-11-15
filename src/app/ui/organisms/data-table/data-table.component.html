@@ -15,7 +15,9 @@
             ></lucide-icon>
           </button>
         </th>
-        <th *ngIf="canShowActions() || canShowAddToCart()" class="table__cell">Actions</th>
+        <th *ngIf="canShowActions() || canShowAddToCart()" class="table__cell">
+          Actions
+        </th>
       </tr>
     </thead>
     <tbody>
@@ -29,21 +31,19 @@
           </ng-template>
         </td>
         <td *ngIf="canShowActions()" class="table__cell">
-          <button class="button">
+          <button class="button" (click)="onIncrementClick(row)">
             <lucide-icon
               name="package-plus"
               class="action-button"
-              (click)="onIncrementClick(row)"
             ></lucide-icon>
             <div class="tool-tip" role="tooltip">Add Supply</div>
           </button>
         </td>
         <td *ngIf="canShowAddToCart()" class="table__cell">
-          <button class="button">
+          <button class="button" (click)="onAddToCartClick(row)">
             <lucide-icon
               name="shopping-basket"
               class="action-button"
-              (click)="onAddToCartClick(row)"
             ></lucide-icon>
             <div class="tool-tip" role="tooltip">Add to Cart</div>
           </button>
@@ -51,41 +51,4 @@
       </tr>
     </tbody>
   </table>
-</div>
-
-<div class="pagination-table">
-  <button
-    class="pagination-table__button"
-    [disabled]="currentPage === 0"
-    (click)="changePage(currentPage - 1)"
-  >
-    <lucide-icon name="MoveLeft" size="14"></lucide-icon>
-  </button>
-
-  <ng-container *ngFor="let page of getPagesToShow()">
-    <button
-      *ngIf="page !== -1"
-      class="pagination-table__page"
-      [class.active]="currentPage === page"
-      (click)="changePage(page)"
-    >
-      {{ page + 1 }}
-    </button>
-    <span *ngIf="page === -1">...</span>
-  </ng-container>
-
-  <button
-    class="pagination-table__button"
-    [disabled]="currentPage === totalPages - 1"
-    (click)="changePage(currentPage + 1)"
-  >
-    <lucide-icon name="MoveRight" size="14"></lucide-icon>
-  </button>
-</div>
-
-<div class="pagination-table__info">
-  <label for="rowsPerPage">Show by</label>
-  <select id="rowsPerPage" (change)="onRowsPerPageChange($event)">
-    <option *ngFor="let size of [5, 10]" [value]="size">{{ size }}</option>
-  </select>
 </div>

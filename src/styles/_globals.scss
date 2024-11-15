@@ -44,6 +44,8 @@ a {
   color: $black;
 }
 
+
+
 li {
   list-style: none;
 }
@@ -63,6 +65,25 @@ input[type="number"]::-webkit-outer-spin-button,
 .container {
   padding: 0 1.5rem;
   margin: 1.6rem 0;
+
+  &__pagination {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-items: center;
+    margin-top: 2rem;
+  }
+
+  app-pagination-controls {
+    grid-column: 1;
+    justify-self: start;
+    font-size: 1.6rem;
+    margin-left: 3rem;
+  }
+
+  app-pagination {
+    grid-column: 2;
+    justify-self: center;
+  }
 }
 
 .container-content {
@@ -244,7 +265,7 @@ input[type="number"]::-webkit-outer-spin-button,
 
 .tool-tip {
   position: absolute;
-  z-index: 1000; 
+  z-index: 1000;
   box-shadow: 0 0 0.1rem $black;
   padding: 0.5rem 1rem;
   font-size: 1rem;
@@ -260,15 +281,17 @@ input[type="number"]::-webkit-outer-spin-button,
   position: relative;
 }
 
- :has(> .tool-tip):hover .tool-tip{
-   opacity: 1;
- }
+:has(> .tool-tip):hover .tool-tip {
+  opacity: 1;
+}
 
-.tag{
+.tag {
   background-color: $purple;
   color: $white;
   padding: 0.5rem 1rem;
   border-radius: 0.8rem;
   font-size: 1.2rem;
   margin-right: 1rem;
+  width: auto;
+  flex-shrink: 0;
 }

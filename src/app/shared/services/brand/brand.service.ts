@@ -1,5 +1,10 @@
 import { environment } from '@/environments/environment';
-import { HttpClient, HttpHeaders, HttpParams, HttpResponse } from '@angular/common/http';
+import {
+  HttpClient,
+  HttpHeaders,
+  HttpParams,
+  HttpResponse,
+} from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
 import { Brand, BrandResponse } from '../../interfaces/brand.interface';
@@ -30,7 +35,12 @@ export class BrandService {
     });
   }
 
-  getBrands(page: number, size: number, sortBy: string, isAscending: boolean): Observable<Pagination<Brand>> {
+  getBrands(
+    page: number,
+    size: number,
+    sortBy: string,
+    isAscending: boolean
+  ): Observable<Pagination<Brand>> {
     const token = this.getToken();
     const headers = new HttpHeaders({
       Authorization: `Bearer ${token}`,
@@ -42,15 +52,17 @@ export class BrandService {
       .set('sortBy', sortBy)
       .set('isAscending', isAscending.toString());
 
-    return this.http.get<Pagination<BrandResponse>>(this.apiUrl, { headers, params }).pipe(
-      map((response: Pagination<BrandResponse>) => ({
-        ...response,
-        content: response.content.map(brand => ({
-          brandName: brand.brandName,
-          brandDescription: brand.brandDescription,
-        })),
-      }))
-    );
+    return this.http
+      .get<Pagination<BrandResponse>>(this.apiUrl, { headers, params })
+      .pipe(
+        map((response: Pagination<BrandResponse>) => ({
+          ...response,
+          content: response.content.map((brand) => ({
+            brandName: brand.brandName,
+            brandDescription: brand.brandDescription,
+          })),
+        }))
+      );
   }
 
   getAllBrands(): Observable<BrandResponse[]> {

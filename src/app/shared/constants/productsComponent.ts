@@ -1,12 +1,17 @@
+interface ValidationError {
+  requiredLength?: number;
+  min?: number;
+}
+
 export const ERROR_MESSAGES = {
     required: (fieldName: string) => `${fieldName} is required.`,
-    minlength: (fieldName: string, error: any) =>
+    minlength: (fieldName: string, error: ValidationError) =>
       `${fieldName} must be at least ${error.requiredLength} characters.`,
-    maxlength: (fieldName: string, error: any) =>
+    maxlength: (fieldName: string, error: ValidationError) =>
       `${fieldName} must be at most ${error.requiredLength} characters.`,
     pattern: () =>
       `forbidden characters.`,
-    min: (fieldName: string, error: any) =>
+    min: (fieldName: string, error: ValidationError) =>
       `${fieldName} must be at least ${error.min}.`,
 } as const;
 
@@ -40,6 +45,25 @@ export const FIELD_NAMES = {
     PRODUCT_PRICE: 'Product Price',
     BRAND_ID: 'Brand ID',
 } as const;
+
+export const MIN_LENGTH = 3;
+export const MAX_CATEGORIES = 3;
+export const DEFAULT_PAGE = 0;
+export const DEFAULT_PAGE_SIZE = 5;
+export const DEFAULT_SORT_BY = 'productName';
+
+export const SUCCESS_PRODUCT_CREATED = 'Product created successfully';
+export const ERROR_CREATING_PRODUCT = 'Error creating product';
+export const ERROR_LOADING_CATEGORIES = 'Error loading categories';
+export const ERROR_LOADING_BRANDS = 'Error loading brands';
+export const ERROR_LOADING_PRODUCTS = 'Error loading products';
+export const ERROR_UPDATING_PRODUCT_QUANTITY = 'Error updating product quantity';
+export const SUCCESS_UPDATING_PRODUCT_QUANTITY = 'Product quantity updated successfully';
+export const ERROR_ADDING_PRODUCT_TO_CART = 'Error adding product to cart';
+export const SUCCESS_ADDING_PRODUCT_TO_CART = 'Product added to cart successfully';
+export const ERROR_FETCHING_NEXT_SUPPLY_DATE = 'Error fetching next supply date';
+export const CATEGORY_NAMES = 'categoryNames';
+export const NUMBER_OF_CATEGORIES = 'numberOfCategories';
 
 type ErrorMessageKeys = keyof typeof ERROR_MESSAGES;
 type SuccessMessageKeys = keyof typeof SUCCESS_MESSAGES;

@@ -1,5 +1,8 @@
 import { TestBed } from '@angular/core/testing';
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import {
+  HttpClientTestingModule,
+  HttpTestingController,
+} from '@angular/common/http/testing';
 import { BrandService } from './brand.service';
 import { environment } from '@/environments/environment';
 import { Brand, BrandResponse } from '../../interfaces/brand.interface';
@@ -31,8 +34,14 @@ describe('BrandService', () => {
 
   describe('#createBrand', () => {
     it('should create a brand and return the response', () => {
-      const brand: Brand = { brandName: 'Test Brand', brandDescription: 'Test Description' };
-      const mockResponse = new HttpResponse<Brand>({ status: 201, body: brand });
+      const brand: Brand = {
+        brandName: 'Test Brand',
+        brandDescription: 'Test Description',
+      };
+      const mockResponse = new HttpResponse<Brand>({
+        status: 201,
+        body: brand,
+      });
 
       service.createBrand(brand).subscribe((response) => {
         expect(response.body).toEqual(brand);
@@ -40,18 +49,23 @@ describe('BrandService', () => {
 
       const req = httpMock.expectOne(apiUrl);
       expect(req.request.method).toBe('POST');
-      expect(req.request.headers.get('Authorization')).toBe(`Bearer ${localStorage.getItem('token')}`);
+      expect(req.request.headers.get('Authorization')).toBe(
+        `Bearer ${localStorage.getItem('token')}`
+      );
       expect(req.request.headers.get('Content-Type')).toBe('application/json');
       req.event(mockResponse);
     });
 
     it('should handle error response', () => {
-      const brand: Brand = { brandName: 'Test Brand', brandDescription: 'Test Description' };
+      const brand: Brand = {
+        brandName: 'Test Brand',
+        brandDescription: 'Test Description',
+      };
       service.createBrand(brand).subscribe({
         next: () => fail('expected an error, not brands'),
         error: (error) => {
           expect(error.status).toBe(400);
-        }
+        },
       });
 
       const req = httpMock.expectOne(apiUrl);
@@ -63,13 +77,21 @@ describe('BrandService', () => {
     it('should return a list of brands', () => {
       const mockResponse: Pagination<BrandResponse> = {
         content: [
-          { brandId: 1, brandName: 'Brand 1', brandDescription: 'Description 1' },
-          { brandId: 2, brandName: 'Brand 2', brandDescription: 'Description 2' },
+          {
+            brandId: 1,
+            brandName: 'Brand 1',
+            brandDescription: 'Description 1',
+          },
+          {
+            brandId: 2,
+            brandName: 'Brand 2',
+            brandDescription: 'Description 2',
+          },
         ],
         totalElements: 2,
         totalPages: 1,
         currentPage: 0,
-        isAscending: false
+        isAscending: false,
       };
 
       const expectedResponse: Pagination<Brand> = {
@@ -98,7 +120,9 @@ describe('BrandService', () => {
       });
 
       expect(req.request.method).toBe('GET');
-      expect(req.request.headers.get('Authorization')).toBe(`Bearer ${localStorage.getItem('token')}`);
+      expect(req.request.headers.get('Authorization')).toBe(
+        `Bearer ${localStorage.getItem('token')}`
+      );
       req.flush(mockResponse);
     });
 
@@ -107,7 +131,7 @@ describe('BrandService', () => {
         next: () => fail('expected an error, not brands'),
         error: (error) => {
           expect(error.status).toBe(400);
-        }
+        },
       });
 
       const req = httpMock.expectOne((request) => {
@@ -136,7 +160,9 @@ describe('BrandService', () => {
 
       const req = httpMock.expectOne(`${apiUrl}/all`);
       expect(req.request.method).toBe('GET');
-      expect(req.request.headers.get('Authorization')).toBe(`Bearer ${localStorage.getItem('token')}`);
+      expect(req.request.headers.get('Authorization')).toBe(
+        `Bearer ${localStorage.getItem('token')}`
+      );
       req.flush(mockResponse);
     });
 
@@ -145,7 +171,7 @@ describe('BrandService', () => {
         next: () => fail('expected an error, not brands'),
         error: (error) => {
           expect(error.status).toBe(400);
-        }
+        },
       });
 
       const req = httpMock.expectOne(`${apiUrl}/all`);

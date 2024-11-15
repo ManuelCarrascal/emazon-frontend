@@ -1,0 +1,25 @@
+@use "styles" as *;
+
+.home {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  width: 100%;
+  height: 100%;
+  padding: 2rem;
+  align-items: center;
+  text-align: center;
+
+  &__title {
+    font-size: 2.8rem;
+  }
+
+  &__subtitle {
+    font-size: 1.6rem;
+    color: $hint-text;
+  }
+}
+
+.responsive-svg {
+  height: auto;
+  user-select: none;
+}

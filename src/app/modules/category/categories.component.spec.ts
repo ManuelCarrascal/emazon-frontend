@@ -5,10 +5,16 @@ import { of, throwError } from 'rxjs';
 import { HttpResponse, HttpStatusCode } from '@angular/common/http';
 import { CategoriesComponent } from './categories.component';
 import { CategoryService } from '@/app/shared/services/category/category.service';
-import { ToastService, ToastType } from '@/app/shared/services/toast/toast.service';
+import {
+  ToastService,
+  ToastType,
+} from '@/app/shared/services/toast/toast.service';
 import { InputWithErrorComponent } from '@/app/ui/molecules/input-with-error/input-with-error.component';
 import { TextAreaWithErrorComponent } from '@/app/ui/molecules/text-area-with-error/text-area-with-error.component';
-import { ERROR_MESSAGES_BY_CODE, SUCCESS_MESSAGES } from '@/app/shared/constants/categoriesComponent';
+import {
+  ERROR_MESSAGES_BY_CODE,
+  SUCCESS_MESSAGES,
+} from '@/app/shared/constants/categoriesComponent';
 import { Category } from '@/app/shared/interfaces/category.interface';
 
 describe('CategoriesComponent', () => {
@@ -49,7 +55,9 @@ describe('CategoriesComponent', () => {
 
     fixture = TestBed.createComponent(CategoriesComponent);
     component = fixture.componentInstance;
-    categoryService = TestBed.inject(CategoryService) as jest.Mocked<CategoryService>;
+    categoryService = TestBed.inject(
+      CategoryService
+    ) as jest.Mocked<CategoryService>;
     toastService = TestBed.inject(ToastService) as jest.Mocked<ToastService>;
     fixture.detectChanges();
   });
@@ -65,13 +73,17 @@ describe('CategoriesComponent', () => {
 
   it('should load categories on ngOnInit', () => {
     const mockResponse = {
-      content: [{ categoryName: 'Category1', categoryDescription: 'Description1' }],
+      content: [
+        { categoryName: 'Category1', categoryDescription: 'Description1' },
+      ],
       totalElements: 1,
       totalPages: 1,
       currentPage: 0,
       isAscending: true,
     };
-    jest.spyOn(categoryService, 'getCategories').mockReturnValue(of(mockResponse));
+    jest
+      .spyOn(categoryService, 'getCategories')
+      .mockReturnValue(of(mockResponse));
 
     component.ngOnInit();
 
@@ -92,9 +104,9 @@ describe('CategoriesComponent', () => {
     });
 
     it('should call createCategory and show success toast on successful creation', () => {
-      jest.spyOn(categoryService, 'createCategory').mockReturnValue(
-        of(new HttpResponse<Category>({ status: 201 }))
-      );
+      jest
+        .spyOn(categoryService, 'createCategory')
+        .mockReturnValue(of(new HttpResponse<Category>({ status: 201 })));
       jest.spyOn(toastService, 'showToast');
 
       component.createCategoryForm.setValue({
@@ -116,7 +128,9 @@ describe('CategoriesComponent', () => {
 
     it('should show error toast when category creation fails', () => {
       const mockError = { status: 400 };
-      jest.spyOn(categoryService, 'createCategory').mockReturnValue(throwError(() => mockError));
+      jest
+        .spyOn(categoryService, 'createCategory')
+        .mockReturnValue(throwError(() => mockError));
 
       component.createCategoryForm.patchValue({
         categoryName: 'Test Category',
@@ -133,10 +147,15 @@ describe('CategoriesComponent', () => {
 
     it('should reset form after successful category creation', () => {
       const mockResponse = new HttpResponse({
-        body: { categoryName: 'Category1', categoryDescription: 'Description1' },
+        body: {
+          categoryName: 'Category1',
+          categoryDescription: 'Description1',
+        },
         status: HttpStatusCode.Created,
       });
-      jest.spyOn(categoryService, 'createCategory').mockReturnValue(of(mockResponse));
+      jest
+        .spyOn(categoryService, 'createCategory')
+        .mockReturnValue(of(mockResponse));
 
       component.createCategoryForm.setValue({
         categoryName: 'Category1',
@@ -155,13 +174,17 @@ describe('CategoriesComponent', () => {
   describe('loadCategories', () => {
     it('should load categories and update the component state', () => {
       const mockData = {
-        content: [{ categoryName: 'Category 1', categoryDescription: 'Description 1' }],
+        content: [
+          { categoryName: 'Category 1', categoryDescription: 'Description 1' },
+        ],
         totalElements: 1,
         totalPages: 1,
         currentPage: 0,
         isAscending: true,
       };
-      jest.spyOn(categoryService, 'getCategories').mockReturnValue(of(mockData));
+      jest
+        .spyOn(categoryService, 'getCategories')
+        .mockReturnValue(of(mockData));
 
       component.loadCategories();
 
@@ -178,11 +201,15 @@ describe('CategoriesComponent', () => {
 
     it('should show error toast if loading categories fails', () => {
       const mockError = { status: 500 };
-      jest.spyOn(categoryService, 'getCategories').mockReturnValue(throwError(() => mockError));
-    
+      jest
+        .spyOn(categoryService, 'getCategories')
+        .mockReturnValue(throwError(() => mockError));
+
       component.loadCategories();
-    
-      const expectedErrorMessage = ERROR_MESSAGES_BY_CODE.CATEGORY_LOAD_ERROR || 'An unexpected error occurred';
+
+      const expectedErrorMessage =
+        ERROR_MESSAGES_BY_CODE.CATEGORY_LOAD_ERROR ||
+        'An unexpected error occurred';
       expect(toastService.showToast).toHaveBeenCalledWith(
         expectedErrorMessage,
         ToastType.Error

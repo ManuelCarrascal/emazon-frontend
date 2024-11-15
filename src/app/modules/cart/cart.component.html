@@ -14,20 +14,35 @@
 <div class="flex-row">
   <section class="container-cards" *ngIf="cartProducts.length !== 0">
     <div class="filter-inputs">
-      <input
-        type="text"
-        [(ngModel)]="searchTerm"
-        placeholder="Search by Category, Brand or Product Name"
-        (input)="updateCart()"
-      />
-      <button (click)="updateCart()">Update Cart</button>
-      <label for="sizeSelect">Show by:</label>
-      <select id="sizeSelect" [(ngModel)]="size" (change)="loadCart()">
-        <option value="5">5</option>
-        <option value="10">10</option>
-      </select>
+      <div class="filter-inputs__group">
+        <label for="searchTerm" class="filter-inputs__label">Search:</label>
+        <input
+          id="searchTerm"
+          type="text"
+          [(ngModel)]="searchTerm"
+          placeholder="Category, Brand or Product Name"
+          (input)="updateCart()"
+          class="filter-inputs__search"
+        />
+      </div>
+      <app-pagination-controls
+        [rowsPerPageOptions]="[5, 10]"
+        [selectedRowsPerPage]="size"
+        (rowsPerPageChange)="onRowsPerPageChange($event)"
+      ></app-pagination-controls>
+      <button (click)="toggleSortOrder()" class="filter-inputs__sort-button">
+        Sort by Name
+        <lucide-icon
+          [name]="isAscending ? 'arrow-down-a-z' : 'arrow-up-a-z'"
+          class="filter-inputs__sort-icon"
+          size="16"
+        ></lucide-icon>
+      </button>
     </div>
     <div class="container-card">
+      <div *ngIf="filteredProducts.length === 0" class="no-results">
+        <p>No products match your search criteria.</p>
+      </div>
       <div *ngFor="let product of filteredProducts" class="card">
         <div class="card__left">
           <div class="card__image-wrapper">
@@ -37,12 +52,42 @@
         <div class="card__right">
           <div class="card__product-content">
             <h2 class="card__product-title">{{ product.productName }}</h2>
-            <p class="card__product-description">
-              {{ product.productDescription }}
-            </p>
+            <p class="">Categories:</p>
+            <div class="card__categories">
+              <div
+                class="tag"
+                *ngFor="let category of product.categories; let isLast = last"
+              >
+                {{ category.categoryName }}
+              </div>
+            </div>
+
             <p class="card__brand">Brand: {{ product.brand.brandName }}</p>
-            <p class="card__cart-quantity">
-              Quantity in Cart: {{ product.cartQuantity }}
+            <div class="card__quantities">
+              <p class="card__cart-quantity">
+                Quantity in Cart:
+                <button
+                  (click)="decreaseQuantity(product)"
+                  class="quantity-button"
+                  [disabled]="product.cartQuantity <= 1"
+                >
+                  -
+                </button>
+                {{ product.cartQuantity }}
+                <button
+                  (click)="increaseQuantity(product)"
+                  class="quantity-button"
+                  [disabled]="product.cartQuantity >= product.productQuantity"
+                >
+                  +
+                </button>
+              </p>
+              <p class="card__stock-quantity">
+                In Stock: {{ product.productQuantity }}
+              </p>
+            </div>
+            <p *ngIf="product.productQuantity === 0 && product.nextSupplyDate">
+              Next supply date: {{ product.nextSupplyDate }}
             </p>
             <p class="card__subtotal">
               Subtotal: {{ product.subtotal | currency }}
@@ -55,14 +100,29 @@
             <app-button
               ngClass="button button--secondary"
               (click)="removeFromCart(product.productId)"
+              (keydown)="onKeyDownButton($event)"
               >Remove</app-button
             >
           </div>
         </div>
       </div>
     </div>
+    <app-pagination
+      *ngIf="totalPages > 1"
+      [totalPages]="totalPages"
+      [currentPage]="currentPage"
+      (pageChange)="changePage($event)"
+    ></app-pagination>
   </section>
   <div *ngIf="filteredProducts.length > 0" class="cart-total">
-    <p>Total: {{ total | currency }}</p>
+    <p class="cart-total__last-update" *ngIf="latestUpdate">
+      Last updated: {{ latestUpdate }}
+    </p>
+    <p class="cart-total__amount">
+      Total: <span class=""> {{ total | currency }}</span>
+    </p>
+    <app-button
+      >Buy <lucide-icon name="shopping-bag"></lucide-icon>
+    </app-button>
   </div>
 </div>

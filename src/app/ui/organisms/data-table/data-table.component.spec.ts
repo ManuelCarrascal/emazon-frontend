@@ -57,12 +57,6 @@ describe('DataTableComponent', () => {
     expect(component.currentSort).toBe('name');
   });
 
-  it('should emit pageChange event on changePage', () => {
-    jest.spyOn(component.pageChange, 'emit');
-    component.changePage(2);
-    expect(component.pageChange.emit).toHaveBeenCalledWith(2);
-  });
-
   it('should emit sortChange event on onSortChange', () => {
     jest.spyOn(component.sortChange, 'emit');
     component.currentSort = 'name';
@@ -73,30 +67,16 @@ describe('DataTableComponent', () => {
     });
   });
 
-  it('should emit rowsPerPageChange event on onRowsPerPageChange', () => {
-    jest.spyOn(component.rowsPerPageChange, 'emit');
-    const event = new Event('change');
-    Object.defineProperty(event, 'target', { value: { value: '10' } });
-    component.onRowsPerPageChange(event);
-    expect(component.rowsPerPageChange.emit).toHaveBeenCalledWith(10);
-    expect(component.rowsPerPage).toBe(10);
-  });
-
-  it('should return correct pages to show', () => {
-    component.columns = [{ key: 'name', label: 'Name', sortable: true }];
-    component.totalPages = 10;
-    component.currentPage = 5;
-    fixture.detectChanges();
-
-    let pages = component.getPagesToShow();
-    expect(pages).toEqual([0, -1, 4, 5, 6, -1, 9]);
-
-    component.totalPages = 3;
-    component.currentPage = 1;
-    fixture.detectChanges();
-
-    pages = component.getPagesToShow();
-    expect(pages).toEqual([0, 1, 2]);
+  it('should update currentSort and isAscending on onSortChange with new sortBy', () => {
+    jest.spyOn(component.sortChange, 'emit');
+    component.currentSort = 'name';
+    component.onSortChange('newSort');
+    expect(component.currentSort).toBe('newSort');
+    expect(component.isAscending).toBe(true);
+    expect(component.sortChange.emit).toHaveBeenCalledWith({
+      sortBy: 'newSort',
+      isAscending: true,
+    });
   });
 
   it('should render table headers correctly', () => {
@@ -119,40 +99,6 @@ describe('DataTableComponent', () => {
     expect(cells[0].nativeElement.textContent.trim()).toBe('Test');
   });
 
-  it('should disable previous button on first page', () => {
-    component.columns = [{ key: 'name', label: 'Name', sortable: true }];
-    component.currentPage = 0;
-    fixture.detectChanges();
-
-    const prevButton = debugElement.query(
-      By.css('.pagination-table__button:first-child')
-    );
-    expect(prevButton.nativeElement.disabled).toBeTruthy();
-  });
-
-  it('should disable next button on last page', () => {
-    component.currentPage = component.totalPages - 1;
-    fixture.detectChanges();
-
-    const nextButton = debugElement.query(
-      By.css('.pagination-table__button:last-child')
-    );
-    expect(nextButton.nativeElement.disabled).toBeTruthy();
-  });
-
-  it('should call changePage on page button click', () => {
-    jest.spyOn(component, 'changePage');
-    component.totalPages = 3;
-    component.currentPage = 1;
-    fixture.detectChanges();
-
-    const pageButtons = debugElement.queryAll(
-      By.css('.pagination-table__page')
-    );
-    pageButtons[0].nativeElement.click();
-    expect(component.changePage).toHaveBeenCalledWith(0);
-  });
-
   it('should call onSortChange on header click', () => {
     jest.spyOn(component, 'onSortChange');
     fixture.detectChanges();
@@ -161,13 +107,6 @@ describe('DataTableComponent', () => {
     header.nativeElement.click();
 
     expect(component.onSortChange).toHaveBeenCalledWith('name');
-  });
-
-  it('should call onRowsPerPageChange on rows per page change', () => {
-    jest.spyOn(component, 'onRowsPerPageChange');
-    const select = debugElement.query(By.css('#rowsPerPage'));
-    select.triggerEventHandler('change', { target: { value: '10' } });
-    expect(component.onRowsPerPageChange).toHaveBeenCalled();
   });
 
   it('should emit incrementClick event on onIncrementClick', () => {
@@ -191,5 +130,12 @@ describe('DataTableComponent', () => {
     authService.getUserRole.mockReturnValue('ROLE_USER');
     component.showActions = true;
     expect(component.canShowActions()).toBe(false);
+  });
+
+  it('should emit addToCartClick event when onAddToCartClick is called', () => {
+    jest.spyOn(component.addToCartClick, 'emit');
+    const row = { id: 1, name: 'Test' };
+    component.onAddToCartClick(row);
+    expect(component.addToCartClick.emit).toHaveBeenCalledWith(row);
   });
 });

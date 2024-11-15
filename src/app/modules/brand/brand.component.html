@@ -1,5 +1,5 @@
 <div class="container">
-  <div class="flex-end-container" *appRole="'ROLE_ADMIN'">
+  <div class="flex-end-container" *appRole="ROLES.ADMIN">
     <app-button (click)="openModal()" (keydown)="onKeyDownButton($event)">
       Add Brand
     </app-button>
@@ -19,13 +19,15 @@
         <app-text-area-with-error
           formControlName="brandDescription"
           [errorMessage]="brandDescriptionError"
-          [control]="brandDescription"  
+          [control]="brandDescription"
           placeholder="Brand Description"
         ></app-text-area-with-error>
       </div>
 
       <div class="flex-center">
-        <app-button [disabled]="createBrandForm.invalid">Create Brand</app-button>
+        <app-button [disabled]="createBrandForm.invalid"
+          >Create Brand</app-button
+        >
       </div>
     </form>
   </app-modal>
@@ -40,5 +42,17 @@
     (sortChange)="onSortChange($event)"
     (rowsPerPageChange)="onRowsPerPageChange($event)"
   ></app-data-table>
+  
+  <div class="container__pagination">
+    <app-pagination-controls
+      [rowsPerPageOptions]="[5, 10]"
+      [selectedRowsPerPage]="size"
+      (rowsPerPageChange)="onRowsPerPageChange($event)"
+    ></app-pagination-controls>
+    <app-pagination
+      [totalPages]="totalPages"
+      [currentPage]="currentPage"
+      (pageChange)="changePage($event)"
+    ></app-pagination>
+  </div>
 </div>
-

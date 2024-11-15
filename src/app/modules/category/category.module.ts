@@ -5,16 +5,9 @@ import { UiModule } from '@/app/ui/ui.module';
 import { ReactiveFormsModule } from '@angular/forms';
 import { SharedModule } from '@/app/shared/shared.module';
 
-
 @NgModule({
   declarations: [CategoriesComponent],
-  imports: [
-    CommonModule,
-    UiModule,
-    ReactiveFormsModule,
-    SharedModule
-
-  ],
-  exports: [CategoriesComponent]
+  imports: [CommonModule, UiModule, ReactiveFormsModule, SharedModule],
+  exports: [CategoriesComponent],
 })
-export class CategoryModule { }
+export class CategoryModule {}
