@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CartComponent } from './cart.component';
 import { SharedModule } from '@/app/shared/shared.module';
-import { LucideAngularModule } from 'lucide-angular';
+import { LucideAngularModule ,Trash } from 'lucide-angular';
 import { FormsModule } from '@angular/forms';
 import { AtomsModule } from '../../ui/atoms/atoms.module';
 import { UiModule } from '@/app/ui/ui.module';
@@ -12,7 +12,7 @@ import { UiModule } from '@/app/ui/ui.module';
   imports: [
     CommonModule,
     SharedModule,
-    LucideAngularModule,
+    LucideAngularModule.pick({ Trash}),
     FormsModule,
     AtomsModule,
     UiModule,

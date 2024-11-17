@@ -101,7 +101,9 @@
               ngClass="button button--secondary"
               (click)="removeFromCart(product.productId)"
               (keydown)="onKeyDownButton($event)"
-              >Remove</app-button
+              [secondary]="true"
+              >Remove <lucide-icon name="trash"></lucide-icon>
+              </app-button
             >
           </div>
         </div>
@@ -121,8 +123,19 @@
     <p class="cart-total__amount">
       Total: <span class=""> {{ total | currency }}</span>
     </p>
-    <app-button
-      >Buy <lucide-icon name="shopping-bag"></lucide-icon>
+    <app-button (click)="openModal()" [disabled]="!allProductsInStock()" (keydown)="onKeyDownButton($event)">
+      Buy <lucide-icon name="shopping-bag"></lucide-icon>
     </app-button>
   </div>
 </div>
+
+<app-modal [isVisible]="isModalVisible" (close)="closeModal()">
+  <div class="modal-content modal-content--confirm-purchase">
+    <h2 class="modal-content__title">Confirm Purchase</h2>
+    <p class="modal-content__message">Are you sure you want to proceed with the purchase?</p>
+    <div class="modal-content__actions">
+      <app-button class="modal-content__button" (click)="confirmPurchase()" (keydown)="onKeyDownButton($event)">Yes</app-button>
+      <app-button class="modal-content__button" [secondary]="true" (click)="cancelPurchase()" (keydown)="onKeyDownButton($event)">No</app-button>
+    </div>
+  </div>
+</app-modal>

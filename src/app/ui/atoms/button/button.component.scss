@@ -8,6 +8,10 @@
     border: none;
     cursor: pointer;
     margin-top: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
     
     @include desktop{
         padding: 1rem 4rem;
@@ -28,6 +32,10 @@
         background-color: $white;
         color: $purple;
         border: 1px solid $purple;
+
+        &:hover{
+            background-color: darken($color: $white, $amount: 5);
+        }
     }
 
 }

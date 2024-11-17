@@ -11,6 +11,7 @@ import {
 } from '@/app/shared/interfaces/cart.interface';
 import { NextSupplyResponse } from '@/app/shared/interfaces/supply.interface';
 import { CartService } from '@/app/shared/services/cart/cart.service';
+import { SaleService } from '@/app/shared/services/sale/sale.service';
 import { SupplyService } from '@/app/shared/services/supply/supply.service';
 import {
   ToastService,
@@ -39,11 +40,13 @@ export class CartComponent implements OnInit {
   totalPages: number = DEFAULT_TOTAL_PAGES;
   latestUpdate: string | null = null;
   isAscending: boolean = true;
+  public isModalVisible: boolean = false;
 
   constructor(
     private readonly cartService: CartService,
     private readonly supplyService: SupplyService,
-    private readonly toastService: ToastService
+    private readonly toastService: ToastService,
+    private readonly saleService: SaleService
   ) {}
 
   ngOnInit(): void {
@@ -173,14 +176,19 @@ export class CartComponent implements OnInit {
       this.removeFromCart(productId);
       return;
     }
-  
+
     this.cartService.updateCartQuantity(productId, quantity).subscribe({
       next: () => {
-        const product = this.cartProducts.find(p => p.productId === productId);
+        const product = this.cartProducts.find(
+          (product) => product.productId === productId
+        );
         if (product) {
           product.cartQuantity = quantity;
           product.subtotal = product.cartQuantity * product.productPrice;
-          this.total = this.cartProducts.reduce((acc, p) => acc + p.subtotal, 0);
+          this.total = this.cartProducts.reduce(
+            (acc, product) => acc + product.subtotal,
+            0
+          );
           this.loadLatestUpdate();
         }
       },
@@ -212,9 +220,46 @@ export class CartComponent implements OnInit {
   onKeyDownButton(event: KeyboardEvent): void {
     if (event.key === 'Enter' || event.key === ' ') {
       event.preventDefault();
-      this.removeFromCart(Number((event.target as HTMLButtonElement).value));
+      const target = event.target as HTMLElement;
+      if (target) {
+        target.click();
+      }
     }
   }
 
-  
+  confirmPurchase(): void {
+    this.saleService.buyCart().subscribe({
+      next: (response) => {
+        console.log('Purchase confirmed:', response);
+        this.toastService.showToast('Purchase successful', ToastType.Success);
+        this.closeModal();
+        this.loadCart();
+      },
+      error: (error) => {
+        console.error('Purchase failed:', error);
+        this.toastService.showToast('Purchase failed', ToastType.Error);
+      },
+    });
+  }
+  cancelPurchase(): void {
+    this.closeModal();
+  }
+
+  openModal(): void {
+    this.isModalVisible = true;
+  }
+
+  closeModal(): void {
+    this.isModalVisible = false;
+  }
+
+  allProductsInStock(): boolean {
+    return this.cartProducts.every(
+      (product) =>
+        product.cartQuantity <= product.productQuantity &&
+        product.productQuantity > 0
+    );
+  }
+
+
 }

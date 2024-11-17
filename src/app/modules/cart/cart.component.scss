@@ -178,3 +178,25 @@
     gap: 0.5rem;
   }
 }
+
+.modal-content{
+  &__title{
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+  }
+
+  &__actions{
+    display: flex;
+    justify-content: space-evenly;
+    margin-top: 0.5rem;
+    gap: 1rem;
+  }
+
+  &__message{
+    font-size: 1.4rem;
+    margin-bottom: 1rem;
+  }
+}
+
+
