@@ -260,6 +260,4 @@ export class CartComponent implements OnInit {
         product.productQuantity > 0
     );
   }
-
-
 }

@@ -2,6 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { CartComponent } from './cart.component';
 import { CartService } from '@/app/shared/services/cart/cart.service';
 import { SupplyService } from '@/app/shared/services/supply/supply.service';
+import { SaleService } from '@/app/shared/services/sale/sale.service';
 import {
   ToastService,
   ToastType,
@@ -21,6 +22,7 @@ describe('CartComponent', () => {
   let fixture: ComponentFixture<CartComponent>;
   let cartService: CartService;
   let supplyService: SupplyService;
+  let saleService: SaleService;
   let toastService: ToastService;
 
   const mockCartResponse: CartResponse = {
@@ -36,7 +38,12 @@ describe('CartComponent', () => {
           brandName: 'Brand 1',
           brandDescription: 'Brand Description 1',
         },
-        categories: [{ categoryName: 'Category 1', categoryDescription: 'Category Description 1' }],
+        categories: [
+          {
+            categoryName: 'Category 1',
+            categoryDescription: 'Category Description 1',
+          },
+        ],
         subtotal: 200,
         nextSupplyDate: '2023-10-10',
       },
@@ -97,6 +104,12 @@ describe('CartComponent', () => {
           },
         },
         {
+          provide: SaleService,
+          useValue: {
+            buyCart: jest.fn().mockReturnValue(of('Purchase successful')),
+          },
+        },
+        {
           provide: ToastService,
           useValue: {
             showToast: jest.fn(),
@@ -111,6 +124,7 @@ describe('CartComponent', () => {
     component = fixture.componentInstance;
     cartService = TestBed.inject(CartService);
     supplyService = TestBed.inject(SupplyService);
+    saleService = TestBed.inject(SaleService);
     toastService = TestBed.inject(ToastService);
     fixture.detectChanges();
   });
@@ -256,8 +270,6 @@ describe('CartComponent', () => {
     expect(component.loadLatestUpdate).toHaveBeenCalled();
   });
 
-
-
   it('should call removeFromCart when quantity is less than or equal to 0', () => {
     jest.spyOn(component, 'removeFromCart');
     component.updateCartQuantity(1, 0);
@@ -285,5 +297,33 @@ describe('CartComponent', () => {
     expect(component.removeFromCart).toHaveBeenCalledWith(1);
 
     document.body.removeChild(button);
+  });
+
+  it('should confirm purchase', () => {
+    jest
+      .spyOn(saleService, 'buyCart')
+      .mockReturnValue(of('Purchase successful'));
+    jest.spyOn(component, 'closeModal');
+    jest.spyOn(component, 'loadCart');
+    component.confirmPurchase();
+    expect(saleService.buyCart).toHaveBeenCalled();
+    expect(toastService.showToast).toHaveBeenCalledWith(
+      'Purchase successful',
+      ToastType.Success
+    );
+    expect(component.closeModal).toHaveBeenCalled();
+    expect(component.loadCart).toHaveBeenCalled();
+  });
+
+  it('should handle error when confirming purchase', () => {
+    jest
+      .spyOn(saleService, 'buyCart')
+      .mockReturnValue(throwError(() => new Error('Error')));
+    component.confirmPurchase();
+    expect(saleService.buyCart).toHaveBeenCalled();
+    expect(toastService.showToast).toHaveBeenCalledWith(
+      'Purchase failed',
+      ToastType.Error
+    );
   });
 });
