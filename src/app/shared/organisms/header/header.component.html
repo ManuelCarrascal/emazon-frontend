@@ -3,18 +3,61 @@
     <app-logo></app-logo>
   </div>
 
- <div class="align-center header__right-content">
-  <button class="shopping-cart-icon" *appRole="ROLES.USER">
-    <a routerLink="/dashboard/cart"><lucide-icon name="shopping-cart"></lucide-icon></a>
-  </button>
+  <div class="align-center header__right-content">
+    <button class="shopping-cart-icon" *appRole="ROLES.USER">
+      <a routerLink="/dashboard/cart"
+        ><lucide-icon name="shopping-cart"></lucide-icon
+      ></a>
+    </button>
 
-  <button class="logout-container" aria-label="Logout" (click)="logout()">
-    Logout
-    <lucide-icon name="log-out" size="14"></lucide-icon>
-  </button>
+    <button class="logout-container" aria-label="Logout" (click)="logout()">
+      Logout
+      <lucide-icon name="log-out" size="14"></lucide-icon>
+    </button>
 
-  <div class="header__nav">
-    <app-hamburger-button></app-hamburger-button>
+    <div class="header__nav">
+      <app-hamburger-button></app-hamburger-button>
+    </div>
   </div>
- </div>
 </header>
+
+<div
+  class="sidebar-overlay"
+  [class.open]="floatMenuService.isOpen$ | async"
+  (click)="toggleFloatMenu()"
+  (keydown)="handleKeydown($event)"
+></div>
+<div class="sidebar" [class.open]="floatMenuService.isOpen$ | async">
+  <div class="sidebar__header">
+    <h3>Dashboard</h3>
+    <button class="close-button" (click)="toggleFloatMenu()">×</button>
+  </div>
+  <div class="sidebar__content">
+    <ul class="sidebar__navigation-list">
+      <li class="sidebar__navigation-item">
+        <a routerLink="/dashboard/home" routerLinkActive="active">Home</a>
+      </li>
+      <li class="sidebar__navigation-item">
+        <a routerLink="/dashboard/categories" routerLinkActive="active"
+          >Categories</a
+        >
+      </li>
+      <li class="sidebar__navigation-item">
+        <a routerLink="/dashboard/brands" routerLinkActive="active">Brands</a>
+      </li>
+      <li class="sidebar__navigation-item">
+        <a routerLink="/dashboard/products" routerLinkActive="active"
+          >Products</a
+        >
+      </li>
+      <li class="sidebar__navigation-item" *appRole="ROLES.ADMIN">
+        <a
+          routerLink="/dashboard/warehouse-assistant"
+          routerLinkActive="active"
+        >
+          Warehouse Asst
+        </a>
+      </li>
+    </ul>
+  </div>
+</div>

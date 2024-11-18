@@ -8,6 +8,7 @@ import { UiModule } from './ui/ui.module';
 import { SharedModule } from './shared/shared.module';
 import { AuthService } from './shared/services/auth/auth.service';
 import { AuthInterceptor } from './core/interceptors/auth.interceptor';
+import { LoaderInterceptor } from './core/interceptors/loader.interceptor';
 
 @NgModule({
   declarations: [AppComponent],
@@ -20,7 +21,8 @@ import { AuthInterceptor } from './core/interceptors/auth.interceptor';
   ],
   providers: [
     AuthService,
-    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: LoaderInterceptor, multi: true } 
   ],
   bootstrap: [AppComponent],
 })

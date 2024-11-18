@@ -125,22 +125,22 @@ export class ProductComponent implements OnInit {
       ],
       productQuantity: ['', [Validators.required, Validators.min(1)]],
       productPrice: ['', [Validators.required, Validators.min(0.0)]],
-      brandId: [null, [Validators.required]],
+      brandId: [{ value: null, disabled: this.selectedBrand !== null }, [Validators.required]],
       categoryIds: [
-        [],
+        { value: [], disabled: this.selectedCategories.length >= MAX_CATEGORIES },
         [Validators.required, categoriesCountValidator(1, MAX_CATEGORIES)],
       ],
     });
-
+  
     this.incrementForm = this.formBuilder.group({
       incrementAmount: ['', [Validators.required, Validators.min(1)]],
       nextSupplyDate: ['', [Validators.required]],
     });
-
+  
     this.addToCartForm = this.formBuilder.group({
       quantity: ['', [Validators.required, Validators.min(1)]],
     });
-
+  
     this.dropdownState = {
       brand: { searchTerm: '', active: false },
       category: { searchTerm: '', active: false },
@@ -175,6 +175,7 @@ export class ProductComponent implements OnInit {
       brand: { searchTerm: '', active: false },
       category: { searchTerm: '', active: false },
     };
+    this.enableDropdowns();
   }
 
   openIncrementModal(product: ProductView) {
@@ -504,11 +505,11 @@ export class ProductComponent implements OnInit {
       this.dropdownState['category'].searchTerm = '';
       this.filteredCategories = [];
       if (this.selectedCategories.length >= MAX_CATEGORIES) {
-        this.dropdownState['category'].active = false;
+        this.createProductForm.get('categoryIds')?.disable();
       }
     }
   }
-
+  
   removeCategory(category: CategoryResponse): void {
     this.selectedCategories = this.selectedCategories.filter(
       (cat) => cat !== category
@@ -517,21 +518,48 @@ export class ProductComponent implements OnInit {
       .get('categoryIds')
       ?.setValue(this.selectedCategories.map((cat) => cat.categoryId));
     if (this.selectedCategories.length < MAX_CATEGORIES) {
-      this.dropdownState['category'].active = true;
+      this.createProductForm.get('categoryIds')?.enable();
     }
   }
-
+  
   selectBrand(brand: BrandResponse): void {
     this.selectedBrand = brand;
     this.createProductForm.get('brandId')?.setValue(brand.brandId);
     this.dropdownState['brand'].searchTerm = '';
     this.filteredBrands = [];
+    this.createProductForm.get('brandId')?.disable();
+  }
+  
+  removeBrand(brand: BrandResponse): void {
+    this.selectedBrand = null;
+    this.createProductForm.get('brandId')?.setValue(null);
+    this.createProductForm.get('brandId')?.markAsTouched();
+    this.createProductForm.get('brandId')?.enable();
   }
 
   setActiveDropdown(dropdown: string): void {
     for (const key in this.dropdownState) {
       this.dropdownState[key].active = key === dropdown;
     }
+  }
+
+  updateDropdownStates(): void {
+    if (this.selectedCategories.length >= MAX_CATEGORIES) {
+      this.createProductForm.get('categoryIds')?.disable();
+    } else {
+      this.createProductForm.get('categoryIds')?.enable();
+    }
+
+    if (this.selectedBrand) {
+      this.createProductForm.get('brandId')?.disable();
+    } else {
+      this.createProductForm.get('brandId')?.enable();
+    }
+  }
+
+  enableDropdowns(): void {
+    this.createProductForm.get('categoryIds')?.enable();
+    this.createProductForm.get('brandId')?.enable();
   }
 
   addToCart(): void {

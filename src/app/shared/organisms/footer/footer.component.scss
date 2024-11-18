@@ -8,9 +8,41 @@
   padding: 1rem 0;
   height: 100%;
 
+  &__content{
+    padding: 2rem 1.5rem;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  &__container-right{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    color: $white;
+  }
+
   &__bottom {
     padding: 0.5rem 2rem;
     color: $white;
     font-size: 1.6rem;
+  }
+
+  &__link{
+    color: $white;
+    font-size: 1.6rem;
+    margin-right: 1.5rem;
+    cursor: pointer;
+  }
+
+  &__link--phone{
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+  }
+
+  &__link--email{
+    margin-top: 0.5rem;
+    font-size: 1.4rem;
+    font-weight: 600;
   }
 }

@@ -93,4 +93,35 @@
       }
     }
   }
+
+  &__selected-items{
+    margin-top: 0.5rem;
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+
+  &__selected-item {
+    background-color: $bg_light_grey;
+    padding: 0.8rem 1.2rem;
+    border-radius: 0.5rem;
+    font-size: 1.4rem;
+    color: $black;
+    display: flex;
+    align-items: center;
+    width: fit-content;
+
+    &__remove-button {
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 1.5rem;
+      margin-left: 0.5rem;
+      color: $hint_text;
+
+      &:hover {
+        color: $error;
+      }
+    }
+  }
 }

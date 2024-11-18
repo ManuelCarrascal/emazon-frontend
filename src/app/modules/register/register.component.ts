@@ -1,9 +1,18 @@
 import { CustomerService } from './../../shared/services/customer/customer.service';
 import { User } from '@/app/shared/interfaces/user.interface';
-import { ToastService, ToastType } from '@/app/shared/services/toast/toast.service';
+import {
+  ToastService,
+  ToastType,
+} from '@/app/shared/services/toast/toast.service';
 import { adultValidator } from '@/app/shared/validators/adult-validator';
 import { Component } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {
+  AbstractControl,
+  FormBuilder,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-register',
@@ -13,19 +22,29 @@ import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/fo
 export class RegisterComponent {
   public customerForm: FormGroup;
 
-  constructor(private readonly formBuilder: FormBuilder, private readonly toastService: ToastService, private readonly customerService: CustomerService) {
+  constructor(
+    private readonly formBuilder: FormBuilder,
+    private readonly toastService: ToastService,
+    private readonly customerService: CustomerService,
+    private readonly router: Router
+  ) {
     this.customerForm = this.formBuilder.group({
       userName: ['', [Validators.required, Validators.minLength(3)]],
       userLastName: ['', [Validators.required, Validators.minLength(3)]],
-      userIdentityDocument: ['', [Validators.required, Validators.minLength(8)]],
-      userPhone: ['', [Validators.required, Validators.pattern(/^\+\d{1,3}\d{10}$/)]],
+      userIdentityDocument: [
+        '',
+        [Validators.required, Validators.minLength(8)],
+      ],
+      userPhone: [
+        '',
+        [Validators.required, Validators.pattern(/^\+\d{1,3}\d{10}$/)],
+      ],
       userEmail: ['', [Validators.required, Validators.email]],
       userPassword: ['', [Validators.required, Validators.minLength(8)]],
       userBirthdate: ['', [Validators.required, adultValidator()]],
     });
   }
 
-  
   get userName(): AbstractControl | null {
     return this.customerForm.get('userName');
   }
@@ -50,7 +69,7 @@ export class RegisterComponent {
     return this.customerForm.get('userPassword');
   }
 
-  get userBirthdate(): AbstractControl | null { 
+  get userBirthdate(): AbstractControl | null {
     return this.customerForm.get('userBirthdate');
   }
 
@@ -132,7 +151,7 @@ export class RegisterComponent {
     return '';
   }
 
-  get userBirthdateError(): string { 
+  get userBirthdateError(): string {
     const control = this.userBirthdate;
     if (control?.touched && control?.errors) {
       if (control.errors['required']) {
@@ -161,15 +180,21 @@ export class RegisterComponent {
 
     this.customerService.registerCustomer(customer).subscribe({
       next: () => {
-        this.toastService.showToast('Customer registered successfully', ToastType.Success);
+        this.toastService.showToast(
+          'Customer registered successfully',
+          ToastType.Success
+        );
         this.customerForm.reset();
+        this.router.navigate(['/login']);
       },
       error: () => {
-        this.toastService.showToast('Failed to register customer', ToastType.Error);
-      }
+        this.toastService.showToast(
+          'Failed to register customer',
+          ToastType.Error
+        );
+      },
     });
   }
-
 }
 
 function formatDate(date: string): string {

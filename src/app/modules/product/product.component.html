@@ -79,7 +79,7 @@
           formControlName="brandId"
           [items]="brands"
           [filteredItems]="filteredBrands"
-          [selectedItems]="[selectedBrand]"
+          [selectedItems]="selectedBrand ? [selectedBrand] : []"
           [displayProperty]="'brandName'"
           [idProperty]="'brandId'"
           [maxSelection]="1"
@@ -87,6 +87,7 @@
           (searchTermChange)="onSearchTermChange('brand', $event)"
           (filterItems)="filterBrands()"
           (selectItem)="selectBrand($event)"
+          (removeItem)="removeBrand($event)"
         ></app-dropdown-search-input>
 
         <app-dropdown-search-input
@@ -186,7 +187,6 @@
 
   <app-data-table
     (pageChange)="changePage($event)"
-    (rowsPerPageChange)="onRowsPerPageChange($event)"
     (sortChange)="onSortChange($event)"
     (incrementClick)="openIncrementModal($event)"
     (addToCartClick)="openAddToCartModal($event)"

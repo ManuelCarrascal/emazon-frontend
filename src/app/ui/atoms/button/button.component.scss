@@ -12,6 +12,8 @@
     align-items: center;
     justify-content: center;
     gap: 0.5rem;
+    width: 100%;
+
     
     @include desktop{
         padding: 1rem 4rem;

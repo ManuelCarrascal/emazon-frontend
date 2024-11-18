@@ -135,6 +135,16 @@ input[type="number"]::-webkit-outer-spin-button,
   margin: 0 auto;
   border-bottom: 0.2rem $purple solid;
   border-top: 0.2rem $purple solid;
+  width: 70%;
+
+  @include desktop {
+    width: 40%;
+  }
+
+  @include large-desktop {
+    width: 23%;
+  }
+
 }
 
 .skeleton-image {

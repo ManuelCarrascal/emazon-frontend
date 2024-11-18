@@ -1,12 +1,15 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
+import { FloatMenuService } from '@/app/shared/services/float-menu/float-menu.service';
 
 @Component({
   selector: 'app-hamburger-button',
   templateUrl: './hamburger-button.component.html',
   styleUrls: ['./hamburger-button.component.scss'],
 })
-export class HamburgerButtonComponent implements OnInit {
-  constructor() {}
+export class HamburgerButtonComponent {
+  constructor(private readonly floatMenuService: FloatMenuService) {}
 
-  ngOnInit(): void {}
+  toggleFloatMenu() {
+    this.floatMenuService.toggleFloatMenu();
+  }
 }

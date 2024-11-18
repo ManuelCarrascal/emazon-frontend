@@ -21,6 +21,7 @@ export class DropdownSearchInputComponent implements ControlValueAccessor {
   @Input() idProperty: string = 'id';
   @Input() maxSelection: number = 1;
   @Input() placeholder: string = 'Search';
+  @Input() disabled: boolean = false;
   @Output() searchTermChange = new EventEmitter<string>();
   @Output() filterItems = new EventEmitter<void>();
   @Output() selectItem = new EventEmitter<any>();
@@ -33,6 +34,9 @@ export class DropdownSearchInputComponent implements ControlValueAccessor {
   public onTouched: () => void = () => {};
 
   writeValue(value: any[]): void {
+    if (!Array.isArray(value)) {
+      value = [];
+    }
     this.selectedItems = this.items.filter(item => value.includes(item[this.idProperty]));
   }
 
@@ -43,7 +47,6 @@ export class DropdownSearchInputComponent implements ControlValueAccessor {
   registerOnTouched(fn: () => void): void {
     this.onTouched = fn;
   }
-
 
   onSearchTermChange(event: Event) {
     const input = event.target as HTMLInputElement;
@@ -72,5 +75,12 @@ export class DropdownSearchInputComponent implements ControlValueAccessor {
     this.selectedItems = this.selectedItems.filter(it => it !== item);
     this.onChange(this.selectedItems.map(it => it[this.idProperty]));
     this.removeItem.emit(item);
+    this.onTouched();
+  }
+
+  onItemKeydown(event: KeyboardEvent, item: any) {
+    if (event.key === 'Enter') {
+      this.onSelectItem(item);
+    }
   }
 }
