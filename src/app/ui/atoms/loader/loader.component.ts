@@ -1,4 +1,4 @@
-import { LoaderService } from '@/app/shared/services/loader.service';
+import { LoaderService } from '@/app/shared/services/loader/loader.service';
 import { Component } from '@angular/core';
 
 @Component({

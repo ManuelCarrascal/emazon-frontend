@@ -342,6 +342,21 @@ describe('ProductComponent', () => {
     );
   });
 
+  it('should remove a brand', () => {
+    const brand = { brandId: 1, brandName: 'Brand 1' } as BrandResponse;
+    component.selectedBrand = brand;
+    component.createProductForm.get('brandId')?.setValue(brand.brandId);
+    component.createProductForm.get('brandId')?.markAsTouched();
+    component.createProductForm.get('brandId')?.disable();
+
+    component.removeBrand(brand);
+
+    expect(component.selectedBrand).toBeNull();
+    expect(component.createProductForm.get('brandId')?.value).toBeNull();
+    expect(component.createProductForm.get('brandId')?.touched).toBe(true);
+    expect(component.createProductForm.get('brandId')?.enabled).toBe(true);
+  });
+
   it('should set active dropdown', () => {
     component.setActiveDropdown('brand');
     expect(component.dropdownState['brand'].active).toBe(true);
@@ -467,5 +482,19 @@ describe('ProductComponent', () => {
       'Error fetching next supply date',
       ToastType.Error
     );
+  });
+
+    it('should update dropdown states correctly', () => {
+    component.selectedCategories = [{ categoryId: 1, categoryName: 'Category 1', categoryDescription: 'Description 1' }];
+    component.selectedBrand = { brandId: 1, brandName: 'Brand 1', brandDescription: 'Description 1' };
+    component.updateDropdownStates();
+
+    expect(component.createProductForm.get('categoryIds')?.disabled).toBe(false);
+    expect(component.createProductForm.get('brandId')?.disabled).toBe(true);
+
+    component.selectedCategories = Array(3).fill({ categoryId: 1, categoryName: 'Category 1' });
+    component.updateDropdownStates();
+
+    expect(component.createProductForm.get('categoryIds')?.disabled).toBe(true);
   });
 });

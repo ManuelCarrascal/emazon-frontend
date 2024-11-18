@@ -9,7 +9,7 @@ import {
 } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
-import { LoaderService } from '@/app/shared/services/loader.service';
+import { LoaderService } from '@/app/shared/services/loader/loader.service';
 
 @Injectable()
 export class LoaderInterceptor implements HttpInterceptor {
